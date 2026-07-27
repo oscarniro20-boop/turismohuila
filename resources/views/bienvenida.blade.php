@@ -34,26 +34,6 @@
                         <h4 class="mt-2 mb-1">{{ $cat['titulo'] }}</h4>
                         <p class="small mb-0" style="color: var(--color-muted-fg);">{{ $cat['desc'] }}</p>
                     </a>
-        </div>
-    </div>
-
-    <div class="container py-5">
-        <h2 class="text-center mb-4" style="font-family: 'Fraunces', Georgia, serif; font-weight: 600;">Todo lo que necesitas para tu viaje</h2>
-        
-        <div class="row g-3">
-            @foreach([
-                ['icon'=>'🏞️','label'=>'Lugares','ruta'=>'lugares.index'],
-                ['icon'=>'🏨','label'=>'Hoteles','ruta'=>'hoteles.index'],
-                ['icon'=>'🍽️','label'=>'Restaurantes','ruta'=>'restaurantes.index'],
-                ['icon'=>'🚌','label'=>'Tours','ruta'=>'tours.index'],
-                ['icon'=>'🗺️','label'=>'Guías','ruta'=>'guias.index'],
-                ['icon'=>'🧳','label'=>'Agencias','ruta'=>'agencias.index'],
-            ] as $mod)
-                <div class="col-6 col-md-2 text-center">
-                    <a href="{{ route($mod['ruta']) }}" class="text-decoration-none d-block p-3 rounded-3" style="color: var(--color-fg); border: 1px solid var(--color-border);">
-                        <div style="font-size: 1.75rem;">{{ $mod['icon'] }}</div>
-                        <div class="small mt-1">{{ $mod['label'] }}</div>
-                    </a>
                 </div>
             @endforeach
         </div>
