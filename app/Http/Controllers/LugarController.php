@@ -53,18 +53,7 @@ class LugarController extends Controller
         $lugar = Lugar::create($datos);
 
         // Guardar imágenes adicionales
-        if ($request->hasFile('imagenes')) {
-            foreach ($request->file('imagenes') as $index => $imagen) {
-                $nombre = time() . '_' . $index . '_' . $imagen->getClientOriginalName();
-                $imagen->move(public_path('imagenes/lugares'), $nombre);
-                
-                LugarImagen::create([
-                    'lugar_id' => $lugar->id,
-                    'ruta' => 'imagenes/lugares/' . $nombre,
-                    'orden' => $index,
-                ]);
-            }
-        }
+        $this->guardarImagenesGaleria($lugar, $request, 'imagenes/lugares');
 
         return redirect()->route('lugares.index')
             ->with('success', 'Lugar creado exitosamente.');
@@ -117,16 +106,7 @@ class LugarController extends Controller
             $lugar->imagenes()->delete();
             
             // Guardar nuevas imágenes
-            foreach ($request->file('imagenes') as $index => $imagen) {
-                $nombre = time() . '_' . $index . '_' . $imagen->getClientOriginalName();
-                $imagen->move(public_path('imagenes/lugares'), $nombre);
-                
-                LugarImagen::create([
-                    'lugar_id' => $lugar->id,
-                    'ruta' => 'imagenes/lugares/' . $nombre,
-                    'orden' => $index,
-                ]);
-            }
+            $this->guardarImagenesGaleria($lugar, $request, 'imagenes/lugares');
         }
 
         return redirect()->route('lugares.index')
