@@ -39,4 +39,19 @@
         </div>
     </div>
 
+    @guest
+    <!-- Banner para usuarios no autenticados -->
+    <section class="py-5" style="background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));">
+        <div class="container text-center text-white">
+            <h2 class="display-5 fw-bold mb-3" style="font-family: 'Fraunces', Georgia, serif;">
+                ¿Listo para descubrir el Huila?
+            </h2>
+            <p class="lead mb-4">Crea tu cuenta y comienza a planificar tu próxima aventura.</p>
+            <a href="{{ route('register') }}" class="btn btn-light btn-lg rounded-pill px-5 fw-semibold">
+                Crear cuenta
+            </a>
+        </div>
+    </section>
+    @endguest
+
 @endsection
