@@ -66,15 +66,7 @@ class GuiaController extends Controller
         }
 
         // Procesar múltiples imágenes de galería
-        if ($request->hasFile('imagenes')) {
-            foreach ($request->file('imagenes') as $index => $imagen) {
-                $ruta = $imagen->store('galeria/guias', 'public');
-                $guia->imagenes()->create([
-                    'ruta' => $ruta,
-                    'orden' => $index,
-                ]);
-            }
-        }
+        $this->guardarImagenesGaleria($guia, $request, 'galeria/guias');
 
         return redirect()->route('guias.index')
             ->with('success', 'Guía turístico creado exitosamente.');
@@ -141,16 +133,7 @@ class GuiaController extends Controller
         }
 
         // Procesar múltiples imágenes de galería
-        if ($request->hasFile('imagenes')) {
-            foreach ($request->file('imagenes') as $index => $imagen) {
-                $nombreImg = time() . '_' . uniqid() . '_' . $index . '.' . $imagen->getClientOriginalExtension();
-                $imagen->move(public_path('imagenes/galeria/guias'), $nombreImg);
-                $guia->imagenes()->create([
-                    'ruta' => 'imagenes/galeria/guias/' . $nombreImg,
-                    'orden' => $index,
-                ]);
-            }
-        }
+        $this->guardarImagenesGaleria($guia, $request, 'galeria/guias');
 
         return redirect()->route('guias.index')
             ->with('success', 'Guía turístico actualizado exitosamente.');
