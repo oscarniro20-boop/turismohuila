@@ -53,16 +53,7 @@ class AgenciaController extends Controller
         $agencia = Agencia::create($datos);
 
         // Procesar múltiples imágenes de galería
-        if ($request->hasFile('imagenes')) {
-            foreach ($request->file('imagenes') as $index => $imagen) {
-                $nombreImg = time() . '_' . uniqid() . '_' . $index . '.' . $imagen->getClientOriginalExtension();
-                $imagen->move(public_path('imagenes/galeria/agencias'), $nombreImg);
-                $agencia->imagenes()->create([
-                    'ruta' => 'imagenes/galeria/agencias/' . $nombreImg,
-                    'orden' => $index,
-                ]);
-            }
-        }
+        $this->guardarImagenesGaleria($agencia, $request, 'galeria/agencias');
 
         $tourIds = $request->input('tours', []);
         $agencia->tours()->sync($tourIds);
@@ -124,16 +115,7 @@ class AgenciaController extends Controller
         $agencia->update($datos);
 
         // Procesar múltiples imágenes de galería
-        if ($request->hasFile('imagenes')) {
-            foreach ($request->file('imagenes') as $index => $imagen) {
-                $nombreImg = time() . '_' . uniqid() . '_' . $index . '.' . $imagen->getClientOriginalExtension();
-                $imagen->move(public_path('imagenes/galeria/agencias'), $nombreImg);
-                $agencia->imagenes()->create([
-                    'ruta' => 'imagenes/galeria/agencias/' . $nombreImg,
-                    'orden' => $index,
-                ]);
-            }
-        }
+        $this->guardarImagenesGaleria($agencia, $request, 'galeria/agencias');
 
         $tourIds = $request->input('tours', []);
         $agencia->tours()->sync($tourIds);
