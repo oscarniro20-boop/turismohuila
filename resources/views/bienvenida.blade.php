@@ -39,6 +39,72 @@
         </div>
     </div>
 
+    <div class="container py-5">
+        <h2 class="text-center mb-4" style="font-family: 'Fraunces', Georgia, serif; font-weight: 600;">Todo lo que necesitas para tu viaje</h2>
+        <div class="row g-3">
+            <div class="col-6 col-md-4 col-lg-2">
+                <a href="{{ route('lugares.index') }}" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm text-center py-4">
+                        <div class="card-body">
+                            <div class="display-5 mb-2" style="color: var(--color-primary);">🏞️</div>
+                            <h6 class="mb-0" style="color: var(--color-fg);">Lugares turísticos</h6>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <a href="{{ route('hoteles.index') }}" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm text-center py-4">
+                        <div class="card-body">
+                            <div class="display-5 mb-2" style="color: var(--color-primary);">🏨</div>
+                            <h6 class="mb-0" style="color: var(--color-fg);">Hoteles</h6>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <a href="{{ route('restaurantes.index') }}" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm text-center py-4">
+                        <div class="card-body">
+                            <div class="display-5 mb-2" style="color: var(--color-primary);">🍽️</div>
+                            <h6 class="mb-0" style="color: var(--color-fg);">Restaurantes</h6>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <a href="{{ route('tours.index') }}" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm text-center py-4">
+                        <div class="card-body">
+                            <div class="display-5 mb-2" style="color: var(--color-primary);">🚌</div>
+                            <h6 class="mb-0" style="color: var(--color-fg);">Tours</h6>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <a href="{{ route('guias.index') }}" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm text-center py-4">
+                        <div class="card-body">
+                            <div class="display-5 mb-2" style="color: var(--color-primary);">🗺️</div>
+                            <h6 class="mb-0" style="color: var(--color-fg);">Guías</h6>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <a href="{{ route('agencias.index') }}" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm text-center py-4">
+                        <div class="card-body">
+                            <div class="display-5 mb-2" style="color: var(--color-primary);">🧳</div>
+                            <h6 class="mb-0" style="color: var(--color-fg);">Agencias</h6>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
     @guest
     <!-- Banner para usuarios no autenticados -->
     <section class="py-5" style="background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));">
