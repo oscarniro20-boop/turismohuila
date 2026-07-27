@@ -34,10 +34,12 @@
                         <h4 class="mt-2 mb-1">{{ $cat['titulo'] }}</h4>
                         <p class="small mb-0" style="color: var(--color-muted-fg);">{{ $cat['desc'] }}</p>
                     </a>
-                </div>
-            @endforeach
         </div>
+    </div>
 
+    <div class="container py-5">
+        <h2 class="text-center mb-4" style="font-family: 'Fraunces', Georgia, serif; font-weight: 600;">Todo lo que necesitas para tu viaje</h2>
+        
         <div class="row g-3">
             @foreach([
                 ['icon'=>'🏞️','label'=>'Lugares','ruta'=>'lugares.index'],
