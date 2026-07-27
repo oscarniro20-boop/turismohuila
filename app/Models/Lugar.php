@@ -21,6 +21,8 @@ class Lugar extends Model
         'descripcion',
         'calificacion',
         'imagen',
+        'latitud',
+        'longitud',
     ];
 
     public function user()

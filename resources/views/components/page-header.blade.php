@@ -1,6 +1,6 @@
 @props(['titulo', 'descripcion' => null])
 
-<div class="position-relative overflow-hidden mb-4" style="border-bottom: 1px solid var(--color-border);">
+<div class="position-relative mb-4" style="border-bottom: 1px solid var(--color-border);">
     <div class="glow-decor" style="top:-60px; right:-60px; width:220px; height:220px; background: var(--color-secondary);"></div>
 
     <div class="container position-relative py-5" style="z-index:1;">
@@ -13,7 +13,12 @@
                     <p class="mb-0" style="color: var(--color-muted-fg);">{{ $descripcion }}</p>
                 @endif
             </div>
-            {{ $slot ?? '' }}
         </div>
     </div>
+    
+    @if(isset($actions))
+        <div class="container position-relative" style="z-index:2; margin-top: -1rem; margin-bottom: 1rem;">
+            {{ $actions }}
+        </div>
+    @endif
 </div>

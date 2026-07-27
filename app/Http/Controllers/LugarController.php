@@ -34,6 +34,8 @@ class LugarController extends Controller
             'nombre'       => 'required|string|max:255',
             'municipio'    => 'required|string|max:255',
             'categoria'    => 'required|string|max:100',
+            'latitud'      => 'nullable|numeric|between:-90,90',
+            'longitud'     => 'nullable|numeric|between:-180,180',
             'descripcion'  => 'required|string',
             'calificacion' => 'required|numeric|min:1|max:5',
             'imagen'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
@@ -92,6 +94,8 @@ class LugarController extends Controller
             'nombre'       => 'required|string|max:255',
             'municipio'    => 'required|string|max:255',
             'categoria'    => 'required|string|max:100',
+            'latitud'      => 'nullable|numeric|between:-90,90',
+            'longitud'     => 'nullable|numeric|between:-180,180',
             'descripcion'  => 'required|string',
             'calificacion' => 'required|numeric|min:1|max:5',
             'imagen'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
@@ -139,5 +143,11 @@ class LugarController extends Controller
 
         return redirect()->route('lugares.index')
             ->with('success', 'Lugar eliminado exitosamente.');
+    }
+
+    public function mapa()
+    {
+        $lugares = Lugar::whereNotNull('latitud')->whereNotNull('longitud')->get();
+        return view('mapa', compact('lugares'));
     }
 }

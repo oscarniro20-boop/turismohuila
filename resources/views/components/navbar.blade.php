@@ -7,6 +7,7 @@
             </a>
             @php
                 $navItems = [
+                    'mapa' => ['label' => 'Mapa', 'match' => 'mapa*'],
                     'lugares.index' => ['label' => 'Lugares', 'match' => 'lugares*'],
                     'hoteles.index' => ['label' => 'Hoteles', 'match' => 'hoteles*'],
                     'restaurantes.index' => ['label' => 'Restaurantes', 'match' => 'restaurantes*'],

@@ -14,9 +14,9 @@
                 <p><strong>ID de referencia:</strong> #{{ $resena->referencia_id }}</p>
                 <p><strong>Usuario:</strong> {{ $resena->user->name ?? 'Usuario #'.$resena->user_id }}</p>
                 <p><strong>Calificación:</strong> 
-                    @for($i = 1; $i <= 5; $i++)
-                        <span class="text-warning">{{ $i <= $resena->calificacion ? '⭐' : '☆' }}</span>
-                    @endfor
+                    <span class="text-warning">
+                        <x-estrellas :calificacion="$resena->calificacion" />
+                    </span>
                 </p>
                 <hr>
                 <p>{{ $resena->comentario }}</p>

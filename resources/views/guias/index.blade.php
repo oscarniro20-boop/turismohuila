@@ -3,26 +3,20 @@
 @section('title', 'Guías Turísticos - TurismoHuila')
 
 @section('content')
-<div class="container py-5">
-    <p class="text-uppercase small fw-medium mb-2" style="letter-spacing: 0.08em; color: var(--color-muted-fg);">
-        — TurismoHuila
-    </p>
-    <h1 class="mb-3" style="font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: clamp(1.75rem, 4vw, 2.5rem); color: var(--color-fg);">
-        Guías turísticos
-    </h1>
-    <p class="mb-4" style="max-width: 640px; color: var(--color-muted-fg);">
-        Expertos locales que harán de tu visita una experiencia inolvidable.
-    </p>
-
+<x-page-header titulo="Guías turísticos" descripcion="Expertos locales que harán de tu visita una experiencia inolvidable.">
     @auth
         @if(auth()->user()->esAdmin())
-            <a href="{{ route('guias.create') }}" class="btn border-0 mb-4"
-               style="background-color: var(--color-primary); color:#fff; border-radius: 2rem; padding: .6rem 1.5rem;">
-                + Nuevo Guía
-            </a>
+            <x-slot:actions>
+                <a href="{{ route('guias.create') }}" class="btn border-0"
+                   style="background-color: var(--color-primary); color:#fff; border-radius: 2rem; padding: .6rem 1.5rem;">
+                    + Nuevo Guía
+                </a>
+            </x-slot:actions>
         @endif
     @endauth
+</x-page-header>
 
+<div class="container pb-5">
     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 mt-1">
         @forelse($guias as $guia)
             <div class="col tarjeta-item">

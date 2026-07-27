@@ -21,9 +21,7 @@
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <span class="badge bg-success text-capitalize">{{ ucfirst($resena->tipo) }}</span>
                         <span class="text-warning fw-bold">
-                            @for($i = 1; $i <= 5; $i++)
-                                {{ $i <= $resena->calificacion ? '★' : '☆' }}
-                            @endfor
+                            <x-estrellas :calificacion="$resena->calificacion" />
                         </span>
                     </div>
                     <div class="card-body">

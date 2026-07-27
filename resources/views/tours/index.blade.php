@@ -17,7 +17,6 @@
 </x-page-header>
 
 <div class="container pb-5">
-    @include('partials.filtro-municipio', ['rutaIndex' => 'tours.index', 'municipios' => $municipios])
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 mt-1">
         @forelse($tours as $tour)

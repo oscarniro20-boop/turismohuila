@@ -37,9 +37,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <strong>{{ $resena->user->name }}</strong>
                                 <span class="text-warning">
-                                    @for($i = 1; $i <= 5; $i++)
-                                        {{ $i <= $resena->calificacion ? '★' : '☆' }}
-                                    @endfor
+                                    <x-estrellas :calificacion="$resena->calificacion" />
                                 </span>
                             </div>
                             <p class="mb-0 mt-1">{{ $resena->comentario }}</p>
