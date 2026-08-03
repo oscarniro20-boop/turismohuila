@@ -18,4 +18,40 @@
             </div>
         </div>
     </div>
+
+    <div class="container py-5">
+        <div class="row g-4 mb-5">
+            @foreach([
+                ['icon'=>'🏔️','titulo'=>'Naturaleza','desc'=>'Desiertos, cascadas y termales.','ruta'=>'lugares.index'],
+                ['icon'=>'🏛️','titulo'=>'Cultura','desc'=>'San Agustín, arte precolombino.','ruta'=>'lugares.index'],
+                ['icon'=>'🌊','titulo'=>'Aventura','desc'=>'Rafting, pesca y astroturismo.','ruta'=>'tours.index'],
+            ] as $cat)
+                <div class="col-md-4">
+                    <a href="{{ route($cat['ruta']) }}" class="text-decoration-none d-block p-4 rounded-4 h-100 hover-lift" style="background: var(--color-muted); color: var(--color-fg);">
+                        <div style="font-size: 2.5rem;">{{ $cat['icon'] }}</div>
+                        <h4 class="mt-2 mb-1">{{ $cat['titulo'] }}</h4>
+                        <p class="small mb-0" style="color: var(--color-muted-fg);">{{ $cat['desc'] }}</p>
+                    </a>
+                </div>
+            @endforeach
+        </div>
+
+        <div class="row g-3">
+            @foreach([
+                ['icon'=>'🏞️','label'=>'Lugares','ruta'=>'lugares.index'],
+                ['icon'=>'🏨','label'=>'Hoteles','ruta'=>'hoteles.index'],
+                ['icon'=>'🍽️','label'=>'Restaurantes','ruta'=>'restaurantes.index'],
+                ['icon'=>'🚌','label'=>'Tours','ruta'=>'tours.index'],
+                ['icon'=>'🗺️','label'=>'Guías','ruta'=>'guias.index'],
+                ['icon'=>'🧳','label'=>'Agencias','ruta'=>'agencias.index'],
+            ] as $mod)
+                <div class="col-6 col-md-2 text-center">
+                    <a href="{{ route($mod['ruta']) }}" class="text-decoration-none d-block p-3 rounded-3" style="color: var(--color-fg); border: 1px solid var(--color-border);">
+                        <div style="font-size: 1.75rem;">{{ $mod['icon'] }}</div>
+                        <div class="small mt-1">{{ $mod['label'] }}</div>
+                    </a>
+                </div>
+            @endforeach
+        </div>
+    </div>
 @endsection
