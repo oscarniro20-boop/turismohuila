@@ -4,11 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@theme {
-  --font-serif: 'Fraunces', serif;
-  --font-sans: 'Inter', sans-serif;
-}
-
 :root {
   --color-bg: oklch(0.975 0.014 85);       /* crema */
   --color-fg: oklch(0.22 0.02 55);         /* carbón cálido */
