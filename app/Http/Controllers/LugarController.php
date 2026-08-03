@@ -4,7 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Lugar;
 use App\Models\LugarImagen;
+use App\Models\Hotel;
+use App\Models\Restaurante;
+use App\Models\Tour;
+use App\Models\Guia;
+use App\Models\Agencia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LugarController extends Controller
 {
@@ -37,7 +43,6 @@ class LugarController extends Controller
             'latitud'      => 'nullable|numeric|between:-90,90',
             'longitud'     => 'nullable|numeric|between:-180,180',
             'descripcion'  => 'required|string',
-            'calificacion' => 'required|numeric|min:1|max:5',
             'imagen'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
@@ -53,7 +58,7 @@ class LugarController extends Controller
         $lugar = Lugar::create($datos);
 
         // Guardar imágenes adicionales
-        $this->guardarImagenesGaleria($lugar, $request, 'imagenes/lugares');
+        $this->guardarImagenesGaleria($lugar, $request, 'galeria/lugares');
 
         return redirect()->route('lugares.index')
             ->with('success', 'Lugar creado exitosamente.');
@@ -67,18 +72,11 @@ class LugarController extends Controller
 
     public function edit(Lugar $lugar)
     {
-        if (!auth()->user()->esAdmin() && $lugar->user_id !== auth()->id()) {
-            abort(403, 'No puedes editar un lugar que no creaste.');
-        }
         return view('lugares.edit', compact('lugar'));
     }
 
     public function update(Request $request, Lugar $lugar)
     {
-        if (!auth()->user()->esAdmin() && $lugar->user_id !== auth()->id()) {
-            abort(403, 'No puedes editar un lugar que no creaste.');
-        }
-
         $request->validate([
             'nombre'       => 'required|string|max:255',
             'municipio'    => 'required|string|max:255',
@@ -86,7 +84,6 @@ class LugarController extends Controller
             'latitud'      => 'nullable|numeric|between:-90,90',
             'longitud'     => 'nullable|numeric|between:-180,180',
             'descripcion'  => 'required|string',
-            'calificacion' => 'required|numeric|min:1|max:5',
             'imagen'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
@@ -106,7 +103,7 @@ class LugarController extends Controller
             $lugar->imagenes()->delete();
             
             // Guardar nuevas imágenes
-            $this->guardarImagenesGaleria($lugar, $request, 'imagenes/lugares');
+            $this->guardarImagenesGaleria($lugar, $request, 'galeria/lugares');
         }
 
         return redirect()->route('lugares.index')
@@ -115,10 +112,6 @@ class LugarController extends Controller
 
     public function destroy(Lugar $lugar)
     {
-        if (!auth()->user()->esAdmin() && $lugar->user_id !== auth()->id()) {
-            abort(403, 'No puedes eliminar un lugar que no creaste.');
-        }
-
         $lugar->delete();
 
         return redirect()->route('lugares.index')
@@ -127,7 +120,32 @@ class LugarController extends Controller
 
     public function mapa()
     {
-        $lugares = Lugar::whereNotNull('latitud')->whereNotNull('longitud')->get();
-        return view('mapa', compact('lugares'));
+        $config = [
+            'lugar'       => ['modelo' => Lugar::class,       'sub' => 'municipio', 'ruta' => 'lugares.show',       'icono' => '📍'],
+            'hotel'       => ['modelo' => Hotel::class,       'sub' => 'municipio', 'ruta' => 'hoteles.show',       'icono' => '🏨'],
+            'restaurante' => ['modelo' => Restaurante::class, 'sub' => 'municipio', 'ruta' => 'restaurantes.show',  'icono' => '🍽️'],
+            'tour'        => ['modelo' => Tour::class,        'sub' => 'municipio', 'ruta' => 'tours.show',         'icono' => '🚌'],
+            'guia'        => ['modelo' => Guia::class,        'sub' => 'zonas',     'ruta' => 'guias.show',         'icono' => '🎯'],
+            'agencia'     => ['modelo' => Agencia::class,     'sub' => 'municipio', 'ruta' => 'agencias.show',      'icono' => '🧳'],
+        ];
+
+        $lugaresMapa = collect();
+
+        foreach ($config as $tipo => $c) {
+            $registros = $c['modelo']::whereNotNull('latitud')->whereNotNull('longitud')->get();
+            $lugaresMapa = $lugaresMapa->merge($registros->map(function ($item) use ($c, $tipo) {
+                return [
+                    'nombre'    => $item->nombre,
+                    'municipio' => $item->{$c['sub']} ?? '',
+                    'lat'       => (float) $item->latitud,
+                    'lng'       => (float) $item->longitud,
+                    'url'       => route($c['ruta'], $item),
+                    'icono'     => $c['icono'],
+                    'tipo'      => $tipo,
+                ];
+            }));
+        }
+
+        return view('mapa', compact('lugaresMapa'));
     }
 }

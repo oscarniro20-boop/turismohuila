@@ -28,7 +28,7 @@ document.querySelectorAll('[data-vue-app]').forEach(el => {
         methods: {
             puedeEditar(item) {
                 if (this.userRol === 'admin') return true;
-                if (this.userRol === 'prestador' && item.user_id === this.userId) return true;
+                if (item.user_id === this.userId) return true;
                 return false;
             },
             eliminar(event) {

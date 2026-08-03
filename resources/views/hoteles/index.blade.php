@@ -25,7 +25,7 @@
                     :imagen="$hotel->imagen ? asset($hotel->imagen) : null"
                     :titulo="$hotel->nombre"
                     :ubicacion="$hotel->municipio"
-                    :rating="$hotel->estrellas"
+                    :rating="$hotel->resenas_avg_calificacion"
                     :descripcion="Str::limit($hotel->descripcion, 110)"
                     :precio="$hotel->precio_noche"
                     precioLabel="/ noche"

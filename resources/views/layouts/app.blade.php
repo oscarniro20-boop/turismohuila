@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('styles')
 </head>
 <body>
     @include('components.navbar')
@@ -47,6 +48,7 @@
                         <li><a href="{{ route('tours.index') }}" class="text-white text-decoration-none" style="opacity: 0.9;">Tours</a></li>
                         <li><a href="{{ route('agencias.index') }}" class="text-white text-decoration-none" style="opacity: 0.9;">Agencias</a></li>
                         <li><a href="{{ route('guias.index') }}" class="text-white text-decoration-none" style="opacity: 0.9;">Guías turísticos</a></li>
+                        <li><a href="{{ route('mapa') }}" class="text-white text-decoration-none" style="opacity: 0.9;">🗺️ Ver en el mapa</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4">
@@ -62,5 +64,6 @@
             <p class="mb-0 small text-center" style="opacity: 0.8;">© {{ date('Y') }} TurismoHuila. Todos los derechos reservados.</p>
         </div>
     </footer>
+    @stack('scripts')
 </body>
 </html>

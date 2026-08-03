@@ -47,42 +47,9 @@
                                 @error('municipio')
                                     <div class="text-danger small mt-1">{{ $message }}</div>
                                 @enderror
-                                <option value="Acevedo" {{ old('municipio', $restaurante->municipio) == 'Acevedo' ? 'selected' : '' }}>Acevedo</option>
-                                <option value="Aipe" {{ old('municipio', $restaurante->municipio) == 'Aipe' ? 'selected' : '' }}>Aipe</option>
-                                <option value="Algeciras" {{ old('municipio', $restaurante->municipio) == 'Algeciras' ? 'selected' : '' }}>Algeciras</option>
-                                <option value="Altamira" {{ old('municipio', $restaurante->municipio) == 'Altamira' ? 'selected' : '' }}>Altamira</option>
-                                <option value="Baraya" {{ old('municipio', $restaurante->municipio) == 'Baraya' ? 'selected' : '' }}>Baraya</option>
-                                <option value="Campoalegre" {{ old('municipio', $restaurante->municipio) == 'Campoalegre' ? 'selected' : '' }}>Campoalegre</option>
-                                <option value="Colombia" {{ old('municipio', $restaurante->municipio) == 'Colombia' ? 'selected' : '' }}>Colombia</option>
-                                <option value="Elías" {{ old('municipio', $restaurante->municipio) == 'Elías' ? 'selected' : '' }}>Elías</option>
-                                <option value="Garzón" {{ old('municipio', $restaurante->municipio) == 'Garzón' ? 'selected' : '' }}>Garzón</option>
-                                <option value="Gigante" {{ old('municipio', $restaurante->municipio) == 'Gigante' ? 'selected' : '' }}>Gigante</option>
-                                <option value="Guadalupe" {{ old('municipio', $restaurante->municipio) == 'Guadalupe' ? 'selected' : '' }}>Guadalupe</option>
-                                <option value="Hobo" {{ old('municipio', $restaurante->municipio) == 'Hobo' ? 'selected' : '' }}>Hobo</option>
-                                <option value="Iquira" {{ old('municipio', $restaurante->municipio) == 'Iquira' ? 'selected' : '' }}>Iquira</option>
-                                <option value="Íquira" {{ old('municipio', $restaurante->municipio) == 'Íquira' ? 'selected' : '' }}>Íquira</option>
-                                <option value="Isnos" {{ old('municipio', $restaurante->municipio) == 'Isnos' ? 'selected' : '' }}>Isnos</option>
-                                <option value="La Argentina" {{ old('municipio', $restaurante->municipio) == 'La Argentina' ? 'selected' : '' }}>La Argentina</option>
-                                <option value="La Plata" {{ old('municipio', $restaurante->municipio) == 'La Plata' ? 'selected' : '' }}>La Plata</option>
-                                <option value="Nátaga" {{ old('municipio', $restaurante->municipio) == 'Nátaga' ? 'selected' : '' }}>Nátaga</option>
-                                <option value="Neiva" {{ old('municipio', $restaurante->municipio) == 'Neiva' ? 'selected' : '' }}>Neiva</option>
-                                <option value="Oporapa" {{ old('municipio', $restaurante->municipio) == 'Oporapa' ? 'selected' : '' }}>Oporapa</option>
-                                <option value="Paicol" {{ old('municipio', $restaurante->municipio) == 'Paicol' ? 'selected' : '' }}>Paicol</option>
-                                <option value="Palermo" {{ old('municipio', $restaurante->municipio) == 'Palermo' ? 'selected' : '' }}>Palermo</option>
-                                <option value="Palestina" {{ old('municipio', $restaurante->municipio) == 'Palestina' ? 'selected' : '' }}>Palestina</option>
-                                <option value="Pitalito" {{ old('municipio', $restaurante->municipio) == 'Pitalito' ? 'selected' : '' }}>Pitalito</option>
-                                <option value="Rivera" {{ old('municipio', $restaurante->municipio) == 'Rivera' ? 'selected' : '' }}>Rivera</option>
-                                <option value="Saladoblanco" {{ old('municipio', $restaurante->municipio) == 'Saladoblanco' ? 'selected' : '' }}>Saladoblanco</option>
-                                <option value="San Agustín" {{ old('municipio', $restaurante->municipio) == 'San Agustín' ? 'selected' : '' }}>San Agustín</option>
-                                <option value="Santa María" {{ old('municipio', $restaurante->municipio) == 'Santa María' ? 'selected' : '' }}>Santa María</option>
-                                <option value="Suaza" {{ old('municipio', $restaurante->municipio) == 'Suaza' ? 'selected' : '' }}>Suaza</option>
-                                <option value="Tarqui" {{ old('municipio', $restaurante->municipio) == 'Tarqui' ? 'selected' : '' }}>Tarqui</option>
-                                <option value="Tesalia" {{ old('municipio', $restaurante->municipio) == 'Tesalia' ? 'selected' : '' }}>Tesalia</option>
-                                <option value="Tello" {{ old('municipio', $restaurante->municipio) == 'Tello' ? 'selected' : '' }}>Tello</option>
-                                <option value="Teruel" {{ old('municipio', $restaurante->municipio) == 'Teruel' ? 'selected' : '' }}>Teruel</option>
-                                <option value="Timana" {{ old('municipio', $restaurante->municipio) == 'Timana' ? 'selected' : '' }}>Timana</option>
-                                <option value="Villavieja" {{ old('municipio', $restaurante->municipio) == 'Villavieja' ? 'selected' : '' }}>Villavieja</option>
-                                <option value="Yaguará" {{ old('municipio', $restaurante->municipio) == 'Yaguará' ? 'selected' : '' }}>Yaguará</option>
+                                @foreach(config('municipios.huila') as $m)
+                                    <option value="{{ $m }}" {{ old('municipio', $restaurante->municipio) == $m ? 'selected' : '' }}>{{ $m }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
@@ -102,6 +69,21 @@
                             </select>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Latitud (opcional)</label>
+                            <input type="number" step="any" name="latitud" class="form-control"
+                                placeholder="Ej: 2.5359" value="{{ old('latitud', $restaurante->latitud ?? '') }}">
+                            @error('latitud')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Longitud (opcional)</label>
+                            <input type="number" step="any" name="longitud" class="form-control"
+                                placeholder="Ej: -75.5277" value="{{ old('longitud', $restaurante->longitud ?? '') }}">
+                            @error('longitud')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+                        </div>
+                    </div>
+                    <small class="text-muted d-block mb-3">Puedes obtenerlas en Google Maps: clic derecho sobre el punto → copiar coordenadas.</small>
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold">Precio promedio ($)</label>

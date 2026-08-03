@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
 
 class GaleriaImagenService
 {
@@ -14,12 +13,18 @@ class GaleriaImagenService
     public function guardar(Model $entidad, array $imagenes, string $directorio): void
     {
         $orden = (int) $entidad->imagenes()->max('orden');
+        $destino = public_path($directorio);
+
+        if (!is_dir($destino)) {
+            mkdir($destino, 0755, true);
+        }
 
         foreach ($imagenes as $imagen) {
-            $ruta = Storage::disk('public')->putFile($directorio, $imagen);
+            $nombre = time() . '_' . uniqid() . '.' . $imagen->getClientOriginalExtension();
+            $imagen->move($destino, $nombre);
 
             $entidad->imagenes()->create([
-                'ruta' => $ruta,
+                'ruta' => $directorio . '/' . $nombre,
                 'orden' => ++$orden,
             ]);
         }
@@ -46,9 +51,7 @@ class GaleriaImagenService
     {
         $ruta = ltrim((string) $imagen->ruta, '/');
 
-        if (Storage::disk('public')->exists($ruta)) {
-            Storage::disk('public')->delete($ruta);
-        } elseif (File::exists(public_path($ruta))) {
+        if (File::exists(public_path($ruta))) {
             File::delete(public_path($ruta));
         }
 

@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::table('lugares', function (Blueprint $table) {
             if (!Schema::hasColumn('lugares', 'latitud')) {
-                $table->decimal('latitud', 10, 7)->nullable()->after('categoria');
+                $table->decimal('latitud', 10, 7)->nullable()->after('municipio');
             }
             if (!Schema::hasColumn('lugares', 'longitud')) {
                 $table->decimal('longitud', 10, 7)->nullable()->after('latitud');

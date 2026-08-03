@@ -24,6 +24,8 @@ class Tour extends Model
         'cupo_maximo',
         'telefono_contacto',
         'imagen',
+        'latitud',
+        'longitud',
     ];
 
     public function resenas()

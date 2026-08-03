@@ -1,45 +1,50 @@
 @extends('layouts.app')
-
 @section('title', 'Mapa - TurismoHuila')
-
 @section('content')
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <div class="container py-4">
-    <div class="mb-4">
-        <h1 class="fw-bold" style="color: var(--color-primary);">Mapa de Lugares Turísticos</h1>
-        <p class="text-muted">Ubicación de los lugares turísticos del Huila registrados con coordenadas.</p>
-    </div>
-
-    @if($lugaresMapa->isEmpty())
-        <div class="alert alert-warning">
-            Todavía no hay lugares con coordenadas registradas. Agrega latitud y longitud al crear o editar un lugar para que aparezca aquí.
-        </div>
-    @else
-        <div id="mapa-huila" style="height: 560px; border-radius: 12px;"></div>
-    @endif
+    <h1 class="h3 mb-3" style="font-family:'Fraunces',serif;">🗺️ Mapa de Servicios Turísticos</h1>
+    <div id="mapa-huila" style="height: 500px; border-radius: 1rem;"></div>
 </div>
-
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    const lugares = @json($lugaresMapa);
+const puntos = @json($lugaresMapa);
 
-    if (lugares.length) {
-        const centro = [
-            lugares.reduce((s, l) => s + l.lat, 0) / lugares.length,
-            lugares.reduce((s, l) => s + l.lng, 0) / lugares.length,
-        ];
+const colores = {
+    lugar: '#2E7D32',
+    hotel: '#1565C0',
+    restaurante: '#C62828',
+    tour: '#EF6C00',
+    guia: '#6A1B9A',
+    agencia: '#00838F',
+};
 
-        const mapa = L.map('mapa-huila').setView(centro, 9);
+function crearPin(color, emoji) {
+    const svg = `<svg width="34" height="44" viewBox="0 0 34 44" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17 0C7.6 0 0 7.6 0 17c0 12.4 17 27 17 27s17-14.6 17-27C34 7.6 26.4 0 17 0z" fill="${color}"/>
+        <circle cx="17" cy="16" r="11" fill="white"/>
+        <text x="17" y="21" font-size="14" text-anchor="middle">${emoji}</text>
+    </svg>`;
+    return L.divIcon({
+        html: svg,
+        className: '',
+        iconSize: [34, 44],
+        iconAnchor: [17, 44],
+        popupAnchor: [0, -40],
+    });
+}
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap'
-        }).addTo(mapa);
+const centro = puntos.length
+    ? [puntos.reduce((s,p)=>s+p.lat,0)/puntos.length, puntos.reduce((s,p)=>s+p.lng,0)/puntos.length]
+    : [2.5359, -75.5277];
 
-        lugares.forEach(function (l) {
-            L.marker([l.lat, l.lng]).addTo(mapa)
-                .bindPopup('<strong>' + l.nombre + '</strong><br>' + l.municipio + '<br><a href="' + l.url + '">Ver más</a>');
-        });
-    }
+const mapa = L.map('mapa-huila').setView(centro, 9);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(mapa);
+
+puntos.forEach(p => {
+    L.marker([p.lat, p.lng], { icon: crearPin(colores[p.tipo] || '#555', p.icono) })
+        .addTo(mapa)
+        .bindPopup(`<strong>${p.nombre}</strong><br>${p.municipio}<br><a href="${p.url}">Ver más</a>`);
+});
 </script>
 @endsection

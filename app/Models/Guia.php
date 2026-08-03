@@ -22,6 +22,8 @@ class Guia extends Model
         'email',
         'telefono',
         'activo',
+        'latitud',
+        'longitud',
     ];
 
     protected $casts = [

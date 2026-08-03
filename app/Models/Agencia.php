@@ -17,6 +17,8 @@ class Agencia extends Model
         'whatsapp',
         'email',
         'imagen',
+        'latitud',
+        'longitud',
     ];
 
     public function tours(): BelongsToMany

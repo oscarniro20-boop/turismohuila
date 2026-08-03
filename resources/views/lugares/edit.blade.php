@@ -1,3 +1,4 @@
+
 @extends('layouts.app')
 
 @section('title', 'Editar Lugar - TurismoHuila')
@@ -47,42 +48,9 @@
                                 @error('municipio')
                                     <div class="text-danger small mt-1">{{ $message }}</div>
                                 @enderror
-                                <option value="Acevedo" {{ old('municipio', $lugar->municipio) == 'Acevedo' ? 'selected' : '' }}>Acevedo</option>
-                                <option value="Aipe" {{ old('municipio', $lugar->municipio) == 'Aipe' ? 'selected' : '' }}>Aipe</option>
-                                <option value="Algeciras" {{ old('municipio', $lugar->municipio) == 'Algeciras' ? 'selected' : '' }}>Algeciras</option>
-                                <option value="Altamira" {{ old('municipio', $lugar->municipio) == 'Altamira' ? 'selected' : '' }}>Altamira</option>
-                                <option value="Baraya" {{ old('municipio', $lugar->municipio) == 'Baraya' ? 'selected' : '' }}>Baraya</option>
-                                <option value="Campoalegre" {{ old('municipio', $lugar->municipio) == 'Campoalegre' ? 'selected' : '' }}>Campoalegre</option>
-                                <option value="Colombia" {{ old('municipio', $lugar->municipio) == 'Colombia' ? 'selected' : '' }}>Colombia</option>
-                                <option value="Elías" {{ old('municipio', $lugar->municipio) == 'Elías' ? 'selected' : '' }}>Elías</option>
-                                <option value="Garzón" {{ old('municipio', $lugar->municipio) == 'Garzón' ? 'selected' : '' }}>Garzón</option>
-                                <option value="Gigante" {{ old('municipio', $lugar->municipio) == 'Gigante' ? 'selected' : '' }}>Gigante</option>
-                                <option value="Guadalupe" {{ old('municipio', $lugar->municipio) == 'Guadalupe' ? 'selected' : '' }}>Guadalupe</option>
-                                <option value="Hobo" {{ old('municipio', $lugar->municipio) == 'Hobo' ? 'selected' : '' }}>Hobo</option>
-                                <option value="Iquira" {{ old('municipio', $lugar->municipio) == 'Iquira' ? 'selected' : '' }}>Iquira</option>
-                                <option value="Íquira" {{ old('municipio', $lugar->municipio) == 'Íquira' ? 'selected' : '' }}>Íquira</option>
-                                <option value="Isnos" {{ old('municipio', $lugar->municipio) == 'Isnos' ? 'selected' : '' }}>Isnos</option>
-                                <option value="La Argentina" {{ old('municipio', $lugar->municipio) == 'La Argentina' ? 'selected' : '' }}>La Argentina</option>
-                                <option value="La Plata" {{ old('municipio', $lugar->municipio) == 'La Plata' ? 'selected' : '' }}>La Plata</option>
-                                <option value="Nátaga" {{ old('municipio', $lugar->municipio) == 'Nátaga' ? 'selected' : '' }}>Nátaga</option>
-                                <option value="Neiva" {{ old('municipio', $lugar->municipio) == 'Neiva' ? 'selected' : '' }}>Neiva</option>
-                                <option value="Oporapa" {{ old('municipio', $lugar->municipio) == 'Oporapa' ? 'selected' : '' }}>Oporapa</option>
-                                <option value="Paicol" {{ old('municipio', $lugar->municipio) == 'Paicol' ? 'selected' : '' }}>Paicol</option>
-                                <option value="Palermo" {{ old('municipio', $lugar->municipio) == 'Palermo' ? 'selected' : '' }}>Palermo</option>
-                                <option value="Palestina" {{ old('municipio', $lugar->municipio) == 'Palestina' ? 'selected' : '' }}>Palestina</option>
-                                <option value="Pitalito" {{ old('municipio', $lugar->municipio) == 'Pitalito' ? 'selected' : '' }}>Pitalito</option>
-                                <option value="Rivera" {{ old('municipio', $lugar->municipio) == 'Rivera' ? 'selected' : '' }}>Rivera</option>
-                                <option value="Saladoblanco" {{ old('municipio', $lugar->municipio) == 'Saladoblanco' ? 'selected' : '' }}>Saladoblanco</option>
-                                <option value="San Agustín" {{ old('municipio', $lugar->municipio) == 'San Agustín' ? 'selected' : '' }}>San Agustín</option>
-                                <option value="Santa María" {{ old('municipio', $lugar->municipio) == 'Santa María' ? 'selected' : '' }}>Santa María</option>
-                                <option value="Suaza" {{ old('municipio', $lugar->municipio) == 'Suaza' ? 'selected' : '' }}>Suaza</option>
-                                <option value="Tarqui" {{ old('municipio', $lugar->municipio) == 'Tarqui' ? 'selected' : '' }}>Tarqui</option>
-                                <option value="Tesalia" {{ old('municipio', $lugar->municipio) == 'Tesalia' ? 'selected' : '' }}>Tesalia</option>
-                                <option value="Tello" {{ old('municipio', $lugar->municipio) == 'Tello' ? 'selected' : '' }}>Tello</option>
-                                <option value="Teruel" {{ old('municipio', $lugar->municipio) == 'Teruel' ? 'selected' : '' }}>Teruel</option>
-                                <option value="Timana" {{ old('municipio', $lugar->municipio) == 'Timana' ? 'selected' : '' }}>Timana</option>
-                                <option value="Villavieja" {{ old('municipio', $lugar->municipio) == 'Villavieja' ? 'selected' : '' }}>Villavieja</option>
-                                <option value="Yaguará" {{ old('municipio', $lugar->municipio) == 'Yaguará' ? 'selected' : '' }}>Yaguará</option>
+                                @foreach(config('municipios.huila') as $m)
+                                    <option value="{{ $m }}" {{ old('municipio', $lugar->municipio) == $m ? 'selected' : '' }}>{{ $m }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -136,15 +104,6 @@
                         @endif
                         <input type="file" name="imagenes[]" class="form-control" accept="image/*" multiple>
                         <small class="text-muted">Selecciona nuevas imágenes para reemplazar la galería actual</small>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Calificación (0-5)</label>
-                        <input type="number" name="calificacion" class="form-control"
-                                min="0" max="5" step="0.1"
-                                value="{{ old('calificacion', $lugar->calificacion) }}">
-                        @error('calificacion')
-                            <div class="text-danger small mt-1">{{ $message }}</div>
-                        @enderror
                     </div>
                     <div class="d-flex justify-content-between">
                         <a href="{{ route('lugares.index') }}" class="btn btn-secondary">← Volver</a>

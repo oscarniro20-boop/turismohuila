@@ -24,7 +24,7 @@
                     :imagen="$agencia->imagen ? asset($agencia->imagen) : null"
                     :titulo="$agencia->nombre"
                     :ubicacion="$agencia->municipio . ' · ' . $agencia->tours_count . ' tours'"
-                    :rating="$agencia->calificacion_promedio"
+                    :rating="$agencia->resenas_avg_calificacion"
                     :totalResenas="$agencia->total_resenas"
                     :descripcion="Str::limit($agencia->descripcion, 110)"
                     :url="route('agencias.show', $agencia)"

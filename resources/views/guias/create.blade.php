@@ -119,6 +119,22 @@
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Latitud (opcional)</label>
+                            <input type="number" step="any" name="latitud" class="form-control"
+                                placeholder="Ej: 2.5359" value="{{ old('latitud') }}">
+                            @error('latitud')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Longitud (opcional)</label>
+                            <input type="number" step="any" name="longitud" class="form-control"
+                                placeholder="Ej: -75.5277" value="{{ old('longitud') }}">
+                            @error('longitud')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+                        </div>
+                    </div>
+                    <small class="text-muted d-block mb-3">Puedes obtenerlas en Google Maps: clic derecho sobre el punto → copiar coordenadas.</small>
+
                     <div class="d-flex justify-content-between">
                         <a href="{{ route('guias.index') }}" class="btn btn-secondary">← Volver</a>
                         <button type="submit" class="btn btn-success">Guardar Guía</button>

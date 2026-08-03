@@ -39,12 +39,15 @@ class HotelController extends Controller
             'imagen'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'telefono'     => 'nullable|string|max:20',
             'direccion'    => 'nullable|string|max:255',
+            'latitud'      => 'nullable|numeric|between:-90,90',
+            'longitud'     => 'nullable|numeric|between:-180,180',
         ]);
 
         $data = $request->only([
             'nombre', 'descripcion', 'municipio',
             'precio_noche', 'estrellas',
-            'telefono', 'direccion'
+            'telefono', 'direccion',
+            'latitud', 'longitud',
         ]);
 
         if ($request->hasFile('imagen')) {
@@ -92,12 +95,15 @@ class HotelController extends Controller
             'imagen'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'telefono'     => 'nullable|string|max:20',
             'direccion'    => 'nullable|string|max:255',
+            'latitud'      => 'nullable|numeric|between:-90,90',
+            'longitud'     => 'nullable|numeric|between:-180,180',
         ]);
 
         $data = $request->only([
             'nombre', 'descripcion', 'municipio',
             'precio_noche', 'estrellas',
-            'telefono', 'direccion'
+            'telefono', 'direccion',
+            'latitud', 'longitud',
         ]);
 
         if ($request->hasFile('imagen')) {

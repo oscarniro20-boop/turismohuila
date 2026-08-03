@@ -24,7 +24,7 @@
                     :imagen="$guia->foto ? asset($guia->foto) : null"
                     :titulo="$guia->nombre"
                     :ubicacion="$guia->zonas ?? 'Guía turístico certificado'"
-                    :rating="$guia->calificacion_promedio"
+                    :rating="$guia->resenas_avg_calificacion"
                     :totalResenas="$guia->total_resenas"
                     :descripcion="Str::limit($guia->bio ?? $guia->experiencia_anios . ' años de experiencia · ' . $guia->idiomas, 110)"
                     :url="route('guias.show', $guia)"

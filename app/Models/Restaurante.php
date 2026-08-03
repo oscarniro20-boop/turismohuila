@@ -22,6 +22,8 @@ class Restaurante extends Model
         'imagen',
         'telefono',
         'direccion',
+        'latitud',
+        'longitud',
     ];
 
     public function resenas()

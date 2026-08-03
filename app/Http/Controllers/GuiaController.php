@@ -48,6 +48,8 @@ class GuiaController extends Controller
             'telefono' => 'nullable|string|max:20',
             'lugares' => 'nullable|array',
             'lugares.*' => 'exists:lugares,id',
+            'latitud'      => 'nullable|numeric|between:-90,90',
+            'longitud'     => 'nullable|numeric|between:-180,180',
         ]);
 
         $datos = $request->all();
@@ -108,6 +110,8 @@ class GuiaController extends Controller
             'telefono' => 'nullable|string|max:20',
             'lugares' => 'nullable|array',
             'lugares.*' => 'exists:lugares,id',
+            'latitud'      => 'nullable|numeric|between:-90,90',
+            'longitud'     => 'nullable|numeric|between:-180,180',
         ]);
 
         $datos = $request->except('foto', 'lugares');

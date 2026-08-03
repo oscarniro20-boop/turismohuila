@@ -40,12 +40,15 @@ class TourController extends Controller
             'incluye'      => 'required|string',
             'cupo_maximo'  => 'required|integer|min:1',
             'imagen'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'latitud'      => 'nullable|numeric|between:-90,90',
+            'longitud'     => 'nullable|numeric|between:-180,180',
         ]);
 
         $data = $request->only([
             'nombre', 'descripcion', 'municipio',
             'precio', 'duracion_dias', 'incluye',
-            'cupo_maximo'
+            'cupo_maximo',
+            'latitud', 'longitud',
         ]);
 
         if ($request->hasFile('imagen')) {
@@ -100,6 +103,8 @@ class TourController extends Controller
             'incluye'       => 'required|string',
             'cupo_maximo'   => 'required|integer|min:1',
             'imagen'        => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'latitud'      => 'nullable|numeric|between:-90,90',
+            'longitud'     => 'nullable|numeric|between:-180,180',
             'agencias'                 => 'nullable|array',
             'agencias.*'               => 'integer|exists:agencias,id',
             'paquetes.*.precio'        => 'nullable|numeric|min:0',
@@ -111,7 +116,8 @@ class TourController extends Controller
         $data = $request->only([
             'nombre', 'descripcion', 'municipio',
             'precio', 'duracion_dias', 'incluye',
-            'cupo_maximo'
+            'cupo_maximo',
+            'latitud', 'longitud',
         ]);
 
         if ($request->hasFile('imagen')) {

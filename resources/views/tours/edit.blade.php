@@ -117,42 +117,9 @@
                                 @error('municipio')
                                     <div class="text-danger small mt-1">{{ $message }}</div>
                                 @enderror
-                                <option value="Acevedo" {{ old('municipio', $tour->municipio) == 'Acevedo' ? 'selected' : '' }}>Acevedo</option>
-                                <option value="Aipe" {{ old('municipio', $tour->municipio) == 'Aipe' ? 'selected' : '' }}>Aipe</option>
-                                <option value="Algeciras" {{ old('municipio', $tour->municipio) == 'Algeciras' ? 'selected' : '' }}>Algeciras</option>
-                                <option value="Altamira" {{ old('municipio', $tour->municipio) == 'Altamira' ? 'selected' : '' }}>Altamira</option>
-                                <option value="Baraya" {{ old('municipio', $tour->municipio) == 'Baraya' ? 'selected' : '' }}>Baraya</option>
-                                <option value="Campoalegre" {{ old('municipio', $tour->municipio) == 'Campoalegre' ? 'selected' : '' }}>Campoalegre</option>
-                                <option value="Colombia" {{ old('municipio', $tour->municipio) == 'Colombia' ? 'selected' : '' }}>Colombia</option>
-                                <option value="Elías" {{ old('municipio', $tour->municipio) == 'Elías' ? 'selected' : '' }}>Elías</option>
-                                <option value="Garzón" {{ old('municipio', $tour->municipio) == 'Garzón' ? 'selected' : '' }}>Garzón</option>
-                                <option value="Gigante" {{ old('municipio', $tour->municipio) == 'Gigante' ? 'selected' : '' }}>Gigante</option>
-                                <option value="Guadalupe" {{ old('municipio', $tour->municipio) == 'Guadalupe' ? 'selected' : '' }}>Guadalupe</option>
-                                <option value="Hobo" {{ old('municipio', $tour->municipio) == 'Hobo' ? 'selected' : '' }}>Hobo</option>
-                                <option value="Iquira" {{ old('municipio', $tour->municipio) == 'Iquira' ? 'selected' : '' }}>Iquira</option>
-                                <option value="Íquira" {{ old('municipio', $tour->municipio) == 'Íquira' ? 'selected' : '' }}>Íquira</option>
-                                <option value="Isnos" {{ old('municipio', $tour->municipio) == 'Isnos' ? 'selected' : '' }}>Isnos</option>
-                                <option value="La Argentina" {{ old('municipio', $tour->municipio) == 'La Argentina' ? 'selected' : '' }}>La Argentina</option>
-                                <option value="La Plata" {{ old('municipio', $tour->municipio) == 'La Plata' ? 'selected' : '' }}>La Plata</option>
-                                <option value="Nátaga" {{ old('municipio', $tour->municipio) == 'Nátaga' ? 'selected' : '' }}>Nátaga</option>
-                                <option value="Neiva" {{ old('municipio', $tour->municipio) == 'Neiva' ? 'selected' : '' }}>Neiva</option>
-                                <option value="Oporapa" {{ old('municipio', $tour->municipio) == 'Oporapa' ? 'selected' : '' }}>Oporapa</option>
-                                <option value="Paicol" {{ old('municipio', $tour->municipio) == 'Paicol' ? 'selected' : '' }}>Paicol</option>
-                                <option value="Palermo" {{ old('municipio', $tour->municipio) == 'Palermo' ? 'selected' : '' }}>Palermo</option>
-                                <option value="Palestina" {{ old('municipio', $tour->municipio) == 'Palestina' ? 'selected' : '' }}>Palestina</option>
-                                <option value="Pitalito" {{ old('municipio', $tour->municipio) == 'Pitalito' ? 'selected' : '' }}>Pitalito</option>
-                                <option value="Rivera" {{ old('municipio', $tour->municipio) == 'Rivera' ? 'selected' : '' }}>Rivera</option>
-                                <option value="Saladoblanco" {{ old('municipio', $tour->municipio) == 'Saladoblanco' ? 'selected' : '' }}>Saladoblanco</option>
-                                <option value="San Agustín" {{ old('municipio', $tour->municipio) == 'San Agustín' ? 'selected' : '' }}>San Agustín</option>
-                                <option value="Santa María" {{ old('municipio', $tour->municipio) == 'Santa María' ? 'selected' : '' }}>Santa María</option>
-                                <option value="Suaza" {{ old('municipio', $tour->municipio) == 'Suaza' ? 'selected' : '' }}>Suaza</option>
-                                <option value="Tarqui" {{ old('municipio', $tour->municipio) == 'Tarqui' ? 'selected' : '' }}>Tarqui</option>
-                                <option value="Tesalia" {{ old('municipio', $tour->municipio) == 'Tesalia' ? 'selected' : '' }}>Tesalia</option>
-                                <option value="Tello" {{ old('municipio', $tour->municipio) == 'Tello' ? 'selected' : '' }}>Tello</option>
-                                <option value="Teruel" {{ old('municipio', $tour->municipio) == 'Teruel' ? 'selected' : '' }}>Teruel</option>
-                                <option value="Timana" {{ old('municipio', $tour->municipio) == 'Timana' ? 'selected' : '' }}>Timana</option>
-                                <option value="Villavieja" {{ old('municipio', $tour->municipio) == 'Villavieja' ? 'selected' : '' }}>Villavieja</option>
-                                <option value="Yaguará" {{ old('municipio', $tour->municipio) == 'Yaguará' ? 'selected' : '' }}>Yaguará</option>
+                                @foreach(config('municipios.huila') as $m)
+                                    <option value="{{ $m }}" {{ old('municipio', $tour->municipio) == $m ? 'selected' : '' }}>{{ $m }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
@@ -164,6 +131,21 @@
                             @enderror
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Latitud (opcional)</label>
+                            <input type="number" step="any" name="latitud" class="form-control"
+                                placeholder="Ej: 2.5359" value="{{ old('latitud', $tour->latitud ?? '') }}">
+                            @error('latitud')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Longitud (opcional)</label>
+                            <input type="number" step="any" name="longitud" class="form-control"
+                                placeholder="Ej: -75.5277" value="{{ old('longitud', $tour->longitud ?? '') }}">
+                            @error('longitud')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+                        </div>
+                    </div>
+                    <small class="text-muted d-block mb-3">Puedes obtenerlas en Google Maps: clic derecho sobre el punto → copiar coordenadas.</small>
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold">Precio por persona ($)</label>

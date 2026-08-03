@@ -19,7 +19,6 @@ class Lugar extends Model
         'municipio',
         'categoria',
         'descripcion',
-        'calificacion',
         'imagen',
         'latitud',
         'longitud',

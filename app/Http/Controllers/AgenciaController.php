@@ -40,9 +40,11 @@ class AgenciaController extends Controller
             'paquetes.*.duracion_dias' => 'nullable|integer|min:1',
             'paquetes.*.cupo_maximo'   => 'nullable|integer|min:1',
             'paquetes.*.descripcion'   => 'nullable|string',
+            'latitud'      => 'nullable|numeric|between:-90,90',
+            'longitud'     => 'nullable|numeric|between:-180,180',
         ]);
 
-        $datos = $request->only(['nombre', 'municipio', 'telefono_contacto', 'whatsapp', 'email']);
+        $datos = $request->only(['nombre', 'municipio', 'telefono_contacto', 'whatsapp', 'email', 'latitud', 'longitud']);
 
         if ($request->hasFile('imagen')) {
             $nombre = time() . '_' . $request->file('imagen')->getClientOriginalName();
@@ -102,9 +104,11 @@ class AgenciaController extends Controller
             'paquetes.*.duracion_dias' => 'nullable|integer|min:1',
             'paquetes.*.cupo_maximo'   => 'nullable|integer|min:1',
             'paquetes.*.descripcion'   => 'nullable|string',
+            'latitud'      => 'nullable|numeric|between:-90,90',
+            'longitud'     => 'nullable|numeric|between:-180,180',
         ]);
 
-        $datos = $request->only(['nombre', 'municipio', 'telefono_contacto', 'whatsapp', 'email']);
+        $datos = $request->only(['nombre', 'municipio', 'telefono_contacto', 'whatsapp', 'email', 'latitud', 'longitud']);
 
         if ($request->hasFile('imagen')) {
             $nombre = time() . '_' . $request->file('imagen')->getClientOriginalName();
