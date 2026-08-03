@@ -12,7 +12,7 @@ use App\Http\Controllers\AgenciaController;
 
 // Página de inicio
 Route::get('/', function () {
-    $heroLugar = \App\Models\Lugar::whereNotNull('imagen')->orderByDesc('calificacion')->first();
+    $heroLugar = \App\Models\Lugar::whereNotNull('imagen')->withAvg('resenas', 'calificacion')->orderByDesc('resenas_avg_calificacion')->first();
     return view('home', compact('heroLugar'));
 })->name('home');
 

@@ -51,7 +51,14 @@
                     <input type="text" name="municipio" class="form-control mb-2" placeholder="Municipio" required>
                     <input type="text" name="categoria" class="form-control mb-2" placeholder="Categoría" required>
                     <textarea name="descripcion" class="form-control mb-2" placeholder="Descripción" required></textarea>
-                    <input type="number" name="calificacion" step="0.1" min="1" max="5" class="form-control mb-2" placeholder="Calificación (1-5)" required>
+                    <div class="row">
+                        <div class="col-md-6 mb-2">
+                            <input type="number" name="latitud" step="any" class="form-control" placeholder="Latitud">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <input type="number" name="longitud" step="any" class="form-control" placeholder="Longitud">
+                        </div>
+                    </div>
                     <input type="file" name="imagen" class="form-control" accept="image/*">
                 </div>
                 <div class="modal-footer">

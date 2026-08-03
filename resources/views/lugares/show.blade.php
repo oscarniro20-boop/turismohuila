@@ -13,7 +13,7 @@
                     <h1 class="text-white fw-bold mb-1" style="font-family: 'Fraunces', Georgia, serif;">{{ $lugar->nombre }}</h1>
                     <div class="d-flex align-items-center gap-3 text-white">
                         <span>📍 {{ $lugar->municipio }}</span>
-                        <span>⭐ {{ number_format($lugar->calificacion_promedio, 1) }}</span>
+                        <span>⭐ {{ number_format($lugar->resenas->avg('calificacion') ?? 0, 1) }}</span>
                     </div>
                 </div>
             </div>
