@@ -56,27 +56,11 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // ── Rutas PÚBLICAS (todos pueden ver) ─────────────────────────────────────
-
-// ── Rutas PÚBLICAS (todos pueden ver) ─────────────────────────────────────
 Route::resource('lugares', LugarController::class)
     ->parameters(['lugares' => 'lugar'])
     ->only(['index', 'show']);
 
-Route::get('/mapa', function () {
-    $lugares = \App\Models\Lugar::whereNotNull('latitud')->whereNotNull('longitud')->get();
-
-    $lugaresMapa = $lugares->map(function ($lugar) {
-        return [
-            'nombre'    => $lugar->nombre,
-            'municipio' => $lugar->municipio,
-            'lat'       => (float) $lugar->latitud,
-            'lng'       => (float) $lugar->longitud,
-            'url'       => route('lugares.show', $lugar),
-        ];
-    });
-
-    return view('mapa', compact('lugaresMapa'));
-})->name('mapa');
+Route::get('/mapa', [LugarController::class, 'mapa'])->name('mapa');
 
 Route::resource('hoteles', HotelController::class)
     ->parameters(['hoteles' => 'hotel'])
@@ -122,45 +106,43 @@ Route::middleware('auth')->group(function () {
     Route::get('/resenas/nombre-servicio', [ResenaController::class, 'nombreServicio'])->name('resenas.nombre-servicio');
 });
 
-// Ruta de prueba JSON para verificar acceso de admin
-Route::get('/test/admin-check', function () {
-    if (!auth()->check()) {
+if (app()->environment('local')) {
+    // Ruta de prueba JSON para verificar acceso de admin
+    Route::get('/test/admin-check', function () {
+        if (!auth()->check()) {
+            return response()->json([
+                'error' => 'No autenticado',
+                'message' => 'Debes iniciar sesión para ver esta información'
+            ], 401);
+        }
+
+        $user = auth()->user();
+        
         return response()->json([
-            'error' => 'No autenticado',
-            'message' => 'Debes iniciar sesión para ver esta información'
-        ], 401);
-    }
+            'usuario' => [
+                'id' => $user->id,
+                'nombre' => $user->name,
+                'email' => $user->email,
+                'rol' => $user->rol,
+            ],
+            'verificaciones' => [
+                'auth()->user()->rol' => auth()->user()->rol,
+                'auth()->user()->esAdmin()' => auth()->user()->esAdmin(),
+                'es_admin' => auth()->user()->esAdmin() ? 'SÍ - Es admin' : 'NO - No es admin',
+            ],
+            'rutas_accesibles' => auth()->user()->esAdmin() ? [
+                'hoteles.create' => route('hoteles.create'),
+                'restaurantes.create' => route('restaurantes.create'),
+                'tours.create' => route('tours.create'),
+            ] : 'No accesible',
+            'botones_visibles' => auth()->user()->esAdmin() ? [
+                '+ Nuevo Hotel',
+                '+ Nuevo Restaurante',
+                '+ Nuevo Tour',
+            ] : 'No visibles',
+        ]);
+    })->middleware('auth')->name('test.admin-check');
 
-    $user = auth()->user();
-    
-    return response()->json([
-        'usuario' => [
-            'id' => $user->id,
-            'nombre' => $user->name,
-            'email' => $user->email,
-            'rol' => $user->rol,
-        ],
-        'verificaciones' => [
-            'auth()->user()->rol' => auth()->user()->rol,
-            'auth()->user()->esAdmin()' => auth()->user()->esAdmin(),
-            'es_admin' => auth()->user()->esAdmin() ? 'SÍ - Es admin' : 'NO - No es admin',
-        ],
-        'rutas_accesibles' => auth()->user()->esAdmin() ? [
-            'hoteles.create' => route('hoteles.create'),
-            'restaurantes.create' => route('restaurantes.create'),
-            'tours.create' => route('tours.create'),
-        ] : 'No accesible',
-        'botones_visibles' => auth()->user()->esAdmin() ? [
-            '+ Nuevo Hotel',
-            '+ Nuevo Restaurante',
-            '+ Nuevo Tour',
-        ] : 'No visibles',
-    ]);
-})->middleware('auth')->name('test.admin-check');
-
-// Ruta de prueba VISUAL para verificar acceso de admin
-Route::get('/test/admin-visual', function () {
-    return view('test-admin');
-})->middleware('auth')->name('test.admin-visual');
+}
 
 require __DIR__.'/auth.php';
