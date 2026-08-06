@@ -69,6 +69,12 @@
                                 Iniciar Sesión
                             </button>
                         </div>
+
+                        <div class="text-center mt-3">
+                            <a href="{{ route('password.request') }}" class="text-success text-decoration-none small">
+                                ¿Olvidaste tu contraseña?
+                            </a>
+                        </div>
                     </form>
                 </div>
 
