@@ -32,6 +32,12 @@ class Hotel extends Model
                     ->where('tipo', 'hotel');
     }
 
+    public function favoritos()
+    {
+        return $this->hasMany(Favorito::class, 'referencia_id')
+                    ->where('tipo', 'hotel');
+    }
+
     public function imagenes()
     {
         return $this->hasMany(HotelImagen::class)->orderBy('orden');

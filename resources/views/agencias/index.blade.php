@@ -30,6 +30,9 @@
                     :url="route('agencias.show', $agencia)"
                     :editUrl="auth()->check() && auth()->user()->esAdmin() ? route('agencias.edit', $agencia) : null"
                     :deleteUrl="auth()->check() && auth()->user()->esAdmin() ? route('agencias.destroy', $agencia) : null"
+                    favoritoTipo="agencia"
+                    :favoritoId="$agencia->id"
+                    :esFavorito="in_array($agencia->id, $favoritosIds ?? [])"
                 />
             </div>
         @empty

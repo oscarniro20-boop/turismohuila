@@ -9,6 +9,7 @@ use App\Http\Controllers\TourController;
 use App\Http\Controllers\ResenaController;
 use App\Http\Controllers\GuiaController;
 use App\Http\Controllers\AgenciaController;
+use App\Http\Controllers\FavoritoController;
 
 // Página de inicio
 Route::get('/', function () {
@@ -104,6 +105,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/mis-resenas', [ResenaController::class, 'misResenas'])->name('resenas.mis');
     Route::get('/resenas/nombre-servicio', [ResenaController::class, 'nombreServicio'])->name('resenas.nombre-servicio');
+    Route::post('/favoritos/toggle', [FavoritoController::class, 'toggle'])->name('favoritos.toggle');
+    Route::get('/mis-favoritos', [FavoritoController::class, 'index'])->name('favoritos.index');
 });
 
 if (app()->environment('local')) {

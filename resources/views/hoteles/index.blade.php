@@ -32,6 +32,9 @@
                     :url="route('hoteles.show', $hotel)"
                     :editUrl="auth()->check() && auth()->user()->esAdmin() ? route('hoteles.edit', $hotel) : null"
                     :deleteUrl="auth()->check() && auth()->user()->esAdmin() ? route('hoteles.destroy', $hotel) : null"
+                    favoritoTipo="hotel"
+                    :favoritoId="$hotel->id"
+                    :esFavorito="in_array($hotel->id, $favoritosIds ?? [])"
                 />
             </div>
         @empty

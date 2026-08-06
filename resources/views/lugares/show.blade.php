@@ -10,7 +10,15 @@
             <div class="position-absolute bottom-0 start-0 w-100" style="background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0));">
                 <div class="container py-4">
                     <span class="badge bg-warning text-dark mb-2">HUILA, COLOMBIA</span>
-                    <h1 class="text-white fw-bold mb-1" style="font-family: 'Fraunces', Georgia, serif;">{{ $lugar->nombre }}</h1>
+                    <div class="d-flex align-items-center gap-3">
+                        <h1 class="text-white fw-bold mb-1" style="font-family: 'Fraunces', Georgia, serif;">{{ $lugar->nombre }}</h1>
+                        @auth
+                            @if(!auth()->user()->esAdmin())
+                                @php $esFav = \App\Models\Favorito::where('user_id', auth()->id())->where('tipo', 'lugar')->where('referencia_id', $lugar->id)->exists(); @endphp
+                                <x-favorito-boton tipo="lugar" :id="$lugar->id" :activo="$esFav" />
+                            @endif
+                        @endauth
+                    </div>
                     <div class="d-flex align-items-center gap-3 text-white">
                         <span>📍 {{ $lugar->municipio }}</span>
                         <span>⭐ {{ number_format($lugar->resenas->avg('calificacion') ?? 0, 1) }}</span>

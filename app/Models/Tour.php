@@ -34,6 +34,12 @@ class Tour extends Model
                     ->where('tipo', 'tour');
     }
 
+    public function favoritos()
+    {
+        return $this->hasMany(Favorito::class, 'referencia_id')
+                    ->where('tipo', 'tour');
+    }
+
     public function agencias(): BelongsToMany
     {
         return $this->belongsToMany(Agencia::class, 'agencia_tour')

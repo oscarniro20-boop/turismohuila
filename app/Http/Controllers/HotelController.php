@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Hotel;
+use App\Models\Favorito;
 use Illuminate\Http\Request;
 
 class HotelController extends Controller
@@ -19,7 +20,11 @@ class HotelController extends Controller
 
         $municipios = config('municipios.huila');
 
-        return view('hoteles.index', compact('hoteles', 'municipios'));
+        $favoritosIds = auth()->check()
+            ? Favorito::where('user_id', auth()->id())->where('tipo', 'hotel')->pluck('referencia_id')->toArray()
+            : [];
+
+        return view('hoteles.index', compact('hoteles', 'municipios', 'favoritosIds'));
     }
 
     public function create()

@@ -60,6 +60,15 @@ class Guia extends Model
     }
 
     /**
+     * Relación con favoritos
+     */
+    public function favoritos()
+    {
+        return $this->hasMany(Favorito::class, 'referencia_id')
+                    ->where('tipo', 'guia');
+    }
+
+    /**
      * Relación con imágenes de la galería
      */
     public function imagenes()

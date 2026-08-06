@@ -27,6 +27,7 @@
                         <a href="{{ route('resenas.index') }}" class="small text-decoration-none" style="color: var(--color-muted-fg);">Reseñas</a>
                     @endif
                     <a href="{{ route('resenas.mis') }}" class="small text-decoration-none" style="color: var(--color-muted-fg);">Mis Reseñas</a>
+                    <a href="{{ route('favoritos.index') }}" class="small text-decoration-none" style="color: var(--color-muted-fg);">❤️ Favoritos</a>
                     <a href="{{ route('profile.edit') }}" class="d-flex align-items-center gap-2 text-decoration-none small fw-medium" style="color: var(--color-fg);"><span aria-hidden="true">👤</span>{{ auth()->user()->esAdmin() ? 'admin' : explode(' ', auth()->user()->name)[0] }}</a>
                     <form method="POST" action="{{ route('logout') }}" class="m-0">@csrf<button type="submit" class="btn btn-sm border-0 small" style="background-color: var(--color-primary); color:#fff; border-radius: 2rem; padding: .4rem 1rem;">Salir</button></form>
                 @else
@@ -43,6 +44,7 @@
                 <hr class="my-2" style="border-color: var(--color-border);">
                 @auth
                     <a href="{{ route('resenas.mis') }}" class="px-3 py-2 text-decoration-none" style="color: var(--color-muted-fg);">Mis Reseñas</a>
+                    <a href="{{ route('favoritos.index') }}" class="px-3 py-2 text-decoration-none" style="color: var(--color-muted-fg);">❤️ Favoritos</a>
                     <a href="{{ route('profile.edit') }}" class="px-3 py-2 text-decoration-none" style="color: var(--color-fg);">Mi Perfil</a>
                     @if(auth()->user()->esAdmin())<a href="{{ route('resenas.index') }}" class="px-3 py-2 text-decoration-none" style="color: var(--color-fg);">Reseñas</a>@endif
                     <form method="POST" action="{{ route('logout') }}" class="px-3">@csrf<button type="submit" class="btn w-100 border-0" style="background-color: var(--color-primary); color:#fff; border-radius: 2rem;">Salir</button></form>

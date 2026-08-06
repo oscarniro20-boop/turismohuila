@@ -9,7 +9,15 @@
     @endif
 
     <div class="card-body">
-        <h1 class="fw-bold mb-2" style="font-family: 'Fraunces', Georgia, serif;">{{ $restaurante->nombre }}</h1>
+        <div class="d-flex align-items-center gap-3">
+            <h1 class="fw-bold mb-2" style="font-family: 'Fraunces', Georgia, serif;">{{ $restaurante->nombre }}</h1>
+            @auth
+                @if(!auth()->user()->esAdmin())
+                    @php $esFav = \App\Models\Favorito::where('user_id', auth()->id())->where('tipo', 'restaurante')->where('referencia_id', $restaurante->id)->exists(); @endphp
+                    <x-favorito-boton tipo="restaurante" :id="$restaurante->id" :activo="$esFav" />
+                @endif
+            @endauth
+        </div>
         <div class="d-flex flex-wrap gap-3 mb-3 text-muted">
             <span>📍 {{ $restaurante->municipio }}</span>
             @if($restaurante->telefono)<span>📞 {{ $restaurante->telefono }}</span>@endif

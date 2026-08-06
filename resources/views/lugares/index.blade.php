@@ -28,6 +28,9 @@
                     :url="route('lugares.show', $lugar)"
                     :editUrl="auth()->check() && auth()->user()->esAdmin() ? route('lugares.edit', $lugar) : null"
                     :deleteUrl="auth()->check() && auth()->user()->esAdmin() ? route('lugares.destroy', $lugar) : null"
+                    favoritoTipo="lugar"
+                    :favoritoId="$lugar->id"
+                    :esFavorito="in_array($lugar->id, $favoritosIds ?? [])"
                 />
             </div>
         @empty

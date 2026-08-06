@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tour;
+use App\Models\Favorito;
 use Illuminate\Http\Request;
 
 class TourController extends Controller
@@ -20,7 +21,11 @@ class TourController extends Controller
 
         $municipios = config('municipios.huila');
 
-        return view('tours.index', compact('tours', 'municipios'));
+        $favoritosIds = auth()->check()
+            ? Favorito::where('user_id', auth()->id())->where('tipo', 'tour')->pluck('referencia_id')->toArray()
+            : [];
+
+        return view('tours.index', compact('tours', 'municipios', 'favoritosIds'));
     }
 
     public function create()

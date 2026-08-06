@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Guia;
 use App\Models\Lugar;
+use App\Models\Favorito;
 use Illuminate\Http\Request;
 
 class GuiaController extends Controller
@@ -19,7 +20,12 @@ class GuiaController extends Controller
             ->each(function ($guia) {
                 $guia->total_resenas = $guia->resenas_count;
             });
-        return view('guias.index', compact('guias'));
+
+        $favoritosIds = auth()->check()
+            ? Favorito::where('user_id', auth()->id())->where('tipo', 'guia')->pluck('referencia_id')->toArray()
+            : [];
+
+        return view('guias.index', compact('guias', 'favoritosIds'));
     }
 
     /**

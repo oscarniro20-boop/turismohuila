@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Restaurante;
+use App\Models\Favorito;
 use Illuminate\Http\Request;
 
 class RestauranteController extends Controller
@@ -19,7 +20,11 @@ class RestauranteController extends Controller
 
         $municipios = config('municipios.huila');
 
-        return view('restaurantes.index', compact('restaurantes', 'municipios'));
+        $favoritosIds = auth()->check()
+            ? Favorito::where('user_id', auth()->id())->where('tipo', 'restaurante')->pluck('referencia_id')->toArray()
+            : [];
+
+        return view('restaurantes.index', compact('restaurantes', 'municipios', 'favoritosIds'));
     }
 
     public function create()

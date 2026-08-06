@@ -9,6 +9,9 @@
     'url',
     'editUrl' => null,
     'deleteUrl' => null,
+    'favoritoTipo' => null,
+    'favoritoId' => null,
+    'esFavorito' => false,
 ])
 
 <div class="h-100 hover-lift rounded-4" style="box-shadow: var(--shadow-ring);">
@@ -45,6 +48,10 @@
                                     style="width:32px; height:32px; background: rgba(255,255,255,0.94);">🗑️</button>
                         </form>
                     @endif
+                </div>
+            @elseif($favoritoTipo !== null && !auth()->user()->esAdmin())
+                <div class="position-absolute top-0 start-0 m-3">
+                    <x-favorito-boton :tipo="$favoritoTipo" :id="$favoritoId" :activo="$esFavorito" />
                 </div>
             @endif
         @endauth

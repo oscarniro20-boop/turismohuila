@@ -9,6 +9,7 @@ use App\Models\Restaurante;
 use App\Models\Tour;
 use App\Models\Guia;
 use App\Models\Agencia;
+use App\Models\Favorito;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,7 +27,11 @@ class LugarController extends Controller
 
         $municipios = config('municipios.huila');
 
-        return view('lugares.index', compact('lugares', 'municipios'));
+        $favoritosIds = auth()->check()
+            ? Favorito::where('user_id', auth()->id())->where('tipo', 'lugar')->pluck('referencia_id')->toArray()
+            : [];
+
+        return view('lugares.index', compact('lugares', 'municipios', 'favoritosIds'));
     }
 
     public function create()

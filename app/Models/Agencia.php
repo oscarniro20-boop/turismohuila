@@ -33,6 +33,11 @@ class Agencia extends Model
         return $this->hasMany(Resena::class, 'referencia_id')->where('tipo', 'agencia');
     }
 
+    public function favoritos()
+    {
+        return $this->hasMany(Favorito::class, 'referencia_id')->where('tipo', 'agencia');
+    }
+
     public function paquetes()
     {
         return $this->hasMany(TourPaquete::class);

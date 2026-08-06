@@ -30,6 +30,9 @@
                     :url="route('guias.show', $guia)"
                     :editUrl="auth()->check() && auth()->user()->esAdmin() ? route('guias.edit', $guia) : null"
                     :deleteUrl="auth()->check() && auth()->user()->esAdmin() ? route('guias.destroy', $guia) : null"
+                    favoritoTipo="guia"
+                    :favoritoId="$guia->id"
+                    :esFavorito="in_array($guia->id, $favoritosIds ?? [])"
                 />
             </div>
         @empty

@@ -2,6 +2,41 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { createApp } from 'vue';
 
+// Listener delegado para botones de favoritos
+document.addEventListener('click', function (e) {
+    const btn = e.target.closest('.favorito-btn');
+    if (!btn) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const tipo = btn.dataset.favoritoTipo;
+    const id = btn.dataset.favoritoId;
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+
+    fetch('/favoritos/toggle', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken,
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+            tipo: tipo,
+            referencia_id: id,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        btn.classList.toggle('activo', data.activo);
+        btn.innerHTML = data.activo ? '❤️' : '🤍';
+    })
+    .catch(() => {
+        // Si no está autenticado, redirige al login
+        window.location.href = '/login';
+    });
+});
+
 document.querySelectorAll('[data-vue-app]').forEach(el => {
     const items = JSON.parse(el.dataset.items || '[]');
     const userRol = el.dataset.rol || 'invitado';

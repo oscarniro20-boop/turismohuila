@@ -32,6 +32,9 @@
                     :url="route('restaurantes.show', $restaurante)"
                     :editUrl="auth()->check() && auth()->user()->esAdmin() ? route('restaurantes.edit', $restaurante) : null"
                     :deleteUrl="auth()->check() && auth()->user()->esAdmin() ? route('restaurantes.destroy', $restaurante) : null"
+                    favoritoTipo="restaurante"
+                    :favoritoId="$restaurante->id"
+                    :esFavorito="in_array($restaurante->id, $favoritosIds ?? [])"
                 />
             </div>
         @empty

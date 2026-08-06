@@ -34,6 +34,11 @@ class Lugar extends Model
         return $this->hasMany(Resena::class, 'referencia_id')->where('tipo', 'lugar');
     }
 
+    public function favoritos()
+    {
+        return $this->hasMany(Favorito::class, 'referencia_id')->where('tipo', 'lugar');
+    }
+
     public function imagenes()
     {
         return $this->hasMany(LugarImagen::class)->orderBy('orden');

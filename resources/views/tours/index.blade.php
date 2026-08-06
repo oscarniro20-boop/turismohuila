@@ -32,6 +32,9 @@
                     :url="route('tours.show', $tour)"
                     :editUrl="auth()->check() && auth()->user()->esAdmin() ? route('tours.edit', $tour) : null"
                     :deleteUrl="auth()->check() && auth()->user()->esAdmin() ? route('tours.destroy', $tour) : null"
+                    favoritoTipo="tour"
+                    :favoritoId="$tour->id"
+                    :esFavorito="in_array($tour->id, $favoritosIds ?? [])"
                 />
             </div>
         @empty

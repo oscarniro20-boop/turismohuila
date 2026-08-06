@@ -32,6 +32,12 @@ class Restaurante extends Model
                     ->where('tipo', 'restaurante');
     }
 
+    public function favoritos()
+    {
+        return $this->hasMany(Favorito::class, 'referencia_id')
+                    ->where('tipo', 'restaurante');
+    }
+
     public function imagenes()
     {
         return $this->hasMany(RestauranteImagen::class)->orderBy('orden');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Agencia;
 use App\Models\TourPaquete;
+use App\Models\Favorito;
 use Illuminate\Http\Request;
 
 class AgenciaController extends Controller
@@ -17,7 +18,12 @@ class AgenciaController extends Controller
             ->each(function ($agencia) {
                 $agencia->total_resenas = $agencia->resenas_count;
             });
-        return view('agencias.index', compact('agencias'));
+
+        $favoritosIds = auth()->check()
+            ? Favorito::where('user_id', auth()->id())->where('tipo', 'agencia')->pluck('referencia_id')->toArray()
+            : [];
+
+        return view('agencias.index', compact('agencias', 'favoritosIds'));
     }
 
     public function create()

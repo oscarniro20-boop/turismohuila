@@ -1,5 +1,4 @@
-
-<!-- @extends('layouts.app') -->
+@extends('layouts.app')
 
 @section('title', $guia->nombre . ' - Guía Turístico')
 
@@ -10,7 +9,15 @@
     @endif
 
     <div class="card-body">
-        <h1 class="fw-bold mb-2" style="font-family: 'Fraunces', Georgia, serif;">{{ $guia->nombre }}</h1>
+        <div class="d-flex align-items-center gap-3">
+            <h1 class="fw-bold mb-2" style="font-family: 'Fraunces', Georgia, serif;">{{ $guia->nombre }}</h1>
+            @auth
+                @if(!auth()->user()->esAdmin())
+                    @php $esFav = \App\Models\Favorito::where('user_id', auth()->id())->where('tipo', 'guia')->where('referencia_id', $guia->id)->exists(); @endphp
+                    <x-favorito-boton tipo="guia" :id="$guia->id" :activo="$esFav" />
+                @endif
+            @endauth
+        </div>
         <div class="d-flex flex-wrap gap-3 mb-3 text-muted">
             @if($guia->experiencia_anios)<span>⭐ {{ $guia->experiencia_anios }} años de experiencia</span>@endif
             @if($guia->telefono)<span>📞 {{ $guia->telefono }}</span>@endif

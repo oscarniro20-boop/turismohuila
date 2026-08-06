@@ -12,7 +12,15 @@
                  style="width: 100%; height: 420px; object-fit: cover;">
         @endif
 
-        <h1 class="fw-bold mb-2" style="font-family: 'Fraunces', Georgia, serif;">{{ $tour->nombre }}</h1>
+        <div class="d-flex align-items-center gap-3">
+            <h1 class="fw-bold mb-2" style="font-family: 'Fraunces', Georgia, serif;">{{ $tour->nombre }}</h1>
+            @auth
+                @if(!auth()->user()->esAdmin())
+                    @php $esFav = \App\Models\Favorito::where('user_id', auth()->id())->where('tipo', 'tour')->where('referencia_id', $tour->id)->exists(); @endphp
+                    <x-favorito-boton tipo="tour" :id="$tour->id" :activo="$esFav" />
+                @endif
+            @endauth
+        </div>
         <div class="d-flex flex-wrap gap-3 mb-3 text-muted">
             <span>📍 {{ $tour->municipio }}</span>
             <span>⏱️ {{ $tour->duracion_dias }} día(s)</span>
