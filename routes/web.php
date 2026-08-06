@@ -10,12 +10,23 @@ use App\Http\Controllers\ResenaController;
 use App\Http\Controllers\GuiaController;
 use App\Http\Controllers\AgenciaController;
 use App\Http\Controllers\FavoritoController;
+use App\Http\Controllers\BusquedaController;
+use App\Http\Controllers\ContactoController;
+use Illuminate\Support\Facades\Mail;
 
 // Página de inicio
 Route::get('/', function () {
     $heroLugar = \App\Models\Lugar::whereNotNull('imagen')->withAvg('resenas', 'calificacion')->orderByDesc('resenas_avg_calificacion')->first();
     return view('home', compact('heroLugar'));
 })->name('home');
+
+Route::get('/buscar', [BusquedaController::class, 'buscar'])->name('busqueda');
+
+Route::view('/nosotros', 'nosotros')->name('nosotros');
+Route::view('/privacidad', 'privacidad')->name('privacidad');
+Route::view('/terminos', 'terminos')->name('terminos');
+Route::get('/contacto', [ContactoController::class, 'mostrar'])->name('contacto');
+Route::post('/contacto', [ContactoController::class, 'enviar'])->name('contacto.enviar');
 
 // ── Rutas ADMIN (gestión total) ───────────────────────────────────────────
 // IMPORTANTE: Estas rutas deben ir ANTES que las públicas para evitar conflictos

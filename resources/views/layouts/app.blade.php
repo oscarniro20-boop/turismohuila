@@ -57,13 +57,20 @@
                         <li>📍 Huila, Colombia</li>
                         <li>📧 info@turismohuila.com</li>
                         <li>📞 +57 300 123 4567</li>
+                        <li><a href="{{ route('contacto') }}" class="text-white text-decoration-none" style="opacity: 0.9;">✉️ Escríbenos</a></li>
                     </ul>
                 </div>
             </div>
             <hr class="my-3" style="border-color: rgba(255,255,255,0.2);">
-            <p class="mb-0 small text-center" style="opacity: 0.8;">© {{ date('Y') }} TurismoHuila. Todos los derechos reservados.</p>
+            <p class="mb-0 small text-center" style="opacity: 0.8;">
+                © {{ date('Y') }} TurismoHuila. Todos los derechos reservados.
+                <a href="{{ route('nosotros') }}" class="text-white text-decoration-none" style="opacity: 0.9;">Nosotros</a> ·
+                <a href="{{ route('privacidad') }}" class="text-white text-decoration-none" style="opacity: 0.9;">Privacidad</a> ·
+                <a href="{{ route('terminos') }}" class="text-white text-decoration-none" style="opacity: 0.9;">Términos</a>
+            </p>
         </div>
     </footer>
+    @include('components.modal-busqueda')
     @stack('scripts')
 </body>
 </html>

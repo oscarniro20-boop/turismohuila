@@ -22,6 +22,9 @@
                 @endforeach
             </div>
             <div class="d-none d-lg-flex align-items-center gap-3">
+                <button class="btn btn-sm border-0 d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#modalBusqueda" style="color: var(--color-muted-fg);">
+                    🔍 <span class="d-none d-lg-inline small">Ctrl K</span>
+                </button>
                 @auth
                     @if(auth()->user()->esAdmin())
                         <a href="{{ route('resenas.index') }}" class="small text-decoration-none" style="color: var(--color-muted-fg);">Reseñas</a>
@@ -41,6 +44,9 @@
                 @foreach($navItems as $route => $item)
                     <a href="{{ route($route) }}" class="px-3 py-2 text-decoration-none rounded-3" style="color: {{ request()->is($item['match']) ? 'var(--color-fg)' : 'var(--color-muted-fg)' }}; background-color: {{ request()->is($item['match']) ? 'var(--color-muted)' : 'transparent' }};">{{ $item['label'] }}</a>
                 @endforeach
+                <button class="btn btn-sm border-0 text-start" data-bs-toggle="modal" data-bs-target="#modalBusqueda" style="color: var(--color-muted-fg);">
+                    🔍 Buscar
+                </button>
                 <hr class="my-2" style="border-color: var(--color-border);">
                 @auth
                     <a href="{{ route('resenas.mis') }}" class="px-3 py-2 text-decoration-none" style="color: var(--color-muted-fg);">Mis Reseñas</a>
