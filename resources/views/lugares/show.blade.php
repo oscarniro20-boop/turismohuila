@@ -3,6 +3,10 @@
 @section('title', $lugar->nombre . ' - Lugares Turísticos')
 
 @section('content')
+<x-migas-pan :items="[
+    ['label' => 'Lugares', 'url' => route('lugares.index')],
+    ['label' => $lugar->nombre],
+]" />
 <div class="card shadow-sm border-0">
     @if($lugar->imagen)
         <div class="position-relative">
@@ -18,6 +22,7 @@
                                 <x-favorito-boton tipo="lugar" :id="$lugar->id" :activo="$esFav" />
                             @endif
                         @endauth
+                        <x-boton-compartir titulo="{{ $lugar->nombre }}" />
                     </div>
                     <div class="d-flex align-items-center gap-3 text-white">
                         <span>📍 {{ $lugar->municipio }}</span>

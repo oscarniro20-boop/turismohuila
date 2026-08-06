@@ -3,6 +3,10 @@
 @section('title', $guia->nombre . ' - Guía Turístico')
 
 @section('content')
+<x-migas-pan :items="[
+    ['label' => 'Guías', 'url' => route('guias.index')],
+    ['label' => $guia->nombre],
+]" />
 <div class="card shadow-sm border-0">
     @if($guia->foto)
         <img src="{{ asset($guia->foto) }}" alt="{{ $guia->nombre }}" class="w-100" style="height: 320px; object-fit: cover;">
@@ -17,6 +21,7 @@
                     <x-favorito-boton tipo="guia" :id="$guia->id" :activo="$esFav" />
                 @endif
             @endauth
+            <x-boton-compartir titulo="{{ $guia->nombre }}" />
         </div>
         <div class="d-flex flex-wrap gap-3 mb-3 text-muted">
             @if($guia->experiencia_anios)<span>⭐ {{ $guia->experiencia_anios }} años de experiencia</span>@endif

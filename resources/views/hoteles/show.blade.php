@@ -3,6 +3,10 @@
 @section('title', $hotel->nombre . ' - Hoteles')
 
 @section('content')
+<x-migas-pan :items="[
+    ['label' => 'Hoteles', 'url' => route('hoteles.index')],
+    ['label' => $hotel->nombre],
+]" />
 <div class="card shadow-sm border-0">
     @if($hotel->imagen)
         <img src="{{ asset($hotel->imagen) }}" alt="{{ $hotel->nombre }}" class="w-100" style="height: 320px; object-fit: cover;">
@@ -17,6 +21,7 @@
                     <x-favorito-boton tipo="hotel" :id="$hotel->id" :activo="$esFav" />
                 @endif
             @endauth
+            <x-boton-compartir titulo="{{ $hotel->nombre }}" />
         </div>
         <div class="d-flex flex-wrap gap-3 mb-3 text-muted">
             <span>📍 {{ $hotel->municipio }}</span>

@@ -3,6 +3,10 @@
 @section('title', $tour->nombre . ' - Tours')
 
 @section('content')
+<x-migas-pan :items="[
+    ['label' => 'Tours', 'url' => route('tours.index')],
+    ['label' => $tour->nombre],
+]" />
 <div class="card shadow-sm border-0">
     <div class="card-body">
 
@@ -20,6 +24,7 @@
                     <x-favorito-boton tipo="tour" :id="$tour->id" :activo="$esFav" />
                 @endif
             @endauth
+            <x-boton-compartir titulo="{{ $tour->nombre }}" />
         </div>
         <div class="d-flex flex-wrap gap-3 mb-3 text-muted">
             <span>📍 {{ $tour->municipio }}</span>
