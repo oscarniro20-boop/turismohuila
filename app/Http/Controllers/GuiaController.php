@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Guia;
 use App\Models\Lugar;
-use App\Models\Favorito;
+use App\Concerns\ManagesImages;
 use Illuminate\Http\Request;
 
 class GuiaController extends Controller
 {
+    use ManagesImages;
     /**
      * Display a listing of the resource.
      */
@@ -21,9 +22,7 @@ class GuiaController extends Controller
                 $guia->total_resenas = $guia->resenas_count;
             });
 
-        $favoritosIds = auth()->check()
-            ? Favorito::where('user_id', auth()->id())->where('tipo', 'guia')->pluck('referencia_id')->toArray()
-            : [];
+        $favoritosIds = $this->obtenerFavoritosIds(auth()->id(), 'guia');
 
         return view('guias.index', compact('guias', 'favoritosIds'));
     }
@@ -61,9 +60,7 @@ class GuiaController extends Controller
         $datos = $request->all();
 
         if ($request->hasFile('foto')) {
-            $nombre = time() . '_' . $request->file('foto')->getClientOriginalName();
-            $request->file('foto')->move(public_path('imagenes/guias'), $nombre);
-            $datos['foto'] = 'imagenes/guias/' . $nombre;
+            $datos['foto'] = $this->subirImagenPrincipal($request->file('foto'), 'guias');
         }
 
         $guia = Guia::create($datos);
@@ -124,13 +121,9 @@ class GuiaController extends Controller
 
         if ($request->hasFile('foto')) {
             // Eliminar foto anterior si existe
-            if ($guia->foto && file_exists(public_path($guia->foto))) {
-                unlink(public_path($guia->foto));
-            }
+            $this->eliminarImagen($guia->foto);
             
-            $nombre = time() . '_' . $request->file('foto')->getClientOriginalName();
-            $request->file('foto')->move(public_path('imagenes/guias'), $nombre);
-            $datos['foto'] = 'imagenes/guias/' . $nombre;
+            $datos['foto'] = $this->subirImagenPrincipal($request->file('foto'), 'guias');
         }
 
         $guia->update($datos);
@@ -155,9 +148,10 @@ class GuiaController extends Controller
     public function destroy(Guia $guia)
     {
         // Eliminar foto si existe
-        if ($guia->foto && file_exists(public_path($guia->foto))) {
-            unlink(public_path($guia->foto));
-        }
+        $this->eliminarImagen($guia->foto);
+        
+        // Eliminar imágenes de galería
+        $this->eliminarTodasImagenes($guia->imagenes);
 
         $guia->delete();
 

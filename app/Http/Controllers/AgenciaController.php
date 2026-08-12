@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Agencia;
+use App\Models\Tour;
 use App\Models\TourPaquete;
-use App\Models\Favorito;
-use Illuminate\Http\Request;
+use App\Concerns\ManagesImages;
+use App\Http\Requests\StoreAgenciaRequest;
+use App\Http\Requests\UpdateAgenciaRequest;
 
 class AgenciaController extends Controller
 {
+    use ManagesImages;
+
     public function index()
     {
         $agencias = Agencia::withAvg('resenas', 'calificacion')
@@ -19,43 +23,24 @@ class AgenciaController extends Controller
                 $agencia->total_resenas = $agencia->resenas_count;
             });
 
-        $favoritosIds = auth()->check()
-            ? Favorito::where('user_id', auth()->id())->where('tipo', 'agencia')->pluck('referencia_id')->toArray()
-            : [];
+        $favoritosIds = $this->obtenerFavoritosIds(auth()->id(), 'agencia');
 
         return view('agencias.index', compact('agencias', 'favoritosIds'));
     }
 
     public function create()
     {
-        return view('agencias.create');
+        $tours = Tour::orderBy('nombre')->get();
+
+        return view('agencias.create', compact('tours'));
     }
 
-    public function store(Request $request)
+    public function store(StoreAgenciaRequest $request)
     {
-        $request->validate([
-            'nombre'             => 'required|string|max:255|unique:agencias,nombre',
-            'municipio'          => 'nullable|string|max:255',
-            'telefono_contacto'  => 'nullable|string|max:50',
-            'whatsapp'           => 'nullable|string|max:50',
-            'email'              => 'nullable|email|max:255',
-            'imagen'             => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'tours'              => 'nullable|array',
-            'tours.*'            => 'integer|exists:tours,id',
-            'paquetes.*.precio'        => 'nullable|numeric|min:0',
-            'paquetes.*.duracion_dias' => 'nullable|integer|min:1',
-            'paquetes.*.cupo_maximo'   => 'nullable|integer|min:1',
-            'paquetes.*.descripcion'   => 'nullable|string',
-            'latitud'      => 'nullable|numeric|between:-90,90',
-            'longitud'     => 'nullable|numeric|between:-180,180',
-        ]);
-
         $datos = $request->only(['nombre', 'municipio', 'telefono_contacto', 'whatsapp', 'email', 'latitud', 'longitud']);
 
         if ($request->hasFile('imagen')) {
-            $nombre = time() . '_' . $request->file('imagen')->getClientOriginalName();
-            $request->file('imagen')->move(public_path('imagenes/agencias'), $nombre);
-            $datos['imagen'] = 'imagenes/agencias/' . $nombre;
+            $datos['imagen'] = $this->subirImagenPrincipal($request->file('imagen'), 'agencias');
         }
 
         $agencia = Agencia::create($datos);
@@ -92,34 +77,20 @@ class AgenciaController extends Controller
     public function edit(Agencia $agencia)
     {
         $agencia->load(['tours', 'paquetes.tour']);
-        return view('agencias.edit', compact('agencia'));
+        $tours = Tour::orderBy('nombre')->get();
+
+        return view('agencias.edit', compact('agencia', 'tours'));
     }
 
-    public function update(Request $request, Agencia $agencia)
+    public function update(UpdateAgenciaRequest $request, Agencia $agencia)
     {
-        $request->validate([
-            'nombre'             => 'required|string|max:255|unique:agencias,nombre,' . $agencia->id,
-            'municipio'          => 'nullable|string|max:255',
-            'telefono_contacto'  => 'nullable|string|max:50',
-            'whatsapp'           => 'nullable|string|max:50',
-            'email'              => 'nullable|email|max:255',
-            'imagen'             => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'tours'              => 'nullable|array',
-            'tours.*'            => 'integer|exists:tours,id',
-            'paquetes.*.precio'        => 'nullable|numeric|min:0',
-            'paquetes.*.duracion_dias' => 'nullable|integer|min:1',
-            'paquetes.*.cupo_maximo'   => 'nullable|integer|min:1',
-            'paquetes.*.descripcion'   => 'nullable|string',
-            'latitud'      => 'nullable|numeric|between:-90,90',
-            'longitud'     => 'nullable|numeric|between:-180,180',
-        ]);
-
         $datos = $request->only(['nombre', 'municipio', 'telefono_contacto', 'whatsapp', 'email', 'latitud', 'longitud']);
 
         if ($request->hasFile('imagen')) {
-            $nombre = time() . '_' . $request->file('imagen')->getClientOriginalName();
-            $request->file('imagen')->move(public_path('imagenes/agencias'), $nombre);
-            $datos['imagen'] = 'imagenes/agencias/' . $nombre;
+            // Eliminar imagen anterior
+            $this->eliminarImagen($agencia->imagen);
+            
+            $datos['imagen'] = $this->subirImagenPrincipal($request->file('imagen'), 'agencias');
         }
 
         $agencia->update($datos);
@@ -153,7 +124,14 @@ class AgenciaController extends Controller
 
     public function destroy(Agencia $agencia)
     {
+        // Eliminar imagen principal
+        $this->eliminarImagen($agencia->imagen);
+        
+        // Eliminar imágenes de galería
+        $this->eliminarTodasImagenes($agencia->imagenes);
+
         $agencia->delete();
+
         return redirect()->route('agencias.index')
                          ->with('success', 'Agencia eliminada correctamente.');
     }

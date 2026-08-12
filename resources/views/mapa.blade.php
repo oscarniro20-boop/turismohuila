@@ -34,6 +34,12 @@ function crearPin(color, emoji) {
     });
 }
 
+function escaparHTML(texto) {
+    const div = document.createElement('div');
+    div.textContent = texto;
+    return div.innerHTML;
+}
+
 const centro = puntos.length
     ? [puntos.reduce((s,p)=>s+p.lat,0)/puntos.length, puntos.reduce((s,p)=>s+p.lng,0)/puntos.length]
     : [2.5359, -75.5277];
@@ -44,7 +50,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:
 puntos.forEach(p => {
     L.marker([p.lat, p.lng], { icon: crearPin(colores[p.tipo] || '#555', p.icono) })
         .addTo(mapa)
-        .bindPopup(`<strong>${p.nombre}</strong><br>${p.municipio}<br><a href="${p.url}">Ver más</a>`);
+        .bindPopup(`<strong>${escaparHTML(p.nombre)}</strong><br>${escaparHTML(p.municipio)}<br><a href="${p.url}">Ver más</a>`);
 });
 </script>
 @endsection

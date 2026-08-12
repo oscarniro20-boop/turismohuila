@@ -26,6 +26,15 @@ class Resena extends Model
 
     public function getNombreServicioAttribute()
     {
+        // Si la relación ya fue precargada, usarla
+        if ($this->relationLoaded('servicio')) {
+            $item = $this->getRelation('servicio');
+            
+            return $item
+                ? $item->nombre
+                : ucfirst($this->tipo) . ' #' . $this->referencia_id . ' (eliminado)';
+        }
+
         $modelo = match ($this->tipo) {
             'lugar'       => \App\Models\Lugar::class,
             'hotel'       => \App\Models\Hotel::class,
@@ -45,5 +54,17 @@ class Resena extends Model
         return $item
             ? $item->nombre
             : ucfirst($this->tipo) . ' #' . $this->referencia_id . ' (eliminado)';
+    }
+
+    /**
+     * Relación morfable hacia el servicio referenciado.
+     */
+    public function servicio()
+    {
+        return $this->morphTo(
+            __FUNCTION__,
+            'tipo',
+            'referencia_id'
+        );
     }
 }

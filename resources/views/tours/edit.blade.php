@@ -35,7 +35,7 @@
                     <div class="mb-3">
                         <label class="form-label fw-bold">Agencias que ofrecen este tour</label>
                         <div id="agencias-checklist" class="mb-2">
-                            @foreach(\App\Models\Agencia::all() as $agencia)
+@foreach($agencias as $agencia)
                                 <div class="form-check">
                                     <input class="form-check-input agencia-checkbox" type="checkbox" name="agencias[]"
                                         value="{{ $agencia->id }}" id="agencia{{ $agencia->id }}"

@@ -24,6 +24,11 @@ class Favorito extends Model
 
     public function getServicioAttribute()
     {
+        // Si la relación ya fue precargada, usarla
+        if ($this->relationLoaded('servicio')) {
+            return $this->getRelation('servicio');
+        }
+
         $modelo = match ($this->tipo) {
             'lugar'       => \App\Models\Lugar::class,
             'hotel'       => \App\Models\Hotel::class,
@@ -39,5 +44,17 @@ class Favorito extends Model
         }
 
         return $modelo::find($this->referencia_id);
+    }
+
+    /**
+     * Relación morfable hacia el servicio referenciado.
+     */
+    public function servicio()
+    {
+        return $this->morphTo(
+            __FUNCTION__,
+            'tipo',
+            'referencia_id'
+        );
     }
 }

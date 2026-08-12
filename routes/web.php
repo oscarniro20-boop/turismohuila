@@ -20,13 +20,17 @@ Route::get('/', function () {
     return view('home', compact('heroLugar'));
 })->name('home');
 
-Route::get('/buscar', [BusquedaController::class, 'buscar'])->name('busqueda');
+Route::get('/buscar', [BusquedaController::class, 'buscar'])
+    ->middleware('throttle:30,1')
+    ->name('busqueda');
 
 Route::view('/nosotros', 'nosotros')->name('nosotros');
 Route::view('/privacidad', 'privacidad')->name('privacidad');
 Route::view('/terminos', 'terminos')->name('terminos');
 Route::get('/contacto', [ContactoController::class, 'mostrar'])->name('contacto');
-Route::post('/contacto', [ContactoController::class, 'enviar'])->name('contacto.enviar');
+Route::post('/contacto', [ContactoController::class, 'enviar'])
+    ->middleware('throttle:5,1')
+    ->name('contacto.enviar');
 
 // ── Rutas ADMIN (gestión total) ───────────────────────────────────────────
 // IMPORTANTE: Estas rutas deben ir ANTES que las públicas para evitar conflictos

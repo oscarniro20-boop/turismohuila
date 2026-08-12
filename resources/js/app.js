@@ -55,14 +55,23 @@ document.addEventListener('click', function (e) {
             referencia_id: id,
         }),
     })
-    .then(response => response.json())
+    .then(response => {
+        if (response.status === 401) {
+            window.location.href = '/login';
+            return null;
+        }
+        if (!response.ok) {
+            throw new Error('Error del servidor');
+        }
+        return response.json();
+    })
     .then(data => {
+        if (!data) return;
         btn.classList.toggle('activo', data.activo);
         btn.innerHTML = data.activo ? '❤️' : '🤍';
     })
     .catch(() => {
-        // Si no está autenticado, redirige al login
-        window.location.href = '/login';
+        alert('No se pudo actualizar el favorito. Intenta de nuevo.');
     });
 });
 
@@ -137,12 +146,6 @@ document.querySelectorAll('[data-vue-app]').forEach(el => {
             grupos[item.tipo].push(item);
         });
         return grupos;
-    }
-
-    function escaparHTML(texto) {
-        const div = document.createElement('div');
-        div.textContent = texto;
-        return div.innerHTML;
     }
 
     function renderizarResultados(data) {

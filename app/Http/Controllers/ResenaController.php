@@ -10,7 +10,7 @@ class ResenaController extends Controller
 {
     public function index()
     {
-        $resenas = Resena::with('user')->latest()->get();
+        $resenas = Resena::with(['user', 'servicio'])->latest()->get();
         return view('resenas.index', compact('resenas'));
     }
 
@@ -49,7 +49,8 @@ class ResenaController extends Controller
 
     public function misResenas()
     {
-        $resenas = Resena::where('user_id', auth()->id())
+        $resenas = Resena::with('servicio')
+            ->where('user_id', auth()->id())
             ->latest()
             ->get();
         return view('resenas.mis-resenas', compact('resenas'));
@@ -95,9 +96,7 @@ class ResenaController extends Controller
 
     public function update(Request $request, Resena $resena)
     {
-        if ($resena->user_id !== Auth::id()) {
-            abort(403, 'No tienes permiso para editar esta reseña.');
-        }
+        $this->authorize('update', $resena);
 
         $request->validate([
             'comentario'   => 'required|string|max:1000',
@@ -112,9 +111,7 @@ class ResenaController extends Controller
 
     public function destroy(Resena $resena)
     {
-        if ($resena->user_id !== Auth::id()) {
-            abort(403, 'No tienes permiso para eliminar esta reseña.');
-        }
+        $this->authorize('delete', $resena);
 
         $resena->delete();
 

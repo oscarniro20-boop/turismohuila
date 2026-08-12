@@ -35,7 +35,8 @@ class FavoritoController extends Controller
 
     public function index()
     {
-        $favoritos = Favorito::where('user_id', auth()->id())
+        $favoritos = Favorito::with('servicio')
+            ->where('user_id', auth()->id())
             ->latest()
             ->get()
             ->filter(fn($f) => $f->servicio !== null)

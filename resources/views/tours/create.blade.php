@@ -33,7 +33,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold">Agencias que ofrecen este tour (y su precio)</label>
-                        @foreach(\App\Models\Agencia::all() as $agencia)
+@foreach($agencias as $agencia)
                             <div class="row g-2 align-items-center mb-2">
                                 <div class="col-auto">
                                     <input type="checkbox" name="agencias[]" value="{{ $agencia->id }}" id="ag{{ $agencia->id }}" {{ collect(old('agencias'))->contains($agencia->id) ? 'checked' : '' }}>

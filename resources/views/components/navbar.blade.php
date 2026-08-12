@@ -7,7 +7,6 @@
             </a>
             @php
                 $navItems = [
-                    'mapa' => ['label' => 'Mapa', 'match' => 'mapa*'],
                     'lugares.index' => ['label' => 'Lugares', 'match' => 'lugares*'],
                     'hoteles.index' => ['label' => 'Hoteles', 'match' => 'hoteles*'],
                     'restaurantes.index' => ['label' => 'Restaurantes', 'match' => 'restaurantes*'],
@@ -17,21 +16,22 @@
                 ];
             @endphp
             <div class="d-none d-lg-flex align-items-center gap-1">
+                <a href="{{ route('mapa') }}" class="px-3 py-2 text-decoration-none small fw-medium rounded-3" style="color: {{ request()->is('mapa*') ? 'var(--color-fg)' : 'var(--color-muted-fg)' }}; background-color: {{ request()->is('mapa*') ? 'var(--color-muted)' : 'transparent' }};">Mapa</a>
+                <button class="btn btn-sm border-0 px-3 py-2" data-bs-toggle="modal" data-bs-target="#modalBusqueda" style="color: var(--color-muted-fg);">
+                    <span class="small fw-medium">Buscar</span>
+                </button>
                 @foreach($navItems as $route => $item)
                     <a href="{{ route($route) }}" class="px-3 py-2 text-decoration-none small fw-medium rounded-3" style="color: {{ request()->is($item['match']) ? 'var(--color-fg)' : 'var(--color-muted-fg)' }}; background-color: {{ request()->is($item['match']) ? 'var(--color-muted)' : 'transparent' }};">{{ $item['label'] }}</a>
                 @endforeach
             </div>
             <div class="d-none d-lg-flex align-items-center gap-3">
-                <button class="btn btn-sm border-0 d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#modalBusqueda" style="color: var(--color-muted-fg);">
-                    🔍 <span class="d-none d-lg-inline small">Ctrl K</span>
-                </button>
                 @auth
                     @if(auth()->user()->esAdmin())
                         <a href="{{ route('resenas.index') }}" class="small text-decoration-none" style="color: var(--color-muted-fg);">Reseñas</a>
                     @endif
                     <a href="{{ route('resenas.mis') }}" class="small text-decoration-none" style="color: var(--color-muted-fg);">Mis Reseñas</a>
-                    <a href="{{ route('favoritos.index') }}" class="small text-decoration-none" style="color: var(--color-muted-fg);">❤️ Favoritos</a>
-                    <a href="{{ route('profile.edit') }}" class="d-flex align-items-center gap-2 text-decoration-none small fw-medium" style="color: var(--color-fg);"><span aria-hidden="true">👤</span>{{ auth()->user()->esAdmin() ? 'admin' : explode(' ', auth()->user()->name)[0] }}</a>
+                    <a href="{{ route('favoritos.index') }}" class="small text-decoration-none" style="color: var(--color-muted-fg);">Favoritos</a>
+                    <a href="{{ route('profile.edit') }}" class="d-flex align-items-center gap-2 text-decoration-none small fw-medium" style="color: var(--color-fg);">{{ auth()->user()->esAdmin() ? 'admin' : explode(' ', auth()->user()->name)[0] }}</a>
                     <form method="POST" action="{{ route('logout') }}" class="m-0">@csrf<button type="submit" class="btn btn-sm border-0 small" style="background-color: var(--color-primary); color:#fff; border-radius: 2rem; padding: .4rem 1rem;">Salir</button></form>
                 @else
                     <a href="{{ route('login') }}" class="btn btn-sm border-0 small" style="background-color: var(--color-primary); color:#fff; border-radius: 2rem; padding: .4rem 1rem;">Ingresar</a>
@@ -41,16 +41,17 @@
         </div>
         <div class="collapse d-lg-none pb-3" id="navPrincipal">
             <div class="d-flex flex-column gap-1">
+                <a href="{{ route('mapa') }}" class="px-3 py-2 text-decoration-none rounded-3" style="color: {{ request()->is('mapa*') ? 'var(--color-fg)' : 'var(--color-muted-fg)' }}; background-color: {{ request()->is('mapa*') ? 'var(--color-muted)' : 'transparent' }};">Mapa</a>
+                <button class="btn btn-sm border-0 text-start" data-bs-toggle="modal" data-bs-target="#modalBusqueda" style="color: var(--color-muted-fg);">
+                    Buscar
+                </button>
                 @foreach($navItems as $route => $item)
                     <a href="{{ route($route) }}" class="px-3 py-2 text-decoration-none rounded-3" style="color: {{ request()->is($item['match']) ? 'var(--color-fg)' : 'var(--color-muted-fg)' }}; background-color: {{ request()->is($item['match']) ? 'var(--color-muted)' : 'transparent' }};">{{ $item['label'] }}</a>
                 @endforeach
-                <button class="btn btn-sm border-0 text-start" data-bs-toggle="modal" data-bs-target="#modalBusqueda" style="color: var(--color-muted-fg);">
-                    🔍 Buscar
-                </button>
                 <hr class="my-2" style="border-color: var(--color-border);">
                 @auth
                     <a href="{{ route('resenas.mis') }}" class="px-3 py-2 text-decoration-none" style="color: var(--color-muted-fg);">Mis Reseñas</a>
-                    <a href="{{ route('favoritos.index') }}" class="px-3 py-2 text-decoration-none" style="color: var(--color-muted-fg);">❤️ Favoritos</a>
+                    <a href="{{ route('favoritos.index') }}" class="px-3 py-2 text-decoration-none" style="color: var(--color-muted-fg);">Favoritos</a>
                     <a href="{{ route('profile.edit') }}" class="px-3 py-2 text-decoration-none" style="color: var(--color-fg);">Mi Perfil</a>
                     @if(auth()->user()->esAdmin())<a href="{{ route('resenas.index') }}" class="px-3 py-2 text-decoration-none" style="color: var(--color-fg);">Reseñas</a>@endif
                     <form method="POST" action="{{ route('logout') }}" class="px-3">@csrf<button type="submit" class="btn w-100 border-0" style="background-color: var(--color-primary); color:#fff; border-radius: 2rem;">Salir</button></form>

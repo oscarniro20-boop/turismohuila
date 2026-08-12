@@ -10,6 +10,10 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
+        if (!app()->environment('local')) {
+            return;
+        }
+
         User::create([
             'name'     => 'Administrador',
             'email'    => 'admin@turismo-huila.com',

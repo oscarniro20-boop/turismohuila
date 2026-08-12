@@ -71,7 +71,7 @@
                     <hr>
                     <label class="form-label fw-bold">Tours que ofrece esta agencia</label>
                     <div id="tours-checklist" class="row row-cols-2 row-cols-md-3 g-2 mb-3">
-                        @foreach(\App\Models\Tour::all() as $tour)
+                        @foreach($tours as $tour)
                             <div class="col">
                                 <div class="form-check border rounded p-2">
                                     <input class="form-check-input tour-checkbox" type="checkbox" name="tours[]" value="{{ $tour->id }}"
@@ -95,7 +95,7 @@
 </div>
 
 <script>
-const TOURS_DATA = {!! \App\Models\Tour::all()->keyBy('id')->toJson() !!};
+const TOURS_DATA = {!! $tours->keyBy('id')->toJson() !!};
 const PAQUETES_EXISTENTES = {};
 document.addEventListener('DOMContentLoaded', function () {
     const contenedor = document.getElementById('paquetes-container');

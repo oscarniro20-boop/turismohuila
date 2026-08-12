@@ -9,12 +9,18 @@ use App\Models\Restaurante;
 use App\Models\Tour;
 use App\Models\Guia;
 use App\Models\Agencia;
-use App\Models\Favorito;
+use App\Concerns\ManagesImages;
+use App\Services\MapaService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class LugarController extends Controller
 {
+    use ManagesImages;
+
+    public function __construct(
+        private MapaService $mapaService
+    ) {}
+
     public function index(Request $request)
     {
         $lugares = Lugar::withAvg('resenas', 'calificacion')
@@ -27,9 +33,7 @@ class LugarController extends Controller
 
         $municipios = config('municipios.huila');
 
-        $favoritosIds = auth()->check()
-            ? Favorito::where('user_id', auth()->id())->where('tipo', 'lugar')->pluck('referencia_id')->toArray()
-            : [];
+        $favoritosIds = $this->obtenerFavoritosIds(auth()->id(), 'lugar');
 
         return view('lugares.index', compact('lugares', 'municipios', 'favoritosIds'));
     }
@@ -55,9 +59,7 @@ class LugarController extends Controller
         $datos['user_id'] = auth()->id();
 
         if ($request->hasFile('imagen')) {
-            $nombre = time() . '_' . $request->file('imagen')->getClientOriginalName();
-            $request->file('imagen')->move(public_path('imagenes/lugares'), $nombre);
-            $datos['imagen'] = 'imagenes/lugares/' . $nombre;
+            $datos['imagen'] = $this->subirImagenPrincipal($request->file('imagen'), 'lugares');
         }
 
         $lugar = Lugar::create($datos);
@@ -95,9 +97,10 @@ class LugarController extends Controller
         $datos = $request->except('imagen');
 
         if ($request->hasFile('imagen')) {
-            $nombre = time() . '_' . $request->file('imagen')->getClientOriginalName();
-            $request->file('imagen')->move(public_path('imagenes/lugares'), $nombre);
-            $datos['imagen'] = 'imagenes/lugares/' . $nombre;
+            // Eliminar imagen anterior
+            $this->eliminarImagen($lugar->imagen);
+            
+            $datos['imagen'] = $this->subirImagenPrincipal($request->file('imagen'), 'lugares');
         }
 
         $lugar->update($datos);
@@ -117,6 +120,12 @@ class LugarController extends Controller
 
     public function destroy(Lugar $lugar)
     {
+        // Eliminar imagen principal
+        $this->eliminarImagen($lugar->imagen);
+        
+        // Eliminar imágenes de galería
+        $this->eliminarTodasImagenes($lugar->imagenes);
+
         $lugar->delete();
 
         return redirect()->route('lugares.index')
@@ -125,31 +134,7 @@ class LugarController extends Controller
 
     public function mapa()
     {
-        $config = [
-            'lugar'       => ['modelo' => Lugar::class,       'sub' => 'municipio', 'ruta' => 'lugares.show',       'icono' => '📍'],
-            'hotel'       => ['modelo' => Hotel::class,       'sub' => 'municipio', 'ruta' => 'hoteles.show',       'icono' => '🏨'],
-            'restaurante' => ['modelo' => Restaurante::class, 'sub' => 'municipio', 'ruta' => 'restaurantes.show',  'icono' => '🍽️'],
-            'tour'        => ['modelo' => Tour::class,        'sub' => 'municipio', 'ruta' => 'tours.show',         'icono' => '🚌'],
-            'guia'        => ['modelo' => Guia::class,        'sub' => 'zonas',     'ruta' => 'guias.show',         'icono' => '🎯'],
-            'agencia'     => ['modelo' => Agencia::class,     'sub' => 'municipio', 'ruta' => 'agencias.show',      'icono' => '🧳'],
-        ];
-
-        $lugaresMapa = collect();
-
-        foreach ($config as $tipo => $c) {
-            $registros = $c['modelo']::whereNotNull('latitud')->whereNotNull('longitud')->get();
-            $lugaresMapa = $lugaresMapa->merge($registros->map(function ($item) use ($c, $tipo) {
-                return [
-                    'nombre'    => $item->nombre,
-                    'municipio' => $item->{$c['sub']} ?? '',
-                    'lat'       => (float) $item->latitud,
-                    'lng'       => (float) $item->longitud,
-                    'url'       => route($c['ruta'], $item),
-                    'icono'     => $c['icono'],
-                    'tipo'      => $tipo,
-                ];
-            }));
-        }
+        $lugaresMapa = $this->mapaService->obtenerTodosLosPuntos();
 
         return view('mapa', compact('lugaresMapa'));
     }

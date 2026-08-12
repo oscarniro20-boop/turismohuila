@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tour;
-use App\Models\Favorito;
+use App\Models\Agencia;
+use App\Concerns\ManagesImages;
 use Illuminate\Http\Request;
 
 class TourController extends Controller
 {
+    use ManagesImages;
+
     public function index(Request $request)
     {
         $tours = Tour::with('paquetes')
@@ -21,16 +24,16 @@ class TourController extends Controller
 
         $municipios = config('municipios.huila');
 
-        $favoritosIds = auth()->check()
-            ? Favorito::where('user_id', auth()->id())->where('tipo', 'tour')->pluck('referencia_id')->toArray()
-            : [];
+        $favoritosIds = $this->obtenerFavoritosIds(auth()->id(), 'tour');
 
         return view('tours.index', compact('tours', 'municipios', 'favoritosIds'));
     }
 
     public function create()
     {
-        return view('tours.create');
+        $agencias = Agencia::orderBy('nombre')->get();
+
+        return view('tours.create', compact('agencias'));
     }
 
     public function store(Request $request)
@@ -44,7 +47,7 @@ class TourController extends Controller
             'duracion_dias'=> 'required|integer|min:1',
             'incluye'      => 'required|string',
             'cupo_maximo'  => 'required|integer|min:1',
-            'imagen'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'imagen'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'latitud'      => 'nullable|numeric|between:-90,90',
             'longitud'     => 'nullable|numeric|between:-180,180',
         ]);
@@ -57,10 +60,7 @@ class TourController extends Controller
         ]);
 
         if ($request->hasFile('imagen')) {
-            $file = $request->file('imagen');
-            $nombre = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('imagenes/tours'), $nombre);
-            $data['imagen'] = 'imagenes/tours/' . $nombre;
+            $data['imagen'] = $this->subirImagenPrincipal($request->file('imagen'), 'tours');
         }
 
         $tour = Tour::create($data);
@@ -87,7 +87,9 @@ class TourController extends Controller
     public function edit(Tour $tour)
     {
         $tour->load('paquetes.agencia');
-        return view('tours.edit', compact('tour'));
+        $agencias = Agencia::orderBy('nombre')->get();
+
+        return view('tours.edit', compact('tour', 'agencias'));
     }
 
     public function update(Request $request, Tour $tour)
@@ -107,7 +109,7 @@ class TourController extends Controller
             'duracion_dias' => 'required|integer|min:1',
             'incluye'       => 'required|string',
             'cupo_maximo'   => 'required|integer|min:1',
-            'imagen'        => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'imagen'        => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'latitud'      => 'nullable|numeric|between:-90,90',
             'longitud'     => 'nullable|numeric|between:-180,180',
             'agencias'                 => 'nullable|array',
@@ -126,10 +128,10 @@ class TourController extends Controller
         ]);
 
         if ($request->hasFile('imagen')) {
-            $file = $request->file('imagen');
-            $nombre = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('imagenes/tours'), $nombre);
-            $data['imagen'] = 'imagenes/tours/' . $nombre;
+            // Eliminar imagen anterior
+            $this->eliminarImagen($tour->imagen);
+            
+            $data['imagen'] = $this->subirImagenPrincipal($request->file('imagen'), 'tours');
         }
 
         $tour->update($data);
@@ -163,6 +165,12 @@ class TourController extends Controller
 
     public function destroy(Tour $tour)
     {
+        // Eliminar imagen principal
+        $this->eliminarImagen($tour->imagen);
+        
+        // Eliminar imágenes de galería
+        $this->eliminarTodasImagenes($tour->imagenes);
+
         $tour->delete();
 
         return redirect()->route('tours.index')

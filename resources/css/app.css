@@ -55,6 +55,13 @@ h1, h2, h3, h4, .navbar-brand {
   font-weight: 600;
 }
 
+.btn,
+button,
+input[type="submit"],
+input[type="button"] {
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
 .navbar.bg-success,
 .btn-success {
   background-color: var(--color-primary) !important;

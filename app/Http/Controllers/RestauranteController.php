@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Restaurante;
-use App\Models\Favorito;
+use App\Concerns\ManagesImages;
 use Illuminate\Http\Request;
 
 class RestauranteController extends Controller
 {
+    use ManagesImages;
+
     public function index(Request $request)
     {
         $restaurantes = Restaurante::withAvg('resenas', 'calificacion')
@@ -20,9 +22,7 @@ class RestauranteController extends Controller
 
         $municipios = config('municipios.huila');
 
-        $favoritosIds = auth()->check()
-            ? Favorito::where('user_id', auth()->id())->where('tipo', 'restaurante')->pluck('referencia_id')->toArray()
-            : [];
+        $favoritosIds = $this->obtenerFavoritosIds(auth()->id(), 'restaurante');
 
         return view('restaurantes.index', compact('restaurantes', 'municipios', 'favoritosIds'));
     }
@@ -41,7 +41,7 @@ class RestauranteController extends Controller
             'municipio'       => 'required|string|max:255',
             'tipo_cocina'     => 'required|string|max:255',
             'precio_promedio' => 'required|numeric|min:0',
-            'imagen'          => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'imagen'          => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'telefono'        => 'nullable|string|max:20',
             'direccion'       => 'nullable|string|max:255',
             'latitud'          => 'nullable|numeric|between:-90,90',
@@ -56,10 +56,7 @@ class RestauranteController extends Controller
         ]);
 
         if ($request->hasFile('imagen')) {
-            $file = $request->file('imagen');
-            $nombre = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('imagenes/restaurantes'), $nombre);
-            $data['imagen'] = 'imagenes/restaurantes/' . $nombre;
+            $data['imagen'] = $this->subirImagenPrincipal($request->file('imagen'), 'restaurantes');
         }
 
         $restaurante = Restaurante::create($data);
@@ -97,7 +94,7 @@ class RestauranteController extends Controller
             'municipio'       => 'required|string|max:255',
             'tipo_cocina'     => 'required|string|max:255',
             'precio_promedio' => 'required|numeric|min:0',
-            'imagen'          => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'imagen'          => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'telefono'        => 'nullable|string|max:20',
             'direccion'       => 'nullable|string|max:255',
             'latitud'          => 'nullable|numeric|between:-90,90',
@@ -112,10 +109,10 @@ class RestauranteController extends Controller
         ]);
 
         if ($request->hasFile('imagen')) {
-            $file = $request->file('imagen');
-            $nombre = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('imagenes/restaurantes'), $nombre);
-            $data['imagen'] = 'imagenes/restaurantes/' . $nombre;
+            // Eliminar imagen anterior
+            $this->eliminarImagen($restaurante->imagen);
+            
+            $data['imagen'] = $this->subirImagenPrincipal($request->file('imagen'), 'restaurantes');
         }
 
         $restaurante->update($data);
@@ -129,6 +126,12 @@ class RestauranteController extends Controller
 
     public function destroy(Restaurante $restaurante)
     {
+        // Eliminar imagen principal
+        $this->eliminarImagen($restaurante->imagen);
+        
+        // Eliminar imágenes de galería
+        $this->eliminarTodasImagenes($restaurante->imagenes);
+
         $restaurante->delete();
 
         return redirect()->route('restaurantes.index')
