@@ -12,13 +12,12 @@ use App\Http\Controllers\AgenciaController;
 use App\Http\Controllers\FavoritoController;
 use App\Http\Controllers\BusquedaController;
 use App\Http\Controllers\ContactoController;
+use App\Http\Controllers\BienvenidaController;
 use Illuminate\Support\Facades\Mail;
 
 // Página de inicio
-Route::get('/', function () {
-    $heroLugar = \App\Models\Lugar::whereNotNull('imagen')->withAvg('resenas', 'calificacion')->orderByDesc('resenas_avg_calificacion')->first();
-    return view('home', compact('heroLugar'));
-})->name('home');
+// "/" y "/bienvenida" comparten BienvenidaController::index() (vista 'bienvenida')
+Route::get('/', [BienvenidaController::class, 'index'])->name('home');
 
 Route::get('/buscar', [BusquedaController::class, 'buscar'])
     ->middleware('throttle:30,1')
@@ -69,6 +68,12 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('resenas', ResenaController::class)
         ->parameters(['resenas' => 'resena'])
         ->except(['index', 'show']);
+
+    // IMPORTANTE: debe ir antes del resource público de abajo, para que
+    // /resenas/nombre-servicio no sea interceptada por /resenas/{resena} (show)
+    Route::get('/resenas/nombre-servicio', [ResenaController::class, 'nombreServicio'])
+        ->middleware('throttle:30,1')
+        ->name('resenas.nombre-servicio');
 });
 
 // ── Rutas PÚBLICAS (todos pueden ver) ─────────────────────────────────────
@@ -102,10 +107,8 @@ Route::get('/guias', [GuiaController::class, 'index'])->name('guias.index');
 Route::get('/guias/{guia}', [GuiaController::class, 'show'])->name('guias.show');
 
 // ── Pantalla de bienvenida ────────────────────────────────────────────────
-Route::get('/bienvenida', function () {
-    if (!auth()->check()) return redirect()->route('login');
-    return view('bienvenida');
-})->middleware('auth')->name('bienvenida');
+Route::get('/bienvenida', [BienvenidaController::class, 'index'])
+    ->name('bienvenida');
 
 // ── Sala de Visita ───────────────────────────────────────────────────────
 Route::get('/sala-visita', function () {
@@ -119,48 +122,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/mis-resenas', [ResenaController::class, 'misResenas'])->name('resenas.mis');
-    Route::get('/resenas/nombre-servicio', [ResenaController::class, 'nombreServicio'])->name('resenas.nombre-servicio');
-    Route::post('/favoritos/toggle', [FavoritoController::class, 'toggle'])->name('favoritos.toggle');
+    Route::post('/favoritos/toggle', [FavoritoController::class, 'toggle'])
+        ->middleware('throttle:30,1')
+        ->name('favoritos.toggle');
     Route::get('/mis-favoritos', [FavoritoController::class, 'index'])->name('favoritos.index');
 });
-
-if (app()->environment('local')) {
-    // Ruta de prueba JSON para verificar acceso de admin
-    Route::get('/test/admin-check', function () {
-        if (!auth()->check()) {
-            return response()->json([
-                'error' => 'No autenticado',
-                'message' => 'Debes iniciar sesión para ver esta información'
-            ], 401);
-        }
-
-        $user = auth()->user();
-        
-        return response()->json([
-            'usuario' => [
-                'id' => $user->id,
-                'nombre' => $user->name,
-                'email' => $user->email,
-                'rol' => $user->rol,
-            ],
-            'verificaciones' => [
-                'auth()->user()->rol' => auth()->user()->rol,
-                'auth()->user()->esAdmin()' => auth()->user()->esAdmin(),
-                'es_admin' => auth()->user()->esAdmin() ? 'SÍ - Es admin' : 'NO - No es admin',
-            ],
-            'rutas_accesibles' => auth()->user()->esAdmin() ? [
-                'hoteles.create' => route('hoteles.create'),
-                'restaurantes.create' => route('restaurantes.create'),
-                'tours.create' => route('tours.create'),
-            ] : 'No accesible',
-            'botones_visibles' => auth()->user()->esAdmin() ? [
-                '+ Nuevo Hotel',
-                '+ Nuevo Restaurante',
-                '+ Nuevo Tour',
-            ] : 'No visibles',
-        ]);
-    })->middleware('auth')->name('test.admin-check');
-
-}
 
 require __DIR__.'/auth.php';

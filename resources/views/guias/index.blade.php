@@ -21,7 +21,7 @@
         @forelse($guias as $guia)
             <div class="col tarjeta-item">
                 <x-card-turismo
-                    :imagen="$guia->foto ? asset($guia->foto) : null"
+                    :imagen="$guia->url_imagen"
                     :titulo="$guia->nombre"
                     :ubicacion="$guia->zonas ?? 'Guía turístico certificado'"
                     :rating="$guia->resenas_avg_calificacion"

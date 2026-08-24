@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Agencia;
 use App\Models\Tour;
 use App\Models\TourPaquete;
+use App\Models\Resena;
+use App\Models\Favorito;
 use App\Concerns\ManagesImages;
 use App\Http\Requests\StoreAgenciaRequest;
 use App\Http\Requests\UpdateAgenciaRequest;
@@ -129,6 +131,13 @@ class AgenciaController extends Controller
         
         // Eliminar imágenes de galería
         $this->eliminarTodasImagenes($agencia->imagenes);
+
+        // Limpiar registros huérfanos
+        Resena::where('tipo', 'agencia')->where('referencia_id', $agencia->id)->delete();
+        Favorito::where('tipo', 'agencia')->where('referencia_id', $agencia->id)->delete();
+        TourPaquete::where('agencia_id', $agencia->id)->delete();
+        // Desvincular tours relacionados
+        $agencia->tours()->detach();
 
         $agencia->delete();
 

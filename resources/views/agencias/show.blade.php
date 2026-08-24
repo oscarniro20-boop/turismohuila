@@ -1,111 +1,109 @@
 @extends('layouts.app')
 
-@section('title', $agencia->nombre . ' - TurismoHuila')
+@section('title', $agencia->nombre . ' - Agencias')
+
+@php
+    $esFav = (auth()->check() && !auth()->user()->esAdmin())
+        ? \App\Models\Favorito::where('user_id', auth()->id())->where('tipo', 'agencia')->where('referencia_id', $agencia->id)->exists()
+        : false;
+@endphp
 
 @section('content')
-<x-migas-pan :items="[
-    ['label' => 'Agencias', 'url' => route('agencias.index')],
-    ['label' => $agencia->nombre],
-]" />
-<div class="card shadow-sm border-0">
-    @if($agencia->imagen)
-        <img src="{{ asset($agencia->imagen) }}" alt="{{ $agencia->nombre }}" class="w-100" style="height: 320px; object-fit: cover;">
-    @endif
+<div class="container py-4">
+    <x-cabecera-detalle
+        :imagen="$agencia->url_imagen"
+        :titulo="$agencia->nombre"
+        :favoritoTipo="'agencia'"
+        :favoritoId="$agencia->id"
+        :esFavorito="$esFav">
 
-    <div class="card-body">
-        <div class="d-flex align-items-center gap-3">
-            <h1 class="fw-bold mb-2" style="font-family: 'Fraunces', Georgia, serif;">{{ $agencia->nombre }}</h1>
-            @auth
-                @if(!auth()->user()->esAdmin())
-                    @php $esFav = \App\Models\Favorito::where('user_id', auth()->id())->where('tipo', 'agencia')->where('referencia_id', $agencia->id)->exists(); @endphp
-                    <x-favorito-boton tipo="agencia" :id="$agencia->id" :activo="$esFav" />
-                @endif
-            @endauth
-            <x-boton-compartir titulo="{{ $agencia->nombre }}" />
-        </div>
-        <div class="d-flex flex-wrap gap-3 mb-3 text-muted">
-            @if($agencia->municipio)<span>📍 {{ $agencia->municipio }}</span>@endif
-            @if($agencia->telefono_contacto)<span>📞 {{ $agencia->telefono_contacto }}</span>@endif
-            @if($agencia->email)<span>📧 {{ $agencia->email }}</span>@endif
-            <span>⭐ {{ number_format($agencia->calificacion_promedio, 1) }}</span>
-        </div>
+        <x-slot:meta>
+            @if($agencia->municipio)<span class="d-inline-flex align-items-center gap-1">📍 {{ $agencia->municipio }}</span>@endif
+            @if($agencia->telefono_contacto)<span class="d-inline-flex align-items-center gap-1">📞 {{ $agencia->telefono_contacto }}</span>@endif
+            @if($agencia->email)<span class="d-inline-flex align-items-center gap-1">📧 {{ $agencia->email }}</span>@endif
+            <span class="d-inline-flex align-items-center gap-1">⭐ {{ number_format($agencia->resenas->avg('calificacion') ?? 0, 1) }}</span>
+        </x-slot:meta>
+    </x-cabecera-detalle>
 
-        <hr class="my-4">
+    <div class="row g-4" style="min-height: calc(100vh - var(--navbar-height, 90px));">
+        <div class="col-lg-8">
+            <p class="mb-3">{{ $agencia->descripcion ?: 'Sin descripción.' }}</p>
 
-        <h5 style="font-family: 'Fraunces', Georgia, serif; font-weight: 600;">🧳 Tours ofrecidos</h5>
-        @if($agencia->paquetes->count() > 0)
-            <div class="row g-3">
-                @foreach($agencia->paquetes as $paquete)
-                    <div class="col-md-4">
-                        <div class="card h-100 border-0 shadow-sm">
-                            @if(optional($paquete->tour)->imagen)
-                                <img src="{{ asset($paquete->tour->imagen) }}" alt="{{ $paquete->tour->nombre }}"
-                                     class="card-img-top" style="height: 160px; object-fit: cover;">
-                            @endif
-                            <div class="card-body">
+            {{-- Tours ofrecidos --}}
+            <h3 class="mt-4 mb-3" style="font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 1.2rem;">🧳 Tours ofrecidos</h3>
+            @if($agencia->paquetes->count() > 0)
+                <div class="row g-3">
+                    @foreach($agencia->paquetes as $paquete)
+                        <div class="col-sm-6">
+                            <div class="h-100 rounded-4 border bg-white p-3 hover-lift" style="border-color: var(--color-border); box-shadow: var(--shadow-ring);">
+                                @if(optional($paquete->tour)->imagen)
+                                    <img src="{{ $paquete->tour->url_imagen }}" alt="{{ $paquete->tour->nombre ?? 'Tour' }}" class="w-100 rounded-3 mb-2" style="height: 140px; object-fit: cover;">
+                                @endif
                                 <h6 class="fw-bold mb-1">{{ optional($paquete->tour)->nombre ?? 'Tour eliminado' }}</h6>
-                                <p class="text-muted small mb-1">
-                                    @if($paquete->precio) ${{ number_format($paquete->precio, 0, ',', '.') }} @endif
+                                <p class="small text-muted mb-1">
+                                    @if($paquete->precio) <span class="text-success fw-bold">${{ number_format($paquete->precio, 0, ',', '.') }}</span> @endif
                                     @if($paquete->duracion_dias) · {{ $paquete->duracion_dias }} día(s) @endif
                                     @if($paquete->cupo_maximo) · cupo {{ $paquete->cupo_maximo }} @endif
                                 </p>
                                 @if($paquete->descripcion)
-                                    <p class="text-muted small mb-0">{{ $paquete->descripcion }}</p>
+                                    <p class="small text-muted mb-0">{{ Str::limit($paquete->descripcion, 90) }}</p>
                                 @endif
                             </div>
                         </div>
-                    </div>
-                @endforeach
-            </div>
-        @else
-            <p class="text-muted">Aún no ofrece tours en la plataforma.</p>
-        @endif
+                    @endforeach
+                </div>
+            @else
+                <p class="text-muted small">Aún no ofrece tours en la plataforma.</p>
+            @endif
 
-        <!-- Galería de Imágenes -->
-        @if($agencia->imagenes->count() > 0)
-            <x-galeria-grid :imagenes="$agencia->imagenes->sortBy('orden')" :alt="$agencia->nombre" />
-        @endif
+            {{-- Galería --}}
+            @if($agencia->imagenes->count() > 0)
+                <x-galeria-grid :imagenes="$agencia->imagenes->sortBy('orden')" :alt="$agencia->nombre" />
+            @endif
 
-        <!-- Sección de Reseñas -->
-        <div class="mt-4">
-            <h5 style="font-family: 'Fraunces', Georgia, serif; font-weight: 600;">⭐ Reseñas</h5>
+            <x-barra-contacto :telefono="$agencia->telefono_contacto" :email="$agencia->email" texto="Contacta directamente con {{ $agencia->nombre }} para reservar un tour o preguntar disponibilidad." />
+
+            <h3 class="mt-4 mb-3" style="font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 1.2rem;">⭐ Reseñas</h3>
             @if($agencia->resenas->count() > 0)
                 @foreach($agencia->resenas as $resena)
-                    <div class="card mb-2">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <strong>{{ $resena->user->name }}</strong>
-                                <span class="text-warning">
-                                    <x-estrellas :calificacion="$resena->calificacion" />
-                                </span>
-                            </div>
-                            <p class="mb-0 mt-1">{{ $resena->comentario }}</p>
+                    <div class="rounded-4 p-3 border mb-2" style="border-color: var(--color-border);">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <strong>{{ $resena->user->name }}</strong>
+                            <span style="color: var(--color-gold);"><x-estrellas :calificacion="$resena->calificacion" /></span>
                         </div>
+                        <p class="mb-0 mt-1">{{ $resena->comentario }}</p>
                     </div>
                 @endforeach
             @else
-                <p class="text-muted">Aún no hay reseñas. ¡Sé el primero!</p>
+                <p class="text-muted small">Aún no hay reseñas. ¡Sé el primero!</p>
             @endif
             @auth
-                <a href="{{ route('resenas.create', ['tipo' => 'agencia', 'referencia_id' => $agencia->id]) }}" class="btn btn-sm btn-success mt-2">✍️ Escribir Reseña</a>
+                <a href="{{ route('resenas.create', ['tipo' => 'agencia', 'referencia_id' => $agencia->id]) }}" class="btn btn-sm rounded-pill mt-2" style="background: var(--color-primary); color: #fff;">✍️ Escribir Reseña</a>
             @else
-                <a href="{{ route('login') }}" class="text-decoration-none">Inicia sesión</a> <span class="text-muted">para dejar una reseña.</span>
+                <a href="{{ route('login') }}" class="text-decoration-none small">Inicia sesión</a> <span class="text-muted small">para dejar una reseña.</span>
             @endauth
-        </div>
-    </div>
 
-    <div class="card-footer d-flex gap-2">
-        <a href="{{ route('agencias.index') }}" class="btn btn-secondary">← Volver</a>
-        @auth
-            @if(auth()->user()->esAdmin())
-                <a href="{{ route('agencias.edit', $agencia) }}" class="btn btn-warning">✏️ Editar</a>
-                <form action="{{ route('agencias.destroy', $agencia) }}" method="POST" onsubmit="return confirm('¿Eliminar esta agencia?')" style="display:inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger">🗑️ Eliminar</button>
-                </form>
-            @endif
-        @endauth
+            {{-- Acciones --}}
+            <div class="d-flex flex-wrap gap-2 mt-4 pt-2">
+                <a href="{{ route('agencias.index') }}" class="btn btn-sm rounded-pill" style="border: 1px solid var(--color-border); color: var(--color-fg);">← Volver</a>
+                @auth
+                    @if(auth()->user()->esAdmin())
+                        <a href="{{ route('agencias.edit', $agencia) }}" class="btn btn-sm rounded-pill" style="border: 1px solid var(--color-secondary); color: var(--color-secondary);">✏️ Editar</a>
+                        <form action="{{ route('agencias.destroy', $agencia) }}" method="POST" onsubmit="return confirm('¿Eliminar esta agencia?')" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm rounded-pill" style="background: var(--color-danger); color: #fff;">🗑️ Eliminar</button>
+                        </form>
+                    @endif
+                @endauth
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="sticky-top" style="top: calc(var(--navbar-height, 90px) + 16px);">
+                <x-tarjeta-compartir :titulo="$agencia->nombre" tipo="agencia" />
+            </div>
+        </div>
     </div>
 </div>
 @endsection

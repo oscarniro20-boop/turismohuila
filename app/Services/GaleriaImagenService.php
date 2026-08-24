@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
+use App\Services\CloudinaryImageService;
 
 class GaleriaImagenService
 {
@@ -13,18 +14,13 @@ class GaleriaImagenService
     public function guardar(Model $entidad, array $imagenes, string $directorio): void
     {
         $orden = (int) $entidad->imagenes()->max('orden');
-        $destino = public_path($directorio);
-
-        if (!is_dir($destino)) {
-            mkdir($destino, 0755, true);
-        }
+        $servicio = app(CloudinaryImageService::class);
 
         foreach ($imagenes as $imagen) {
-            $nombre = time() . '_' . uniqid() . '.' . $imagen->getClientOriginalExtension();
-            $imagen->move($destino, $nombre);
+            $secureUrl = $servicio->subir($imagen->getRealPath(), $directorio);
 
             $entidad->imagenes()->create([
-                'ruta' => $directorio . '/' . $nombre,
+                'ruta' => $secureUrl,
                 'orden' => ++$orden,
             ]);
         }
@@ -49,10 +45,17 @@ class GaleriaImagenService
 
     public function eliminar(Model $imagen): void
     {
-        $ruta = ltrim((string) $imagen->ruta, '/');
+        $servicio = app(CloudinaryImageService::class);
+        $ruta = (string) $imagen->ruta;
 
-        if (File::exists(public_path($ruta))) {
-            File::delete(public_path($ruta));
+        if ($servicio->esUrlCloudinary($ruta)) {
+            $servicio->eliminarPorUrl($ruta);
+        } else {
+            $rutaLimpia = ltrim($ruta, '/');
+
+            if (File::exists(public_path($rutaLimpia))) {
+                File::delete(public_path($rutaLimpia));
+            }
         }
 
         $imagen->delete();

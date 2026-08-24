@@ -22,7 +22,7 @@
         @forelse($hoteles as $hotel)
             <div class="col tarjeta-item">
                 <x-card-turismo
-                    :imagen="$hotel->imagen ? asset($hotel->imagen) : null"
+                    :imagen="$hotel->url_imagen"
                     :titulo="$hotel->nombre"
                     :ubicacion="$hotel->municipio"
                     :rating="$hotel->resenas_avg_calificacion"

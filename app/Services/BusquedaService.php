@@ -12,6 +12,15 @@ use Illuminate\Support\Collection;
 
 class BusquedaService
 {
+    private const RUTAS = [
+        'lugar' => 'lugares.show',
+        'hotel' => 'hoteles.show',
+        'restaurante' => 'restaurantes.show',
+        'tour' => 'tours.show',
+        'guia' => 'guias.show',
+        'agencia' => 'agencias.show',
+    ];
+
     public function buscarEnTodos(string $query, int $limite = 4): Collection
     {
         $modelos = [
@@ -34,7 +43,7 @@ class BusquedaService
                     'id' => $item->id,
                     'nombre' => $item->nombre,
                     'subtitulo' => $item->{$config['subtitulo']} ?? '',
-                    'url' => route("{$config['tipo']}s.show", $item),
+                    'url' => route(self::RUTAS[$config['tipo']], $item),
                 ]);
             }
         }

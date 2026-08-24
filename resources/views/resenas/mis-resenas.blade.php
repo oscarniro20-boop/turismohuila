@@ -33,6 +33,12 @@
                     </div>
                     <div class="card-footer d-flex gap-2">
                         <a href="{{ route('resenas.edit', $resena) }}" class="btn btn-sm btn-warning">Editar</a>
+                        <form action="{{ route('resenas.destroy', $resena) }}" method="POST" class="d-inline"
+                              onsubmit="return confirm('¿Eliminar esta reseña? Esta acción no se puede deshacer.');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                        </form>
                     </div>
                 </div>
             </div>

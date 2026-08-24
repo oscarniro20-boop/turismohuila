@@ -19,7 +19,7 @@
                         <div class="col">
                             @if($tipo === 'guia')
                                 <x-card-turismo
-                                    :imagen="$item->foto ? asset($item->foto) : null"
+                                    :imagen="$item->url_imagen"
                                     :titulo="$item->nombre"
                                     :ubicacion="$item->zonas ?? 'Guía turístico certificado'"
                                     :descripcion="Str::limit($item->bio ?? $item->experiencia_anios . ' años de experiencia · ' . $item->idiomas, 110)"
@@ -30,7 +30,7 @@
                                 />
                             @elseif($tipo === 'hotel')
                                 <x-card-turismo
-                                    :imagen="$item->imagen ? asset($item->imagen) : null"
+                                    :imagen="$item->url_imagen"
                                     :titulo="$item->nombre"
                                     :ubicacion="$item->municipio"
                                     :descripcion="Str::limit($item->descripcion, 110)"
@@ -43,7 +43,7 @@
                                 />
                             @elseif($tipo === 'restaurante')
                                 <x-card-turismo
-                                    :imagen="$item->imagen ? asset($item->imagen) : null"
+                                    :imagen="$item->url_imagen"
                                     :titulo="$item->nombre"
                                     :ubicacion="$item->municipio . ' · ' . $item->tipo_cocina"
                                     :descripcion="Str::limit($item->descripcion, 110)"
@@ -56,7 +56,7 @@
                                 />
                             @elseif($tipo === 'tour')
                                 <x-card-turismo
-                                    :imagen="$item->imagen ? asset($item->imagen) : null"
+                                    :imagen="$item->url_imagen"
                                     :titulo="$item->nombre"
                                     :ubicacion="$item->municipio"
                                     :descripcion="Str::limit($item->descripcion, 110)"
@@ -69,7 +69,7 @@
                                 />
                             @elseif($tipo === 'agencia')
                                 <x-card-turismo
-                                    :imagen="$item->imagen ? asset($item->imagen) : null"
+                                    :imagen="$item->url_imagen"
                                     :titulo="$item->nombre"
                                     :ubicacion="$item->municipio"
                                     :descripcion="Str::limit($item->descripcion, 110)"
@@ -80,7 +80,7 @@
                                 />
                             @else
                                 <x-card-turismo
-                                    :imagen="$item->imagen ? asset($item->imagen) : null"
+                                    :imagen="$item->url_imagen"
                                     :titulo="$item->nombre"
                                     :ubicacion="$item->municipio . ' · ' . $item->categoria"
                                     :descripcion="Str::limit($item->descripcion, 110)"

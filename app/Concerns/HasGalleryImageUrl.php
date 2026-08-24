@@ -6,6 +6,10 @@ trait HasGalleryImageUrl
 {
     public function getUrlAttribute(): string
     {
-        return asset(ltrim((string) $this->ruta, '/'));
+        $ruta = (string) $this->ruta;
+
+        return str_starts_with($ruta, 'http')
+            ? $ruta
+            : asset(ltrim($ruta, '/'));
     }
 }

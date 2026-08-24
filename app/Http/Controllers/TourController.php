@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Tour;
 use App\Models\Agencia;
+use App\Models\Favorito;
+use App\Models\Resena;
 use App\Concerns\ManagesImages;
 use Illuminate\Http\Request;
 
@@ -171,6 +173,9 @@ class TourController extends Controller
         // Eliminar imágenes de galería
         $this->eliminarTodasImagenes($tour->imagenes);
 
+        // Limpiar registros huérfanos
+        Resena::where('tipo', 'tour')->where('referencia_id', $tour->id)->delete();
+        Favorito::where('tipo', 'tour')->where('referencia_id', $tour->id)->delete();
         $tour->delete();
 
         return redirect()->route('tours.index')

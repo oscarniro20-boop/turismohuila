@@ -2,109 +2,115 @@
 
 @section('title', $tour->nombre . ' - Tours')
 
+@php
+    $esFav = (auth()->check() && !auth()->user()->esAdmin())
+        ? \App\Models\Favorito::where('user_id', auth()->id())->where('tipo', 'tour')->where('referencia_id', $tour->id)->exists()
+        : false;
+@endphp
+
 @section('content')
-<x-migas-pan :items="[
-    ['label' => 'Tours', 'url' => route('tours.index')],
-    ['label' => $tour->nombre],
-]" />
-<div class="card shadow-sm border-0">
-    <div class="card-body">
+<div class="container py-4">
+    <x-cabecera-detalle
+        :imagen="$tour->url_imagen"
+        :titulo="$tour->nombre"
+        :favoritoTipo="'tour'"
+        :favoritoId="$tour->id"
+        :esFavorito="$esFav">
 
-        @if($tour->imagen)
-            <img src="{{ asset($tour->imagen) }}" alt="{{ $tour->nombre }}"
-                 class="rounded mb-3"
-                 style="width: 100%; height: 420px; object-fit: cover;">
-        @endif
+        <x-slot:meta>
+            @if($tour->municipio)<span class="d-inline-flex align-items-center gap-1">📍 {{ $tour->municipio }}</span>@endif
+            @if($tour->duracion_dias)<span class="d-inline-flex align-items-center gap-1">⏱️ {{ $tour->duracion_dias }} día(s)</span>@endif
+            @if($tour->cupo_maximo)<span class="d-inline-flex align-items-center gap-1">👥 Cupo {{ $tour->cupo_maximo }}</span>@endif
+            @if($tour->precio)<span class="d-inline-flex align-items-center gap-1">💲 ${{ number_format($tour->precio, 0, ',', '.') }}</span>@endif
+            @if($tour->telefono_contacto)<span class="d-inline-flex align-items-center gap-1">📞 {{ $tour->telefono_contacto }}</span>@endif
+            <span class="d-inline-flex align-items-center gap-1">⭐ {{ number_format($tour->resenas->avg('calificacion') ?? 0, 1) }}</span>
+        </x-slot:meta>
+    </x-cabecera-detalle>
 
-        <div class="d-flex align-items-center gap-3">
-            <h1 class="fw-bold mb-2" style="font-family: 'Fraunces', Georgia, serif;">{{ $tour->nombre }}</h1>
-            @auth
-                @if(!auth()->user()->esAdmin())
-                    @php $esFav = \App\Models\Favorito::where('user_id', auth()->id())->where('tipo', 'tour')->where('referencia_id', $tour->id)->exists(); @endphp
-                    <x-favorito-boton tipo="tour" :id="$tour->id" :activo="$esFav" />
-                @endif
-            @endauth
-            <x-boton-compartir titulo="{{ $tour->nombre }}" />
-        </div>
-        <div class="d-flex flex-wrap gap-3 mb-3 text-muted">
-            <span>📍 {{ $tour->municipio }}</span>
-            <span>⏱️ {{ $tour->duracion_dias }} día(s)</span>
-            <span>👥 Cupo máximo: {{ $tour->cupo_maximo }} personas</span>
-            <span>⭐ {{ number_format($tour->calificacion_promedio, 1) }}</span>
-        </div>
-        <p class="fw-bold mb-1">Incluye:</p>
-        <p>{{ $tour->incluye }}</p>
-        <hr>
-        <p>{{ $tour->descripcion }}</p>
+    <div class="row g-4" style="min-height: calc(100vh - var(--navbar-height, 90px));">
+        <div class="col-lg-8">
+            @if($tour->incluye)
+                <p class="fw-bold mb-1" style="color: var(--color-primary);">Incluye:</p>
+                <p class="mb-3">{{ $tour->incluye }}</p>
+            @endif
+            <p class="mb-3">{{ $tour->descripcion ?: 'Sin descripción.' }}</p>
 
-        <div class="mt-4">
-            <h5 style="font-family: 'Fraunces', Georgia, serif; font-weight: 600;">Reserva con nuestras agencias</h5>
-            <p class="text-muted small mb-3">Compara precios y condiciones. Reserva directamente con la agencia.</p>
+            {{-- Agencias que ofrecen este tour --}}
+            <h3 class="mt-4 mb-3" style="font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 1.2rem;">💬 Reserva con nuestras agencias</h3>
             @forelse($tour->paquetes as $paquete)
-                <div class="card mb-2">
-                    <div class="card-body py-2">
-                        <strong>{{ optional($paquete->agencia)->nombre ?? 'Agencia eliminada' }}</strong>
-                        <div class="text-muted small">{{ optional($paquete->agencia)->municipio }}</div>
-                        <p class="text-muted small mb-0 mt-1">
-                            @if($paquete->precio) <span class="text-success fw-bold">${{ number_format($paquete->precio, 0, ',', '.') }}</span> @endif
-                            @if($paquete->duracion_dias) · {{ $paquete->duracion_dias }} día(s) @endif
-                            @if($paquete->cupo_maximo) · cupo {{ $paquete->cupo_maximo }} @endif
-                        </p>
-                        @if($paquete->descripcion)
-                            <p class="mb-0 mt-1">{{ $paquete->descripcion }}</p>
+                <div class="rounded-4 p-3 border mb-2" style="border-color: var(--color-border); box-shadow: var(--shadow-ring);">
+                    <div class="d-flex justify-content-between align-items-start gap-3 flex-wrap">
+                        <div class="flex-grow-1">
+                            <strong>{{ optional($paquete->agencia)->nombre ?? 'Agencia eliminada' }}</strong>
+                            <div class="text-muted small">{{ optional($paquete->agencia)->municipio }}</div>
+                            <div class="text-muted small mt-1">
+                                @if($paquete->precio) <span class="text-success fw-bold">${{ number_format($paquete->precio, 0, ',', '.') }}</span> @endif
+                                @if($paquete->duracion_dias) · {{ $paquete->duracion_dias }} día(s) @endif
+                                @if($paquete->cupo_maximo) · cupo {{ $paquete->cupo_maximo }} @endif
+                            </div>
+                            @if($paquete->descripcion)
+                                <p class="mb-0 mt-1">{{ Str::limit($paquete->descripcion, 100) }}</p>
+                            @endif
+                        </div>
+                        @if(optional($paquete->agencia)->telefono_contacto)
+                            @php $numAg = preg_replace('/\D/', '', $paquete->agencia->telefono_contacto); @endphp
+                            <a href="https://wa.me/57{{ $numAg }}" target="_blank" rel="noopener"
+                               class="btn btn-sm rounded-pill"
+                               style="background: var(--color-primary); color: #fff;">💬 WhatsApp</a>
                         @endif
                     </div>
                 </div>
             @empty
-                <p class="text-muted">Ninguna agencia registrada todavía.</p>
+                <p class="text-muted small">Ninguna agencia registrada todavía.</p>
             @endforelse
-        </div>
 
-        <!-- Galería de Imágenes -->
-        @if($tour->imagenes->count() > 0)
-            <x-galeria-grid :imagenes="$tour->imagenes->sortBy('orden')" :alt="$tour->nombre" />
-        @endif
+            {{-- Galería --}}
+            @if($tour->imagenes->count() > 0)
+                <x-galeria-grid :imagenes="$tour->imagenes->sortBy('orden')" :alt="$tour->nombre" />
+            @endif
 
-        <!-- Sección de Reseñas -->
-        <div class="mt-4">
-            <h5 style="font-family: 'Fraunces', Georgia, serif; font-weight: 600;">⭐ Reseñas</h5>
+            <h3 class="mt-4 mb-3" style="font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 1.2rem;">⭐ Reseñas</h3>
             @if($tour->resenas->count() > 0)
                 @foreach($tour->resenas as $resena)
-                    <div class="card mb-2">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <strong>{{ $resena->user->name }}</strong>
-                                <span class="text-warning">
-                                    <x-estrellas :calificacion="$resena->calificacion" />
-                                </span>
-                            </div>
-                            <p class="mb-0 mt-1">{{ $resena->comentario }}</p>
+                    <div class="rounded-4 p-3 border mb-2" style="border-color: var(--color-border);">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <strong>{{ $resena->user->name }}</strong>
+                            <span style="color: var(--color-gold);"><x-estrellas :calificacion="$resena->calificacion" /></span>
                         </div>
+                        <p class="mb-0 mt-1">{{ $resena->comentario }}</p>
                     </div>
                 @endforeach
             @else
-                <p class="text-muted">Aún no hay reseñas. ¡Sé el primero!</p>
+                <p class="text-muted small">Aún no hay reseñas. ¡Sé el primero!</p>
             @endif
             @auth
-                <a href="{{ route('resenas.create', ['tipo' => 'tour', 'referencia_id' => $tour->id]) }}" class="btn btn-sm btn-success mt-2">✍️ Escribir Reseña</a>
+                <a href="{{ route('resenas.create', ['tipo' => 'tour', 'referencia_id' => $tour->id]) }}" class="btn btn-sm rounded-pill mt-2" style="background: var(--color-primary); color: #fff;">✍️ Escribir Reseña</a>
             @else
-                <a href="{{ route('login') }}" class="text-decoration-none">Inicia sesión</a> <span class="text-muted">para dejar una reseña.</span>
+                <a href="{{ route('login') }}" class="text-decoration-none small">Inicia sesión</a> <span class="text-muted small">para dejar una reseña.</span>
             @endauth
-        </div>
-    </div>
 
-    <div class="card-footer">
-        <a href="{{ route('tours.index') }}" class="btn btn-secondary">← Volver</a>
-        @auth
-            @if(auth()->user()->esAdmin())
-                <a href="{{ route('tours.edit', $tour) }}" class="btn btn-warning">✏️ Editar</a>
-                <form action="{{ route('tours.destroy', $tour) }}" method="POST" onsubmit="return confirm('¿Eliminar este registro?')" style="display:inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger">🗑️ Eliminar</button>
-                </form>
-            @endif
-        @endauth
+            {{-- Acciones --}}
+            <div class="d-flex flex-wrap gap-2 mt-4 pt-2">
+                <a href="{{ route('tours.index') }}" class="btn btn-sm rounded-pill" style="border: 1px solid var(--color-border); color: var(--color-fg);">← Volver</a>
+                @auth
+                    @if(auth()->user()->esAdmin())
+                        <a href="{{ route('tours.edit', $tour) }}" class="btn btn-sm rounded-pill" style="border: 1px solid var(--color-secondary); color: var(--color-secondary);">✏️ Editar</a>
+                        <form action="{{ route('tours.destroy', $tour) }}" method="POST" onsubmit="return confirm('¿Eliminar este registro?')" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm rounded-pill" style="background: var(--color-danger); color: #fff;">🗑️ Eliminar</button>
+                        </form>
+                    @endif
+                @endauth
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="sticky-top" style="top: calc(var(--navbar-height, 90px) + 16px);">
+                <x-panel-contacto :telefono="$tour->telefono_contacto" />
+                <x-tarjeta-compartir :titulo="$tour->nombre" tipo="tour" />
+            </div>
+        </div>
     </div>
 </div>
 @endsection

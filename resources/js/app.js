@@ -15,6 +15,23 @@ window.copiarEnlace = function (url) {
     }
 };
 
+// Función para compartir usando navigator.share o copiar enlace
+window.compartirNativo = function (titulo, url) {
+    if (navigator.share) {
+        navigator.share({
+            title: titulo,
+            url: url
+        }).then(() => {
+            console.log('Compartido exitosamente');
+        }).catch((error) => {
+            console.error('Error al compartir:', error);
+            copiarEnlace(url);
+        });
+    } else {
+        copiarEnlace(url);
+    }
+};
+
 function fallbackCopiar(url) {
     const textarea = document.createElement('textarea');
     textarea.value = url;
@@ -239,4 +256,25 @@ document.querySelectorAll('[data-vue-app]').forEach(el => {
         input.value = '';
         resultados.innerHTML = '';
     });
+})();
+
+// ── Altura dinámica del navbar para el sidebar sticky ──────────────────────
+(function () {
+    const nav = document.querySelector('nav.sticky-top');
+    if (!nav) return;
+
+    function medirNavbar() {
+        const alto = nav.getBoundingClientRect().height;
+        document.documentElement.style.setProperty('--navbar-height', alto + 'px');
+    }
+
+    medirNavbar();
+    window.addEventListener('load', medirNavbar);
+    window.addEventListener('resize', medirNavbar);
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(medirNavbar);
+    }
+    if ('ResizeObserver' in window) {
+        new ResizeObserver(medirNavbar).observe(nav);
+    }
 })();

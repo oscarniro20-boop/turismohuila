@@ -22,7 +22,7 @@
 
                 @if($agencia->imagen)
                     <div class="mb-2">
-                        <img src="{{ asset($agencia->imagen) }}" style="max-height:120px;" class="rounded d-block mb-1">
+                        <img src="{{ $agencia->url_imagen }}" style="max-height:120px;" class="rounded d-block mb-1">
                         <span class="form-text">Imagen actual (sube una nueva para reemplazarla)</span>
                     </div>
                 @endif
@@ -104,8 +104,8 @@
 </div>
 
 <script>
-const TOURS_DATA = {!! $tours->keyBy('id')->toJson() !!};
-const PAQUETES_EXISTENTES = {!! $agencia->paquetes->keyBy('tour_id')->toJson() !!};
+const TOURS_DATA = {!! Js::from($tours->keyBy('id')) !!};
+const PAQUETES_EXISTENTES = {!! Js::from($agencia->paquetes->keyBy('tour_id')) !!};
 document.addEventListener('DOMContentLoaded', function () {
     const contenedor = document.getElementById('paquetes-container');
     function renderPaquetes() {
@@ -120,6 +120,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const cupo = ex.cupo_maximo || tour.cupo_maximo || '';
             const descripcion = ex.descripcion || '';
             const bloque = document.createElement('div');
+
             bloque.className = 'card mb-3 p-3';
             bloque.innerHTML = `
                 <h6 class="mb-3">${tour.nombre}</h6>

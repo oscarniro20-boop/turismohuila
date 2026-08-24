@@ -2,82 +2,67 @@
 
 namespace App\Concerns;
 
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\File;
+use App\Models\Favorito;
+use App\Services\CloudinaryImageService;
+use App\Services\GaleriaImagenService;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 trait ManagesImages
 {
-    /**
-     * Sube una imagen principal a la carpeta especificada.
-     */
-    protected function subirImagenPrincipal(UploadedFile $file, string $carpeta): ?string
+    public function subirImagenPrincipal($file, $directorio)
     {
-        $nombre = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-        $destino = public_path("imagenes/{$carpeta}");
-
-        if (!is_dir($destino)) {
-            mkdir($destino, 0755, true);
-        }
-
-        $file->move($destino, $nombre);
-
-        return "imagenes/{$carpeta}/{$nombre}";
+        return app(CloudinaryImageService::class)->subir($file->getRealPath(), $directorio);
     }
 
-    /**
-     * Elimina una imagen del filesystem.
-     */
-    protected function eliminarImagen(?string $ruta): void
+    public function eliminarImagen($ruta)
     {
         if (!$ruta) {
             return;
         }
 
-        $rutaCompleta = public_path($ruta);
+        $servicio = app(CloudinaryImageService::class);
+        $ruta = (string) $ruta;
 
-        if (File::exists($rutaCompleta)) {
-            File::delete($rutaCompleta);
+        // Si ya es una URL de Cloudinary (migrada), borrar desde Cloudinary.
+        if ($servicio->esUrlCloudinary($ruta)) {
+            $servicio->eliminarPorUrl($ruta);
+
+            return;
+        }
+
+        // Si sigue siendo una ruta local vieja (antes de la migración), borrar del disco.
+        $rutaLimpia = ltrim($ruta, '/');
+
+        if (File::exists(public_path($rutaLimpia))) {
+            File::delete(public_path($rutaLimpia));
         }
     }
 
-    /**
-     * Obtiene los IDs de favoritos de un usuario para un tipo específico.
-     */
-    protected function obtenerFavoritosIds(?int $userId, string $tipo): array
+    public function obtenerFavoritosIds($userId, $tipo): array
     {
         if (!$userId) {
             return [];
         }
 
-        return \App\Models\Favorito::where('user_id', $userId)
+        return Favorito::where('user_id', $userId)
             ->where('tipo', $tipo)
             ->pluck('referencia_id')
             ->toArray();
     }
 
-    /**
-     * Elimina todas las imágenes de una colección.
-     */
-    protected function eliminarTodasImagenes(Collection $imagenes): void
+    public function eliminarTodasImagenes($imagenes)
     {
-        $imagenes->each(function (Model $imagen) {
-            $this->eliminarImagen($imagen->ruta ?? null);
-            $imagen->delete();
-        });
+        foreach ($imagenes as $imagen) {
+            $this->eliminarImagen($imagen->ruta);
+        }
     }
 
-    /**
-     * Guarda imágenes de galería usando el servicio especializado.
-     */
-    protected function guardarImagenesGaleria(Model $entidad, $request, string $directorio): void
+    public function guardarImagenesGaleria(Model $entidad, Request $request, string $directorio): void
     {
-        if (!$request->hasFile('imagenes')) {
-            return;
+        if ($request->hasFile('imagenes')) {
+            app(GaleriaImagenService::class)->guardar($entidad, $request->file('imagenes'), $directorio);
         }
-
-        $service = new \App\Services\GaleriaImagenService();
-        $service->guardar($entidad, $request->file('imagenes'), $directorio);
     }
 }

@@ -14,6 +14,7 @@
 /.zed
 /auth.json
 /node_modules
+/dist
 /public/build
 /public/fonts-manifest.dev.json
 /public/hot
@@ -28,3 +29,6 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 .phpstorm.meta.php 
+ 
+# Backups locales del proyecto 
+*.zip

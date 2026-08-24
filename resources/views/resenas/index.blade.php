@@ -18,9 +18,17 @@
                 </div>
                 <div class="card-footer d-flex gap-2">
                     <a href="{{ route('resenas.show', $resena) }}" class="btn btn-sm btn-info">Ver</a>
-                    @if($resena->user_id === auth()->id())
+                    @can('update', $resena)
                         <a href="{{ route('resenas.edit', $resena) }}" class="btn btn-sm btn-warning">Editar</a>
-                    @endif
+                    @endcan
+                    @can('delete', $resena)
+                        <form action="{{ route('resenas.destroy', $resena) }}" method="POST" class="d-inline"
+                              onsubmit="return confirm('¿Eliminar esta reseña? Esta acción no se puede deshacer.');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                        </form>
+                    @endcan
                 </div>
             </div>
         </div>

@@ -1,21 +1,23 @@
 @props(['imagenes', 'alt' => 'Imagen'])
 
 @if($imagenes && $imagenes->count() > 0)
-<div class="mt-6">
-    <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+<div class="mt-4">
+    <h2 class="mb-3" style="font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 1.4rem;">
         📷 Galería de Fotos
-    </h3>
+    </h2>
 
-    <!-- Contenedor Grid Responsivo -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
         @foreach($imagenes as $imagen)
-            <div class="overflow-hidden rounded-xl shadow-md border border-gray-100 group relative aspect-[4/3]">
-                <img 
-                    src="{{ $imagen->url }}" 
-                    alt="{{ $alt }}" 
-                    class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    loading="lazy"
-                />
+            <div class="col">
+                <div class="hover-lift rounded-4 overflow-hidden" style="aspect-ratio: 4 / 3; box-shadow: var(--shadow-ring);">
+                    <img
+                        src="{{ $imagen->url }}"
+                        alt="{{ $alt }}"
+                        class="w-100 h-100"
+                        style="object-fit: cover;"
+                        loading="lazy"
+                    />
+                </div>
             </div>
         @endforeach
     </div>

@@ -176,42 +176,42 @@
                 <div class="mb-2">
                     <span style="font-size: 2.5rem;">🏞️</span>
                 </div>
-                <div class="display-4 fw-bold">{{ \App\Models\Lugar::count() }}</div>
+                 <div class="display-4 fw-bold">{{ $lugaresCount }}</div>
                 <div class="small text-white-50">Lugares turísticos</div>
             </div>
             <div class="col-6 col-md-4 col-lg-2">
                 <div class="mb-2">
                     <span style="font-size: 2.5rem;">🏨</span>
                 </div>
-                <div class="display-4 fw-bold">{{ \App\Models\Hotel::count() }}</div>
+                <div class="display-4 fw-bold">{{ $hotelesCount }}</div>
                 <div class="small text-white-50">Hoteles</div>
             </div>
             <div class="col-6 col-md-4 col-lg-2">
                 <div class="mb-2">
                     <span style="font-size: 2.5rem;">🍽️</span>
                 </div>
-                <div class="display-4 fw-bold">{{ \App\Models\Restaurante::count() }}</div>
+                <div class="display-4 fw-bold">{{ $restaurantesCount }}</div>
                 <div class="small text-white-50">Restaurantes</div>
             </div>
             <div class="col-6 col-md-4 col-lg-2">
                 <div class="mb-2">
                     <span style="font-size: 2.5rem;">🚌</span>
                 </div>
-                <div class="display-4 fw-bold">{{ \App\Models\Tour::count() }}</div>
+                <div class="display-4 fw-bold">{{ $toursCount }}</div>
                 <div class="small text-white-50">Tours</div>
             </div>
             <div class="col-6 col-md-4 col-lg-2">
                 <div class="mb-2">
                     <span style="font-size: 2.5rem;">🗺️</span>
                 </div>
-                <div class="display-4 fw-bold">{{ \App\Models\Guia::count() }}</div>
+                <div class="display-4 fw-bold">{{ $guiasCount }}</div>
                 <div class="small text-white-50">Guías</div>
             </div>
             <div class="col-6 col-md-4 col-lg-2">
                 <div class="mb-2">
                     <span style="font-size: 2.5rem;">🏢</span>
                 </div>
-                <div class="display-4 fw-bold">{{ \App\Models\Agencia::count() }}</div>
+                <div class="display-4 fw-bold">{{ $agenciasCount }}</div>
                 <div class="small text-white-50">Agencias</div>
             </div>
         </div>
@@ -226,25 +226,10 @@
             <p class="lead text-muted mt-3">Descubre la belleza del Huila a través de nuestras imágenes</p>
         </div>
         <div class="row g-3">
-            @php
-                $galeria = \App\Models\LugarImagen::inRandomOrder()->take(8)->get();
-                if($galeria->count() == 0) {
-                    $galeria = collect([
-                        (object)['ruta' => 'imagenes/lugares/1783842423_Parque Arqueológico San Agustín.jpg', 'lugar' => 'Parque Arqueológico San Agustín'],
-                        (object)['ruta' => 'imagenes/lugares/1783842423_Parque Arqueológico San Agustín.jpg', 'lugar' => 'Parque Arqueológico San Agustín'],
-                        (object)['ruta' => 'imagenes/lugares/1783842423_Parque Arqueológico San Agustín.jpg', 'lugar' => 'Parque Arqueológico San Agustín'],
-                        (object)['ruta' => 'imagenes/lugares/1783842423_Parque Arqueológico San Agustín.jpg', 'lugar' => 'Parque Arqueológico San Agustín'],
-                        (object)['ruta' => 'imagenes/lugares/1783842423_Parque Arqueológico San Agustín.jpg', 'lugar' => 'Parque Arqueológico San Agustín'],
-                        (object)['ruta' => 'imagenes/lugares/1783842423_Parque Arqueológico San Agustín.jpg', 'lugar' => 'Parque Arqueológico San Agustín'],
-                        (object)['ruta' => 'imagenes/lugares/1783842423_Parque Arqueológico San Agustín.jpg', 'lugar' => 'Parque Arqueológico San Agustín'],
-                        (object)['ruta' => 'imagenes/lugares/1783842423_Parque Arqueológico San Agustín.jpg', 'lugar' => 'Parque Arqueológico San Agustín'],
-                    ]);
-                }
-            @endphp
             @foreach($galeria as $img)
                 <div class="col-6 col-md-4 col-lg-3">
                     <div class="position-relative overflow-hidden" style="border-radius: 16px; height: 250px; cursor: pointer;">
-                        <img src="{{ asset($img->ruta) }}" alt="{{ $img->lugar ?? 'Huila' }}" class="w-100 h-100 object-fit-cover" style="transition: transform 0.5s ease;">
+                        <img src="{{ str_starts_with($img->ruta, 'http') ? $img->ruta : asset($img->ruta) }}" alt="{{ $img->lugar ?? 'Huila' }}" class="w-100 h-100 object-fit-cover" style="transition: transform 0.5s ease;">
                         <div class="position-absolute top-0 start-0 w-100 h-100" style="background: rgba(0,0,0,0); transition: background 0.3s ease;"></div>
                         <div class="position-absolute bottom-0 start-0 w-100 p-3 text-white" style="opacity: 0; transition: opacity 0.3s ease;">
                             <h6 class="fw-semibold mb-0">{{ $img->lugar ?? 'Huila' }}</h6>
@@ -256,20 +241,56 @@
     </div>
 </section>
 
-<!-- Banner final para usuarios no autenticados -->
-@guest
-<section class="py-5" style="background: linear-gradient(135deg, var(--color-secondary), var(--color-primary)); position: relative; overflow: hidden;">
-    <div class="container text-center text-white position-relative" style="z-index: 2;">
-        <h2 class="display-4 fw-bold mb-3" style="font-family: 'Fraunces', Georgia, serif;">
-            ¿Listo para descubrir el Huila?
-        </h2>
-        <p class="lead mb-4 fs-5">Crea tu cuenta y comienza a planificar tu próxima aventura.</p>
-        <a href="{{ route('register') }}" class="btn btn-light btn-lg rounded-pill px-5 py-3 fw-semibold" style="box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
-            Crear cuenta
-        </a>
+<!-- Sección: Testimonios -->
+<section class="py-5" style="background: var(--color-bg);">
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold" style="font-family: 'Fraunces', Georgia, serif; color: var(--color-fg);">Testimonios</h2>
+            <p class="lead text-muted mt-3">Experiencias reales de quienes ya vivieron el Huila</p>
+        </div>
+        @if($testimonios->isNotEmpty())
+            <div class="row g-4">
+                @foreach($testimonios as $testimonio)
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 20px; transition: all 0.3s ease;">
+                            <div class="card-body p-4">
+                                <div class="mb-3">
+                                    <x-estrellas :calificacion="$testimonio->calificacion" size="1.1rem" />
+                                </div>
+                                <p class="mb-4" style="color: var(--color-fg);">&ldquo;{{ $testimonio->comentario }}&rdquo;</p>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 48px; height: 48px; background-color: var(--color-primary); color: #fff; font-weight: 600; font-family: 'Fraunces', Georgia, serif;">
+                                        {{ strtoupper(substr(optional($testimonio->user)->name ?? 'V', 0, 1)) }}
+                                    </div>
+                                    <div class="text-truncate">
+                                        <strong class="d-block text-truncate">{{ optional($testimonio->user)->name ?? 'Viajero' }}</strong>
+                                        <small class="text-muted d-block text-truncate">{{ $testimonio->nombre_servicio }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @else
+            <p class="text-center text-muted mb-0">Aún no hay testimonios. ¡Sé el primero en compartir tu experiencia!</p>
+        @endif
     </div>
-    <div class="position-absolute top-0 start-0 w-100 h-100" style="background: url('{{ asset('imagenes/lugares/1783842423_Parque Arqueológico San Agustín.jpg') }}') center/cover no-repeat; opacity: 0.1;"></div>
 </section>
+
+@guest
+    <section class="py-5" style="background: linear-gradient(135deg, var(--color-secondary), var(--color-primary)); position: relative; overflow: hidden;">
+        <div class="container text-center text-white position-relative" style="z-index: 2;">
+            <h2 class="display-4 fw-bold mb-3" style="font-family: 'Fraunces', Georgia, serif;">
+                ¿Listo para descubrir el Huila?
+            </h2>
+            <p class="lead mb-4 fs-5">Crea tu cuenta y comienza a planificar tu próxima aventura.</p>
+            <a href="{{ route('register') }}" class="btn btn-light btn-lg rounded-pill px-5 py-3 fw-semibold" style="box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
+                Crear cuenta
+            </a>
+        </div>
+        <div class="position-absolute top-0 start-0 w-100 h-100" style="background: url('{{ asset('imagenes/lugares/1783842423_Parque Arqueológico San Agustín.jpg') }}') center/cover no-repeat; opacity: 0.1;"></div>
+    </section>
 @endguest
 
 @endsection

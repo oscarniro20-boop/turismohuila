@@ -7,8 +7,10 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "cloudinary/cloudinary_php": "*",
         "laravel/framework": "^13.8",
-        "laravel/tinker": "^3.0"
+        "laravel/tinker": "^3.0",
+        "league/flysystem-aws-s3-v3": "^3.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.7",

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Hotel;
+use App\Models\Resena;
+use App\Models\Favorito;
 use App\Concerns\ManagesImages;
 use Illuminate\Http\Request;
 
@@ -132,6 +134,9 @@ class HotelController extends Controller
         // Eliminar imágenes de galería
         $this->eliminarTodasImagenes($hotel->imagenes);
 
+        // Limpiar registros huérfanos
+        Resena::where('tipo', 'hotel')->where('referencia_id', $hotel->id)->delete();
+        Favorito::where('tipo', 'hotel')->where('referencia_id', $hotel->id)->delete();
         $hotel->delete();
 
         return redirect()->route('hoteles.index')

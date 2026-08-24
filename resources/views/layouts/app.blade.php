@@ -35,38 +35,43 @@
         <div class="glow-decor" style="top:-140px; left:50%; transform:translateX(-50%); width:380px; height:380px; background: var(--color-gold); opacity:0.2;"></div>
         <div class="container py-4 position-relative" style="z-index:1;">
             <div class="row g-4">
-                <div class="col-md-4">
+                <!-- Col 1: TurismoHuila -->
+                <div class="col-md-3">
                     <h6 style="font-family: 'Fraunces', Georgia, serif; font-weight: 600;">TurismoHuila</h6>
                     <p class="mb-0 small" style="opacity: 0.9;">Descubre las maravillas del Huila. Naturaleza, cultura y aventura en un solo lugar.</p>
                 </div>
-                <div class="col-md-4">
+                <!-- Col 2: PLATAFORMA -->
+                <div class="col-md-3">
+                    <h6 class="mb-2 eyebrow" style="color: var(--color-gold);">Plataforma</h6>
+                    <ul class="list-unstyled mb-0 small">
+                        <li><a href="{{ route('nosotros') }}" class="text-white text-decoration-none" style="opacity: 0.9;">Nosotros</a></li>
+                        <li><a href="{{ route('contacto') }}" class="text-white text-decoration-none" style="opacity: 0.9;">Contacto</a></li>
+                        <li><a href="{{ route('mapa') }}" class="text-white text-decoration-none" style="opacity: 0.9;">Mapa interactivo</a></li>
+                    </ul>
+                </div>
+                <!-- Col 3: EXPLORAR -->
+                <div class="col-md-3">
                     <h6 class="mb-2 eyebrow" style="color: var(--color-gold);">Explorar</h6>
                     <ul class="list-unstyled mb-0 small">
                         <li><a href="{{ route('lugares.index') }}" class="text-white text-decoration-none" style="opacity: 0.9;">Lugares turísticos</a></li>
                         <li><a href="{{ route('hoteles.index') }}" class="text-white text-decoration-none" style="opacity: 0.9;">Hoteles</a></li>
-                        <li><a href="{{ route('restaurantes.index') }}" class="text-white text-decoration-none" style="opacity: 0.9;">Restaurantes</a></li>
                         <li><a href="{{ route('tours.index') }}" class="text-white text-decoration-none" style="opacity: 0.9;">Tours</a></li>
+                        <li><a href="{{ route('guias.index') }}" class="text-white text-decoration-none" style="opacity: 0.9;">Guías</a></li>
                         <li><a href="{{ route('agencias.index') }}" class="text-white text-decoration-none" style="opacity: 0.9;">Agencias</a></li>
-                        <li><a href="{{ route('guias.index') }}" class="text-white text-decoration-none" style="opacity: 0.9;">Guías turísticos</a></li>
-                        <li><a href="{{ route('mapa') }}" class="text-white text-decoration-none" style="opacity: 0.9;">🗺️ Ver en el mapa</a></li>
                     </ul>
                 </div>
-                <div class="col-md-4">
-                    <h6 class="mb-2 eyebrow" style="color: var(--color-gold);">Contacto</h6>
+                <!-- Col 4: LEGAL -->
+                <div class="col-md-3">
+                    <h6 class="mb-2 eyebrow" style="color: var(--color-gold);">Legal</h6>
                     <ul class="list-unstyled mb-0 small">
-                        <li>📍 Huila, Colombia</li>
-                        <li>📧 info@turismohuila.com</li>
-                        <li>📞 +57 300 123 4567</li>
-                        <li><a href="{{ route('contacto') }}" class="text-white text-decoration-none" style="opacity: 0.9;">✉️ Escríbenos</a></li>
+                        <li><a href="{{ route('terminos') }}" class="text-white text-decoration-none" style="opacity: 0.9;">Términos de uso</a></li>
+                        <li><a href="{{ route('privacidad') }}" class="text-white text-decoration-none" style="opacity: 0.9;">Política de privacidad</a></li>
                     </ul>
                 </div>
             </div>
             <hr class="my-3" style="border-color: rgba(255,255,255,0.2);">
             <p class="mb-0 small text-center" style="opacity: 0.8;">
                 © {{ date('Y') }} TurismoHuila. Todos los derechos reservados.
-                <a href="{{ route('nosotros') }}" class="text-white text-decoration-none" style="opacity: 0.9;">Nosotros</a> ·
-                <a href="{{ route('privacidad') }}" class="text-white text-decoration-none" style="opacity: 0.9;">Privacidad</a> ·
-                <a href="{{ route('terminos') }}" class="text-white text-decoration-none" style="opacity: 0.9;">Términos</a>
             </p>
         </div>
     </footer>

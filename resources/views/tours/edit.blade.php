@@ -183,7 +183,7 @@
                     <div class="mb-3">
                         <label class="form-label fw-bold">Imagen actual</label>
                         @if($tour->imagen)
-                            <div><img src="{{ asset($tour->imagen) }}" alt="Imagen" style="max-height: 150px;"></div>
+                            <div><img src="{{ $tour->url_imagen }}" alt="Imagen" style="max-height: 150px;"></div>
                         @endif
                         <input type="file" name="imagen" class="form-control mt-1" accept="image/*">
                     </div>

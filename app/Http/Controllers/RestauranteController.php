@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Restaurante;
+use App\Models\Favorito;
+use App\Models\Resena;
 use App\Concerns\ManagesImages;
 use Illuminate\Http\Request;
 
@@ -132,6 +134,9 @@ class RestauranteController extends Controller
         // Eliminar imágenes de galería
         $this->eliminarTodasImagenes($restaurante->imagenes);
 
+        // Limpiar registros huérfanos
+        Resena::where('tipo', 'restaurante')->where('referencia_id', $restaurante->id)->delete();
+        Favorito::where('tipo', 'restaurante')->where('referencia_id', $restaurante->id)->delete();
         $restaurante->delete();
 
         return redirect()->route('restaurantes.index')

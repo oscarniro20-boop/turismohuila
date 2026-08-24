@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Guia;
 use App\Models\Lugar;
+use App\Models\Favorito;
+use App\Models\Resena;
 use App\Concerns\ManagesImages;
 use Illuminate\Http\Request;
 
@@ -153,6 +155,9 @@ class GuiaController extends Controller
         // Eliminar imágenes de galería
         $this->eliminarTodasImagenes($guia->imagenes);
 
+        // Limpiar registros huérfanos
+        Resena::where('tipo', 'guia')->where('referencia_id', $guia->id)->delete();
+        Favorito::where('tipo', 'guia')->where('referencia_id', $guia->id)->delete();
         $guia->delete();
 
         return redirect()->route('guias.index')

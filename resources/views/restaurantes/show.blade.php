@@ -2,84 +2,83 @@
 
 @section('title', $restaurante->nombre . ' - Restaurantes')
 
+@php
+    $esFav = (auth()->check() && !auth()->user()->esAdmin())
+        ? \App\Models\Favorito::where('user_id', auth()->id())->where('tipo', 'restaurante')->where('referencia_id', $restaurante->id)->exists()
+        : false;
+@endphp
+
 @section('content')
-<x-migas-pan :items="[
-    ['label' => 'Restaurantes', 'url' => route('restaurantes.index')],
-    ['label' => $restaurante->nombre],
-]" />
-<div class="card shadow-sm border-0">
-    @if($restaurante->imagen)
-        <img src="{{ asset($restaurante->imagen) }}" alt="{{ $restaurante->nombre }}" class="w-100" style="height: 320px; object-fit: cover;">
-    @endif
+    <div class="container py-4">
+        <x-cabecera-detalle
+            :imagen="$restaurante->url_imagen"
+            :titulo="$restaurante->nombre"
+            :categoria="$restaurante->tipo_cocina"
+            :favoritoTipo="'restaurante'"
+            :favoritoId="$restaurante->id"
+            :esFavorito="$esFav">
 
-    <div class="card-body">
-        <div class="d-flex align-items-center gap-3">
-            <h1 class="fw-bold mb-2" style="font-family: 'Fraunces', Georgia, serif;">{{ $restaurante->nombre }}</h1>
-            @auth
-                @if(!auth()->user()->esAdmin())
-                    @php $esFav = \App\Models\Favorito::where('user_id', auth()->id())->where('tipo', 'restaurante')->where('referencia_id', $restaurante->id)->exists(); @endphp
-                    <x-favorito-boton tipo="restaurante" :id="$restaurante->id" :activo="$esFav" />
+            <x-slot:meta>
+                @if($restaurante->municipio)<span class="d-inline-flex align-items-center gap-1">📍 {{ $restaurante->municipio }}</span>@endif
+                @if($restaurante->precio_promedio)<span class="d-inline-flex align-items-center gap-1">💲 ${{ number_format($restaurante->precio_promedio, 0, ',', '.') }}</span>@endif
+                @if($restaurante->telefono)<span class="d-inline-flex align-items-center gap-1">📞 {{ $restaurante->telefono }}</span>@endif
+                <span class="d-inline-flex align-items-center gap-1">⭐ {{ number_format($restaurante->resenas->avg('calificacion') ?? 0, 1) }}</span>
+            </x-slot:meta>
+        </x-cabecera-detalle>
+
+        <div class="row g-4" style="min-height: calc(100vh - var(--navbar-height, 90px));">
+            <div class="col-lg-8">
+                <p class="mb-3">{{ $restaurante->descripcion ?: 'Sin descripción.' }}</p>
+
+                {{-- Galería --}}
+                @if($restaurante->imagenes->count() > 0)
+                    <x-galeria-grid :imagenes="$restaurante->imagenes->sortBy('orden')" :alt="$restaurante->nombre" />
                 @endif
-            @endauth
-            <x-boton-compartir titulo="{{ $restaurante->nombre }}" />
-        </div>
-        <div class="d-flex flex-wrap gap-3 mb-3 text-muted">
-            <span>📍 {{ $restaurante->municipio }}</span>
-            @if($restaurante->telefono)<span>📞 {{ $restaurante->telefono }}</span>@endif
-            <span>🍽️ {{ $restaurante->tipo_cocina }}</span>
-            <span>⭐ {{ number_format($restaurante->calificacion_promedio, 1) }}</span>
-        </div>
-        <p class="fw-bold mb-3" style="color: var(--color-primary); font-size: 1.1rem;">
-            Precio promedio: ${{ number_format($restaurante->precio_promedio, 0, ',', '.') }}
-        </p>
-        <hr>
-        <p>{{ $restaurante->descripcion }}</p>
 
-        <!-- Galería de Imágenes -->
-        @if($restaurante->imagenes->count() > 0)
-            <x-galeria-grid :imagenes="$restaurante->imagenes->sortBy('orden')" :alt="$restaurante->nombre" />
-        @endif
+                <x-barra-contacto :telefono="$restaurante->telefono" texto="Contacta directamente con {{ $restaurante->nombre }} para reservar o preguntar disponibilidad." />
 
-        <!-- Sección de Reseñas -->
-        <div class="mt-4">
-            <h5 style="font-family: 'Fraunces', Georgia, serif; font-weight: 600;">⭐ Reseñas</h5>
-            @if($restaurante->resenas->count() > 0)
-                @foreach($restaurante->resenas as $resena)
-                    <div class="card mb-2">
-                        <div class="card-body">
+                {{-- Reseñas --}}
+                <h3 class="mt-4 mb-3" style="font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 1.2rem;">⭐ Reseñas</h3>
+                @if($restaurante->resenas->count() > 0)
+                    @foreach($restaurante->resenas as $resena)
+                        <div class="rounded-4 p-3 border mb-2" style="border-color: var(--color-border);">
                             <div class="d-flex justify-content-between align-items-center">
                                 <strong>{{ $resena->user->name }}</strong>
-                                <span class="text-warning">
-                                    <x-estrellas :calificacion="$resena->calificacion" />
-                                </span>
+                                <span style="color: var(--color-gold);"><x-estrellas :calificacion="$resena->calificacion" /></span>
                             </div>
                             <p class="mb-0 mt-1">{{ $resena->comentario }}</p>
                         </div>
-                    </div>
-                @endforeach
-            @else
-                <p class="text-muted">Aún no hay reseñas. ¡Sé el primero!</p>
-            @endif
-            @auth
-                <a href="{{ route('resenas.create', ['tipo' => 'restaurante', 'referencia_id' => $restaurante->id]) }}" class="btn btn-sm btn-success mt-2">✍️ Escribir Reseña</a>
-            @else
-                <a href="{{ route('login') }}" class="text-decoration-none">Inicia sesión</a> <span class="text-muted">para dejar una reseña.</span>
-            @endauth
+                    @endforeach
+                @else
+                    <p class="text-muted small">Aún no hay reseñas. ¡Sé el primero!</p>
+                @endif
+                @auth
+                    <a href="{{ route('resenas.create', ['tipo' => 'restaurante', 'referencia_id' => $restaurante->id]) }}" class="btn btn-sm rounded-pill mt-2" style="background: var(--color-primary); color: #fff;">✍️ Escribir Reseña</a>
+                @else
+                    <a href="{{ route('login') }}" class="text-decoration-none small">Inicia sesión</a> <span class="text-muted small">para dejar una reseña.</span>
+                @endauth
+
+                {{-- Acciones --}}
+                <div class="d-flex flex-wrap gap-2 mt-4 pt-2">
+                    <a href="{{ route('restaurantes.index') }}" class="btn btn-sm rounded-pill" style="border: 1px solid var(--color-border); color: var(--color-fg);">← Volver</a>
+                    @auth
+                        @if(auth()->user()->esAdmin())
+                            <a href="{{ route('restaurantes.edit', $restaurante) }}" class="btn btn-sm rounded-pill" style="border: 1px solid var(--color-secondary); color: var(--color-secondary);">✏️ Editar</a>
+                            <form action="{{ route('restaurantes.destroy', $restaurante) }}" method="POST" onsubmit="return confirm('¿Eliminar este registro?')" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm rounded-pill" style="background: var(--color-danger); color: #fff;">🗑️ Eliminar</button>
+                            </form>
+                        @endif
+                    @endauth
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="sticky-top" style="top: calc(var(--navbar-height, 90px) + 16px);">
+                    <x-tarjeta-compartir :titulo="$restaurante->nombre" tipo="restaurante" />
+                </div>
+            </div>
         </div>
     </div>
-
-    <div class="card-footer">
-        <a href="{{ route('restaurantes.index') }}" class="btn btn-secondary">← Volver</a>
-        @auth
-            @if(auth()->user()->esAdmin())
-                <a href="{{ route('restaurantes.edit', $restaurante) }}" class="btn btn-warning">✏️ Editar</a>
-                <form action="{{ route('restaurantes.destroy', $restaurante) }}" method="POST" onsubmit="return confirm('¿Eliminar este registro?')" style="display:inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger">🗑️ Eliminar</button>
-                </form>
-            @endif
-        @endauth
-    </div>
-</div>
 @endsection

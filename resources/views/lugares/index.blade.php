@@ -14,13 +14,11 @@
 </x-page-header>
 
 <div class="container pb-5">
-    @include('partials.filtro-municipio', ['rutaIndex' => 'lugares.index', 'municipios' => $municipios])
-
     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 mt-1">
         @forelse($lugares as $lugar)
             <div class="col tarjeta-item">
                 <x-card-turismo
-                    :imagen="$lugar->imagen ? asset($lugar->imagen) : null"
+                    :imagen="$lugar->url_imagen"
                     :titulo="$lugar->nombre"
                     :ubicacion="$lugar->municipio . ' · ' . $lugar->categoria"
                     :rating="$lugar->resenas_avg_calificacion"

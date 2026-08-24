@@ -16,7 +16,7 @@ class ProfileUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+                return [
             'name' => ['required', 'string', 'max:255'],
             'email' => [
                 'required',
@@ -26,6 +26,8 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
+            // Validación de seguridad para la portada: bloquear subida de archivos no imagen
+            'foto_portada' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ];
     }
 }

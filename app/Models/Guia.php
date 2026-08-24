@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Concerns\HasGalleryImages;
+use App\Concerns\HasUrlImagen;
 use App\Concerns\HasRating;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Guia extends Model
 {
-    use HasGalleryImages, HasRating;
+    use HasGalleryImages, HasRating, HasUrlImagen;
     protected $fillable = [
         'nombre',
         'foto',
@@ -74,5 +75,10 @@ class Guia extends Model
     public function imagenes()
     {
         return $this->hasMany(GuiaImagen::class)->orderBy('orden');
+    }
+
+    protected function columnaImagen(): string
+    {
+        return 'foto';
     }
 }

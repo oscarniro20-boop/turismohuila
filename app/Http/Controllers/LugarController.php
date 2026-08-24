@@ -9,6 +9,8 @@ use App\Models\Restaurante;
 use App\Models\Tour;
 use App\Models\Guia;
 use App\Models\Agencia;
+use App\Models\Resena;
+use App\Models\Favorito;
 use App\Concerns\ManagesImages;
 use App\Services\MapaService;
 use Illuminate\Http\Request;
@@ -21,21 +23,16 @@ class LugarController extends Controller
         private MapaService $mapaService
     ) {}
 
-    public function index(Request $request)
+    public function index()
     {
         $lugares = Lugar::withAvg('resenas', 'calificacion')
             ->withCount('resenas')
-            ->when($request->filled('municipio'), function ($query) use ($request) {
-                $query->where('municipio', $request->query('municipio'));
-            })
             ->orderBy('nombre')
             ->get();
 
-        $municipios = config('municipios.huila');
-
         $favoritosIds = $this->obtenerFavoritosIds(auth()->id(), 'lugar');
 
-        return view('lugares.index', compact('lugares', 'municipios', 'favoritosIds'));
+        return view('lugares.index', compact('lugares', 'favoritosIds'));
     }
 
     public function create()
@@ -94,7 +91,7 @@ class LugarController extends Controller
             'imagen'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $datos = $request->except('imagen');
+                        $datos = $request->except('imagen', 'user_id');
 
         if ($request->hasFile('imagen')) {
             // Eliminar imagen anterior
@@ -125,6 +122,10 @@ class LugarController extends Controller
         
         // Eliminar imágenes de galería
         $this->eliminarTodasImagenes($lugar->imagenes);
+
+        // Limpiar registros huérfanos
+        Resena::where('tipo', 'lugar')->where('referencia_id', $lugar->id)->delete();
+        Favorito::where('tipo', 'lugar')->where('referencia_id', $lugar->id)->delete();
 
         $lugar->delete();
 

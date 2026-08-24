@@ -24,9 +24,9 @@
             </div>
             <div class="card-footer">
                 <a href="{{ route('resenas.index') }}" class="btn btn-secondary">← Volver</a>
-                @if($resena->user_id === auth()->id())
+                @can('update', $resena)
                     <a href="{{ route('resenas.edit', $resena) }}" class="btn btn-warning">✏️ Editar</a>
-                @endif
+                @endcan
             </div>
         </div>
     </div>

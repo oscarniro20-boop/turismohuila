@@ -28,7 +28,7 @@
 - Las reseñas usan relaciones polimórficas
 - Cada reseña tiene: `user_id`, `tipo`, `referencia_id`, `comentario`, `calificacion`
 - Solo el autor puede editar/eliminar su reseña (Policy `ResenaPolicy`)
-- Los administradores pueden gestionar todas las reseñas
+- Los administradores solo pueden editar/eliminar sus propias reseñas, igual que cualquier turista
 
 ## Funcionamiento de Búsquedas
 

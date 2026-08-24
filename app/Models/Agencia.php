@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use App\Concerns\HasGalleryImages;
+use App\Concerns\HasUrlImagen;
 use App\Concerns\HasRating;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Agencia extends Model
 {
-    use HasGalleryImages, HasRating;
+    use HasGalleryImages, HasRating, HasUrlImagen;
     protected $fillable = [
         'nombre',
         'municipio',

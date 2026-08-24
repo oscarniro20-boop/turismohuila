@@ -21,7 +21,7 @@
         @forelse($agencias as $agencia)
             <div class="col tarjeta-item">
                 <x-card-turismo
-                    :imagen="$agencia->imagen ? asset($agencia->imagen) : null"
+                    :imagen="$agencia->url_imagen"
                     :titulo="$agencia->nombre"
                     :ubicacion="$agencia->municipio . ' · ' . $agencia->tours_count . ' tours'"
                     :rating="$agencia->resenas_avg_calificacion"

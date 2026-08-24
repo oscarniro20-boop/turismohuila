@@ -87,7 +87,7 @@
                     <div class="mb-3">
                         <label class="form-label fw-bold">Imagen Principal</label>
                         @if($lugar->imagen)
-                            <div><img src="{{ asset($lugar->imagen) }}" alt="Imagen" style="max-height: 150px;"></div>
+                            <div><img src="{{ $lugar->url_imagen }}" alt="Imagen" style="max-height: 150px;"></div>
                         @endif
                         <input type="file" name="imagen" class="form-control mt-1" accept="image/*">
                     </div>
@@ -97,7 +97,7 @@
                             <div class="row mb-2">
                                 @foreach($lugar->imagenes as $img)
                                     <div class="col-md-3 mb-2">
-                                        <img src="{{ asset($img->ruta) }}" class="img-thumbnail" style="height: 100px; object-fit: cover;">
+                                        <img src="{{ $img->url }}" class="img-thumbnail" style="height: 100px; object-fit: cover;">
                                     </div>
                                 @endforeach
                             </div>

@@ -95,7 +95,7 @@
 </div>
 
 <script>
-const TOURS_DATA = {!! $tours->keyBy('id')->toJson() !!};
+ const TOURS_DATA = {!! Js::from($tours->keyBy('id')) !!};
 const PAQUETES_EXISTENTES = {};
 document.addEventListener('DOMContentLoaded', function () {
     const contenedor = document.getElementById('paquetes-container');

@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Concerns\HasUrlImagen;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasUrlImagen;
 
     protected $fillable = [
         'name',
@@ -39,5 +40,10 @@ class User extends Authenticatable
     public function esTurista(): bool
     {
         return $this->rol === 'turista';
+    }
+
+    protected function columnaImagen(): string
+    {
+        return 'foto_portada';
     }
 }

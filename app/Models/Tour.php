@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Concerns\HasGalleryImages;
+use App\Concerns\HasUrlImagen;
 use App\Concerns\HasRating;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Tour extends Model
 {
-    use HasFactory, HasGalleryImages, HasRating;
+    use HasFactory, HasGalleryImages, HasRating, HasUrlImagen;
 
     protected $table = 'tours';
 

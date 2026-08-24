@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,8 +17,24 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $user = $request->user();
+
+        $resenas = \App\Models\Resena::with('servicio')
+            ->where('user_id', $user->id)
+            ->latest()
+            ->get();
+
+        $favoritos = \App\Models\Favorito::with('servicio')
+            ->where('user_id', $user->id)
+            ->get();
+
         return view('profile.edit', [
-            'user' => $request->user(),
+            'user' => $user,
+            'favoritosCount' => \App\Models\Favorito::where('user_id', $user->id)->count(),
+            'resenas' => $resenas,
+            'resenasCount' => $resenas->count(),
+            'calificacionPromedio' => $resenas->count() > 0 ? round($resenas->avg('calificacion'), 1) : 0,
+            'favoritos' => $favoritos,
         ]);
     }
 
@@ -31,7 +48,7 @@ class ProfileController extends Controller
         // Manejar foto de portada
         if ($request->hasFile('foto_portada')) {
             $archivo = $request->file('foto_portada');
-            $nombre = time() . '_portada_' . $archivo->getClientOriginalName();
+            $nombre = time() . '_' . uniqid() . '.' . $archivo->getClientOriginalExtension();
             $archivo->move(public_path('portadas'), $nombre);
             $datos['foto_portada'] = 'portadas/' . $nombre;
         }
@@ -59,6 +76,9 @@ class ProfileController extends Controller
         $user = $request->user();
 
         Auth::logout();
+
+        // Limpiar foto de portada del usuario
+        \App\Utilities\FotoPortada::limpiar($user);
 
         $user->delete();
 
