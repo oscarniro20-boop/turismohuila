@@ -69,7 +69,6 @@
                 </div>
                 @auth
                     @if(!auth()->user()->esAdmin())
-                        @php $esFav = \App\Models\Favorito::where('user_id', auth()->id())->where('tipo', 'guia')->where('referencia_id', $guia->id)->exists(); @endphp
                         <div class="ms-auto">
                             <x-favorito-boton tipo="guia" :id="$guia->id" :activo="$esFav" />
                         </div>

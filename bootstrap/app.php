@@ -15,9 +15,18 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'rol' => \App\Http\Middleware\VerificarRol::class,
         ]);
+
+        // Cabeceras de seguridad (FASE 4). Sin CSP restrictiva: las vistas usan
+        // scripts/styles inline y CDNs (Leaflet, OSM, MarkerCluster, Cloudinary,
+        // Google Fonts); una CSP estricta rompería el mapa y el frontend.
+        $middleware->web(append: [
+            \App\Http\Middleware\CabecerasSeguridad::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        // JSON para api/* y para cualquier cliente que lo pida explícitamente
+        // (fetch/AJAX del frontend, ej. toggle de favoritos).
         $exceptions->shouldRenderJsonWhen(
-            fn (Request $request) => $request->is('api/*'),
+            fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
     })->create();

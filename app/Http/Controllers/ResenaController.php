@@ -63,11 +63,36 @@ class ResenaController extends Controller
         return view('resenas.create', compact('tipo', 'referenciaId'));
     }
 
+    /**
+     * Mapa de tipos válidos -> modelo correspondiente.
+     * Usado para garantizar que la reseña referencie un recurso existente.
+     */
+    public static function modelosPorTipo(): array
+    {
+        return [
+            'lugar'       => \App\Models\Lugar::class,
+            'hotel'       => \App\Models\Hotel::class,
+            'restaurante' => \App\Models\Restaurante::class,
+            'tour'        => \App\Models\Tour::class,
+            'guia'        => \App\Models\Guia::class,
+            'agencia'     => \App\Models\Agencia::class,
+        ];
+    }
+
     public function store(Request $request)
     {
         $request->validate([
             'tipo'         => 'required|in:lugar,hotel,restaurante,tour,guia,agencia',
-            'referencia_id'=> 'required|integer',
+            'referencia_id'=> [
+                'required',
+                'integer',
+                function (string $attribute, mixed $value, \Closure $fail) use ($request) {
+                    $modelo = self::modelosPorTipo()[$request->tipo] ?? null;
+                    if ($modelo === null || ! $modelo::whereKey($value)->exists()) {
+                        $fail('El recurso referenciado no existe.');
+                    }
+                },
+            ],
             'comentario'   => 'required|string|max:1000',
             'calificacion' => 'required|integer|min:1|max:5',
         ]);
@@ -91,6 +116,8 @@ class ResenaController extends Controller
 
     public function edit(Resena $resena)
     {
+        $this->authorize('update', $resena);
+
         return view('resenas.edit', compact('resena'));
     }
 

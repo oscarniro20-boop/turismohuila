@@ -85,7 +85,11 @@ class GuiaController extends Controller
     public function show(Guia $guia)
     {
         $guia->load('lugares', 'imagenes', 'resenas');
-        return view('guias.show', compact('guia'));
+        $esFav = auth()->check()
+            && !auth()->user()->esAdmin()
+            && Favorito::where('user_id', auth()->id())->where('tipo', 'guia')->where('referencia_id', $guia->id)->exists();
+
+        return view('guias.show', compact('guia', 'esFav'));
     }
 
     /**

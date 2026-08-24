@@ -70,11 +70,13 @@ class TourController extends Controller
         // Procesar múltiples imágenes de galería
         $this->guardarImagenesGaleria($tour, $request, 'galeria/tours');
 
-        $tour->agencias()->sync(
-            collect($request->input('agencias', []))->mapWithKeys(fn($id) => [
-                $id => ['precio' => $request->input("precios.$id")]
-            ])
-        );
+        // Fuente oficial de verdad: tour_paquetes (una fila por agencia seleccionada)
+        foreach ($request->input('agencias', []) as $agenciaId) {
+            \App\Models\TourPaquete::updateOrCreate(
+                ['agencia_id' => $agenciaId, 'tour_id' => $tour->id],
+                ['precio' => $request->input("precios.$agenciaId")]
+            );
+        }
 
         return redirect()->route('tours.index')
                          ->with('success', 'Tour creado correctamente.');
@@ -83,7 +85,11 @@ class TourController extends Controller
     public function show(Tour $tour)
     {
         $tour->load('paquetes.agencia', 'imagenes', 'resenas');
-        return view('tours.show', compact('tour'));
+        $esFav = auth()->check()
+            && !auth()->user()->esAdmin()
+            && Favorito::where('user_id', auth()->id())->where('tipo', 'tour')->where('referencia_id', $tour->id)->exists();
+
+        return view('tours.show', compact('tour', 'esFav'));
     }
 
     public function edit(Tour $tour)
@@ -142,7 +148,6 @@ class TourController extends Controller
         $this->guardarImagenesGaleria($tour, $request, 'galeria/tours');
 
         $agenciaIds = $request->input('agencias', []);
-        $tour->agencias()->sync($agenciaIds);
 
         foreach ($agenciaIds as $agenciaId) {
             $p = $request->input("paquetes.$agenciaId", []);

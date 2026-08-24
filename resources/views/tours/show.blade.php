@@ -2,12 +2,6 @@
 
 @section('title', $tour->nombre . ' - Tours')
 
-@php
-    $esFav = (auth()->check() && !auth()->user()->esAdmin())
-        ? \App\Models\Favorito::where('user_id', auth()->id())->where('tipo', 'tour')->where('referencia_id', $tour->id)->exists()
-        : false;
-@endphp
-
 @section('content')
 <div class="container py-4">
     <x-cabecera-detalle

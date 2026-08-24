@@ -1,0 +1,31 @@
+TEMP_BORRADOS: 2
+TMP_RESTANTES: _rf_out.txt
+ENV_TRACKED: ''
+ENV_IGNORED: .gitignore:3:.env	.env
+POSIBLES_SECRETOS_TRACKED: NINGUNO
+===STATUS===
+ M app/Http/Controllers/AgenciaController.php
+ M app/Http/Controllers/FavoritoController.php
+ M app/Http/Controllers/GuiaController.php
+ M app/Http/Controllers/HotelController.php
+ M app/Http/Controllers/LugarController.php
+ M app/Http/Controllers/ResenaController.php
+ M app/Http/Controllers/RestauranteController.php
+ M app/Http/Controllers/TourController.php
+ M bootstrap/app.php
+ M resources/views/agencias/show.blade.php
+ M resources/views/guias/show.blade.php
+ M resources/views/hoteles/show.blade.php
+ M resources/views/lugares/show.blade.php
+ M resources/views/restaurantes/show.blade.php
+ M resources/views/tours/show.blade.php
+?? _rf_out.txt
+?? app/Console/Commands/MigrarImagenesCloudinary.php
+?? app/Console/Commands/ProponerMapeoSeeder.php
+?? app/Http/Middleware/CabecerasSeguridad.php
+?? database/migrations/2026_08_24_000001_add_index_to_resenas_table.php
+?? tests/Feature/SeguridadTest.php
+DIFF_CHECK: warning: in the working copy of 'app/Http/Controllers/AgenciaController.php', CRLF will be replaced by LF the next time Git touches it; warning: in the working copy of 'app/Http/Controllers/FavoritoController.php', CRLF will be replaced by LF the next time Git touches it; warning: in the working copy of 'app/Http/Controllers/GuiaController.php', CRLF will be replaced by LF the next time Git touches it; warning: in the working copy of 'app/Http/Controllers/HotelController.php', CRLF will be replaced by LF the next time Git touches it; warning: in the working copy of 'app/Http/Controllers/RestauranteController.php', CRLF will be replaced by LF the next time Git touches it
+===TESTS===
+[90mTests:[39m    [32;1m46 passed[39;22m[90m (120 assertions)[39m
+TEST_EXIT: 0

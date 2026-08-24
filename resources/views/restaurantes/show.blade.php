@@ -2,12 +2,6 @@
 
 @section('title', $restaurante->nombre . ' - Restaurantes')
 
-@php
-    $esFav = (auth()->check() && !auth()->user()->esAdmin())
-        ? \App\Models\Favorito::where('user_id', auth()->id())->where('tipo', 'restaurante')->where('referencia_id', $restaurante->id)->exists()
-        : false;
-@endphp
-
 @section('content')
     <div class="container py-4">
         <x-cabecera-detalle

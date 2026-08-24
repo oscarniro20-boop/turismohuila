@@ -71,7 +71,11 @@ class LugarController extends Controller
     public function show(Lugar $lugar)
     {
         $lugar->load('imagenes', 'resenas');
-        return view('lugares.show', compact('lugar'));
+        $esFav = auth()->check()
+            && !auth()->user()->esAdmin()
+            && Favorito::where('user_id', auth()->id())->where('tipo', 'lugar')->where('referencia_id', $lugar->id)->exists();
+
+        return view('lugares.show', compact('lugar', 'esFav'));
     }
 
     public function edit(Lugar $lugar)

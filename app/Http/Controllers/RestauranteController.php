@@ -73,7 +73,11 @@ class RestauranteController extends Controller
     public function show(Restaurante $restaurante)
     {
         $restaurante->load('imagenes', 'resenas');
-        return view('restaurantes.show', compact('restaurante'));
+        $esFav = auth()->check()
+            && !auth()->user()->esAdmin()
+            && Favorito::where('user_id', auth()->id())->where('tipo', 'restaurante')->where('referencia_id', $restaurante->id)->exists();
+
+        return view('restaurantes.show', compact('restaurante', 'esFav'));
     }
 
     public function edit(Restaurante $restaurante)

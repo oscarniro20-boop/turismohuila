@@ -73,7 +73,11 @@ class HotelController extends Controller
     public function show(Hotel $hotel)
     {
         $hotel->load('imagenes', 'resenas');
-        return view('hoteles.show', compact('hotel'));
+        $esFav = auth()->check()
+            && !auth()->user()->esAdmin()
+            && Favorito::where('user_id', auth()->id())->where('tipo', 'hotel')->where('referencia_id', $hotel->id)->exists();
+
+        return view('hoteles.show', compact('hotel', 'esFav'));
     }
 
     public function edit(Hotel $hotel)

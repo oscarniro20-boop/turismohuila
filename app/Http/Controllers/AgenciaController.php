@@ -51,7 +51,6 @@ class AgenciaController extends Controller
         $this->guardarImagenesGaleria($agencia, $request, 'galeria/agencias');
 
         $tourIds = $request->input('tours', []);
-        $agencia->tours()->sync($tourIds);
 
         foreach ($tourIds as $tourId) {
             $p = $request->input("paquetes.$tourId", []);
@@ -73,12 +72,16 @@ class AgenciaController extends Controller
     public function show(Agencia $agencia)
     {
         $agencia->load('paquetes.tour', 'imagenes', 'resenas');
-        return view('agencias.show', compact('agencia'));
+        $esFav = auth()->check()
+            && !auth()->user()->esAdmin()
+            && Favorito::where('user_id', auth()->id())->where('tipo', 'agencia')->where('referencia_id', $agencia->id)->exists();
+
+        return view('agencias.show', compact('agencia', 'esFav'));
     }
 
     public function edit(Agencia $agencia)
     {
-        $agencia->load(['tours', 'paquetes.tour']);
+        $agencia->load('paquetes.tour', 'imagenes', 'resenas');
         $tours = Tour::orderBy('nombre')->get();
 
         return view('agencias.edit', compact('agencia', 'tours'));
@@ -101,7 +104,6 @@ class AgenciaController extends Controller
         $this->guardarImagenesGaleria($agencia, $request, 'galeria/agencias');
 
         $tourIds = $request->input('tours', []);
-        $agencia->tours()->sync($tourIds);
 
         foreach ($tourIds as $tourId) {
             $p = $request->input("paquetes.$tourId", []);
@@ -136,8 +138,6 @@ class AgenciaController extends Controller
         Resena::where('tipo', 'agencia')->where('referencia_id', $agencia->id)->delete();
         Favorito::where('tipo', 'agencia')->where('referencia_id', $agencia->id)->delete();
         TourPaquete::where('agencia_id', $agencia->id)->delete();
-        // Desvincular tours relacionados
-        $agencia->tours()->detach();
 
         $agencia->delete();
 
