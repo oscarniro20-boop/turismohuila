@@ -2,11 +2,14 @@
 @section('title', 'Mapa - TurismoHuila')
 @section('content')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
 <div class="container py-4">
     <h1 class="h3 mb-3" style="font-family:'Fraunces',serif;">🗺️ Mapa de Servicios Turísticos</h1>
     <div id="mapa-huila" style="height: 500px; border-radius: 1rem;"></div>
 </div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script>
 const puntos = @json($lugaresMapa);
 
@@ -40,17 +43,24 @@ function escaparHTML(texto) {
     return div.innerHTML;
 }
 
-const centro = puntos.length
-    ? [puntos.reduce((s,p)=>s+p.lat,0)/puntos.length, puntos.reduce((s,p)=>s+p.lng,0)/puntos.length]
-    : [2.5359, -75.5277];
-
-const mapa = L.map('mapa-huila').setView(centro, 9);
+const mapa = L.map('mapa-huila').setView([2.5359, -75.5277], 9);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(mapa);
 
-puntos.forEach(p => {
-    L.marker([p.lat, p.lng], { icon: crearPin(colores[p.tipo] || '#555', p.icono) })
-        .addTo(mapa)
-        .bindPopup(`<strong>${escaparHTML(p.nombre)}</strong><br>${escaparHTML(p.municipio)}<br><a href="${p.url}">Ver más</a>`);
+const clusterGroup = L.markerClusterGroup({
+    maxClusterRadius: 40,
+    spiderfyOnMaxZoom: true,
 });
+
+const marcadores = puntos.map(p =>
+    L.marker([p.lat, p.lng], { icon: crearPin(colores[p.tipo] || '#555', p.icono) })
+        .bindPopup(`<strong>${escaparHTML(p.nombre)}</strong><br>${escaparHTML(p.municipio)}<br><a href="${p.url}">Ver más</a>`)
+);
+
+marcadores.forEach(m => clusterGroup.addLayer(m));
+mapa.addLayer(clusterGroup);
+
+if (puntos.length > 0) {
+    mapa.fitBounds(clusterGroup.getBounds(), { padding: [30, 30], maxZoom: 12 });
+}
 </script>
 @endsection
