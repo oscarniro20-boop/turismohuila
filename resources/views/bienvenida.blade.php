@@ -79,8 +79,8 @@
             <h2 class="display-5 fw-bold" style="font-family: 'Fraunces', Georgia, serif; color: var(--color-fg);">Todo lo que necesitas para tu viaje</h2>
             <p class="lead text-muted mt-3">Encuentra todo lo que necesitas para una experiencia inolvidable</p>
         </div>
-        <div class="row g-4">
-            <div class="col-6 col-md-4 col-lg-2">
+        <div class="row g-4 row-cols-2 row-cols-md-4">
+            <div class="col">
                 <a href="{{ route('lugares.index') }}" class="text-decoration-none">
                     <div class="card h-100 border-0 shadow-sm text-center py-4 px-3" style="border-radius: 16px; transition: all 0.3s ease; background: #f8f9fa;">
                         <div class="card-body">
@@ -94,7 +94,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-6 col-md-4 col-lg-2">
+            <div class="col">
                 <a href="{{ route('hoteles.index') }}" class="text-decoration-none">
                     <div class="card h-100 border-0 shadow-sm text-center py-4 px-3" style="border-radius: 16px; transition: all 0.3s ease; background: #f8f9fa;">
                         <div class="card-body">
@@ -108,7 +108,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-6 col-md-4 col-lg-2">
+            <div class="col">
                 <a href="{{ route('restaurantes.index') }}" class="text-decoration-none">
                     <div class="card h-100 border-0 shadow-sm text-center py-4 px-3" style="border-radius: 16px; transition: all 0.3s ease; background: #f8f9fa;">
                         <div class="card-body">
@@ -122,7 +122,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-6 col-md-4 col-lg-2">
+            <div class="col">
                 <a href="{{ route('tours.index') }}" class="text-decoration-none">
                     <div class="card h-100 border-0 shadow-sm text-center py-4 px-3" style="border-radius: 16px; transition: all 0.3s ease; background: #f8f9fa;">
                         <div class="card-body">
@@ -136,7 +136,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-6 col-md-4 col-lg-2">
+            <div class="col">
                 <a href="{{ route('guias.index') }}" class="text-decoration-none">
                     <div class="card h-100 border-0 shadow-sm text-center py-4 px-3" style="border-radius: 16px; transition: all 0.3s ease; background: #f8f9fa;">
                         <div class="card-body">
@@ -150,7 +150,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-6 col-md-4 col-lg-2">
+            <div class="col">
                 <a href="{{ route('agencias.index') }}" class="text-decoration-none">
                     <div class="card h-100 border-0 shadow-sm text-center py-4 px-3" style="border-radius: 16px; transition: all 0.3s ease; background: #f8f9fa;">
                         <div class="card-body">
@@ -164,6 +164,20 @@
                     </div>
                 </a>
             </div>
+            <div class="col">
+                <a href="{{ route('transportes.index') }}" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm text-center py-4 px-3" style="border-radius: 16px; transition: all 0.3s ease; background: #f8f9fa;">
+                        <div class="card-body">
+                            <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px; background: rgba(var(--color-primary-rgb), 0.1);">
+                                <span style="font-size: 2rem;">🚐</span>
+                            </div>
+                            <h6 class="fw-semibold mb-2" style="color: var(--color-fg);">Transporte</h6>
+                            <p class="small text-muted mb-3">Moviliza tu viaje con comodidad</p>
+                            <span class="text-success fw-semibold small">Explorar →</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
         </div>
     </div>
 </section>
@@ -171,48 +185,55 @@
 <!-- Sección: Estadísticas -->
 <section class="py-5" style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));">
     <div class="container py-5">
-        <div class="row g-4 text-center text-white">
-            <div class="col-6 col-md-4 col-lg-2">
+        <div class="row g-4 row-cols-2 row-cols-md-4 text-center text-white">
+            <div class="col">
                 <div class="mb-2">
                     <span style="font-size: 2.5rem;">🏞️</span>
                 </div>
                  <div class="display-4 fw-bold">{{ $lugaresCount }}</div>
                 <div class="small text-white-50">Lugares turísticos</div>
             </div>
-            <div class="col-6 col-md-4 col-lg-2">
+            <div class="col">
                 <div class="mb-2">
                     <span style="font-size: 2.5rem;">🏨</span>
                 </div>
                 <div class="display-4 fw-bold">{{ $hotelesCount }}</div>
                 <div class="small text-white-50">Hoteles</div>
             </div>
-            <div class="col-6 col-md-4 col-lg-2">
+            <div class="col">
                 <div class="mb-2">
                     <span style="font-size: 2.5rem;">🍽️</span>
                 </div>
                 <div class="display-4 fw-bold">{{ $restaurantesCount }}</div>
                 <div class="small text-white-50">Restaurantes</div>
             </div>
-            <div class="col-6 col-md-4 col-lg-2">
+            <div class="col">
                 <div class="mb-2">
                     <span style="font-size: 2.5rem;">🚌</span>
                 </div>
                 <div class="display-4 fw-bold">{{ $toursCount }}</div>
                 <div class="small text-white-50">Tours</div>
             </div>
-            <div class="col-6 col-md-4 col-lg-2">
+            <div class="col">
                 <div class="mb-2">
                     <span style="font-size: 2.5rem;">🗺️</span>
                 </div>
                 <div class="display-4 fw-bold">{{ $guiasCount }}</div>
                 <div class="small text-white-50">Guías</div>
             </div>
-            <div class="col-6 col-md-4 col-lg-2">
+            <div class="col">
                 <div class="mb-2">
                     <span style="font-size: 2.5rem;">🏢</span>
                 </div>
                 <div class="display-4 fw-bold">{{ $agenciasCount }}</div>
                 <div class="small text-white-50">Agencias</div>
+            </div>
+            <div class="col">
+                <div class="mb-2">
+                    <span style="font-size: 2.5rem;">🚐</span>
+                </div>
+                <div class="display-4 fw-bold">{{ $transportesCount }}</div>
+                <div class="small text-white-50">Transporte</div>
             </div>
         </div>
     </div>

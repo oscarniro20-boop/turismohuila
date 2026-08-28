@@ -91,16 +91,16 @@
                             <strong>{{ $resena->user->name }}</strong>
                             <span style="color: var(--color-gold);"><x-estrellas :calificacion="$resena->calificacion" /></span>
                         </div>
-                        <p class="mb-0 mt-1">{{ $resena->comentario }}</p>
+                        @if($resena->comentario)<p class="mb-0 mt-1">{{ $resena->comentario }}</p>@endif
                     </div>
                 @endforeach
             @else
                 <p class="text-muted small">Aún no hay reseñas. ¡Sé el primero!</p>
             @endif
             @auth
-                <a href="{{ route('resenas.create', ['tipo' => 'guia', 'referencia_id' => $guia->id]) }}" class="btn btn-sm rounded-pill mt-2" style="background: var(--color-primary); color: #fff;">✍️ Escribir Reseña</a>
+                <x-resena-formulario tipo="guia" :referenciaId="$guia->id" :nombre="$guia->nombre" />
             @else
-                <a href="{{ route('login') }}" class="text-decoration-none small">Inicia sesión</a> <span class="text-muted small">para dejar una reseña.</span>
+                <p class="small mt-3">🔒 <a href="{{ route('login') }}" class="text-decoration-none fw-semibold">Inicia sesión</a> <span style="color: var(--color-muted-fg);">para dejar una reseña.</span></p>
             @endauth
 
             {{-- Acciones --}}
@@ -121,7 +121,7 @@
 
         <div class="col-lg-4">
             <div class="sticky-top d-flex flex-column gap-3" style="top: calc(var(--navbar-height, 90px) + 16px);">
-                <x-panel-contacto :telefono="$guia->telefono" texto="Contacta directamente a {{ $guia->nombre }} para reservar o preguntar disponibilidad." />
+                <x-contacto-servicio :telefono="$guia->telefono" texto="Contacta directamente a {{ $guia->nombre }} para reservar o preguntar disponibilidad." />
                 <x-tarjeta-compartir :titulo="$guia->nombre" tipo="guia" />
             </div>
         </div>

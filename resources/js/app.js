@@ -1,12 +1,11 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
+﻿import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import { createApp } from 'vue';
 
-// Función global para copiar enlace al portapapeles
+// FunciÃ³n global para copiar enlace al portapapeles
 window.copiarEnlace = function (url) {
     if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(url).then(() => {
-            alert('¡Enlace copiado!');
+            alert('Â¡Enlace copiado!');
         }).catch(() => {
             fallbackCopiar(url);
         });
@@ -15,7 +14,7 @@ window.copiarEnlace = function (url) {
     }
 };
 
-// Función para compartir usando navigator.share o copiar enlace
+// FunciÃ³n para compartir usando navigator.share o copiar enlace
 window.compartirNativo = function (titulo, url) {
     if (navigator.share) {
         navigator.share({
@@ -41,7 +40,7 @@ function fallbackCopiar(url) {
     textarea.select();
     try {
         document.execCommand('copy');
-        alert('¡Enlace copiado!');
+        alert('Â¡Enlace copiado!');
     } catch (err) {
         console.error('No se pudo copiar:', err);
     }
@@ -85,52 +84,15 @@ document.addEventListener('click', function (e) {
     .then(data => {
         if (!data) return;
         btn.classList.toggle('activo', data.activo);
-        btn.innerHTML = data.activo ? '❤️' : '🤍';
+        btn.innerHTML = data.activo ? 'â¤ï¸' : 'ðŸ¤';
     })
     .catch(() => {
         alert('No se pudo actualizar el favorito. Intenta de nuevo.');
     });
 });
 
-document.querySelectorAll('[data-vue-app]').forEach(el => {
-    const items = JSON.parse(el.dataset.items || '[]');
-    const userRol = el.dataset.rol || 'invitado';
-    const userId = parseInt(el.dataset.userid || '0');
 
-    createApp({
-        data() {
-            return {
-                busqueda: '',
-                items: items,
-                userRol: userRol,
-                userId: userId,
-            }
-        },
-        computed: {
-            itemsFiltrados() {
-                if (!this.busqueda) return this.items;
-                return this.items.filter(item =>
-                    item.nombre.toLowerCase().includes(this.busqueda.toLowerCase()) ||
-                    (item.municipio && item.municipio.toLowerCase().includes(this.busqueda.toLowerCase()))
-                );
-            }
-        },
-        methods: {
-            puedeEditar(item) {
-                if (this.userRol === 'admin') return true;
-                if (item.user_id === this.userId) return true;
-                return false;
-            },
-            eliminar(event) {
-                if (confirm('¿Seguro que deseas eliminar este registro?')) {
-                    event.target.submit();
-                }
-            }
-        }
-    }).mount(el);
-});
-
-// ── Búsqueda global ────────────────────────────────────────────────────────
+// â”€â”€ BÃºsqueda global â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 (function () {
     const input = document.getElementById('busqueda-input');
     const resultados = document.getElementById('busqueda-resultados');
@@ -139,12 +101,12 @@ document.querySelectorAll('[data-vue-app]').forEach(el => {
     let debounceTimer;
 
     const iconosPorTipo = {
-        lugar: '📍',
-        hotel: '🏨',
-        restaurante: '🍽️',
-        tour: '🥾',
-        guia: '🧑‍🏫',
-        agencia: '🏢',
+        lugar: 'ðŸ“',
+        hotel: 'ðŸ¨',
+        restaurante: 'ðŸ½ï¸',
+        tour: 'ðŸ¥¾',
+        guia: 'ðŸ§‘â€ðŸ«',
+        agencia: 'ðŸ¢',
     };
 
     const nombresPorTipo = {
@@ -152,7 +114,7 @@ document.querySelectorAll('[data-vue-app]').forEach(el => {
         hotel: 'Hoteles',
         restaurante: 'Restaurantes',
         tour: 'Tours',
-        guia: 'Guías',
+        guia: 'GuÃ­as',
         agencia: 'Agencias',
     };
 
@@ -197,7 +159,7 @@ document.querySelectorAll('[data-vue-app]').forEach(el => {
                 flex.className = 'd-flex align-items-center gap-2';
 
                 const icono = document.createElement('span');
-                icono.textContent = iconosPorTipo[item.tipo] || '🔎';
+                icono.textContent = iconosPorTipo[item.tipo] || 'ðŸ”Ž';
                 flex.appendChild(icono);
 
                 const info = document.createElement('div');
@@ -258,7 +220,7 @@ document.querySelectorAll('[data-vue-app]').forEach(el => {
     });
 })();
 
-// ── Altura dinámica del navbar para el sidebar sticky ──────────────────────
+// â”€â”€ Altura dinÃ¡mica del navbar para el sidebar sticky â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 (function () {
     const nav = document.querySelector('nav.sticky-top');
     if (!nav) return;

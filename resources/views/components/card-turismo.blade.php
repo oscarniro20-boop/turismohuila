@@ -34,8 +34,12 @@
         @endif
 
         @auth
-            @if(auth()->user()->esAdmin() && ($editUrl || $deleteUrl))
-                <div class="position-absolute top-0 start-0 m-3 d-flex gap-2">
+            <div class="position-absolute top-0 start-0 m-3 d-flex gap-2">
+                @if($favoritoTipo !== null)
+                    <x-favorito-boton :tipo="$favoritoTipo" :id="$favoritoId" :activo="$esFavorito" />
+                @endif
+
+                @if(auth()->user()->esAdmin())
                     @if($editUrl)
                         <a href="{{ $editUrl }}" title="Editar" onclick="event.stopPropagation();"
                            class="d-flex align-items-center justify-content-center rounded-circle"
@@ -48,12 +52,8 @@
                                     style="width:32px; height:32px; background: rgba(255,255,255,0.94);">🗑️</button>
                         </form>
                     @endif
-                </div>
-            @elseif($favoritoTipo !== null && !auth()->user()->esAdmin())
-                <div class="position-absolute top-0 start-0 m-3">
-                    <x-favorito-boton :tipo="$favoritoTipo" :id="$favoritoId" :activo="$esFavorito" />
-                </div>
-            @endif
+                @endif
+            </div>
         @endauth
     </a>
 

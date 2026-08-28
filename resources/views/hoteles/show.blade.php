@@ -12,24 +12,24 @@
             :esFavorito="$esFav">
 
             <x-slot:meta>
-                @if($hotel->municipio)<span class="d-inline-flex align-items-center gap-1">📍 {{ $hotel->municipio }}</span>@endif
-                @if($hotel->estrellas)<span class="d-inline-flex align-items-center gap-1">⭐ {{ $hotel->estrellas }} estrellas</span>@endif
-                @if($hotel->precio_noche)<span class="d-inline-flex align-items-center gap-1">💲 ${{ number_format($hotel->precio_noche, 0, ',', '.') }} / noche</span>@endif
-                @if($hotel->telefono)<span class="d-inline-flex align-items-center gap-1">📞 {{ $hotel->telefono }}</span>@endif
-                <span class="d-inline-flex align-items-center gap-1">⭐ {{ number_format($hotel->resenas->avg('calificacion') ?? 0, 1) }}</span>
+                @if($hotel->municipio)<span class="badge rounded-pill px-3 py-2" style="background: rgba(255,255,255,0.92); color: var(--color-fg);">📍 {{ $hotel->municipio }}</span>@endif
+                @if($hotel->estrellas)<span class="badge rounded-pill px-3 py-2" style="background: rgba(255,255,255,0.92); color: var(--color-fg);">⭐ {{ $hotel->estrellas }} estrellas</span>@endif
+                @if($hotel->precio_noche)<span class="badge rounded-pill px-3 py-2" style="background: rgba(255,255,255,0.92); color: var(--color-fg);">💲 ${{ number_format($hotel->precio_noche, 0, ',', '.') }} / noche</span>@endif
+                @if($hotel->telefono)<span class="badge rounded-pill px-3 py-2" style="background: rgba(255,255,255,0.92); color: var(--color-fg);">📞 {{ $hotel->telefono }}</span>@endif
+                <span class="badge rounded-pill px-3 py-2" style="background: rgba(255,255,255,0.92); color: var(--color-fg);">⭐ {{ number_format($hotel->resenas->avg('calificacion') ?? 0, 1) }}</span>
             </x-slot:meta>
         </x-cabecera-detalle>
 
         <div class="row g-4" style="min-height: calc(100vh - var(--navbar-height, 90px));">
             <div class="col-lg-8">
-                <p class="mb-3">{{ $hotel->descripcion ?: 'Sin descripción.' }}</p>
+                <p class="mb-3">@if($hotel->descripcion)<span style="float: left; font-family: 'Fraunces', Georgia, serif; font-size: 3.5rem; line-height: 0.8; padding-right: 0.5rem; color: var(--color-primary); font-weight: 600;">{{ mb_substr($hotel->descripcion, 0, 1) }}</span>{{ mb_substr($hotel->descripcion, 1) }}@else Sin descripción. @endif</p>
 
                 {{-- Galería --}}
                 @if($hotel->imagenes->count() > 0)
                     <x-galeria-grid :imagenes="$hotel->imagenes->sortBy('orden')" :alt="$hotel->nombre" />
                 @endif
 
-                <x-barra-contacto :telefono="$hotel->telefono" texto="Contacta directamente con {{ $hotel->nombre }} para reservar o preguntar disponibilidad." />
+                <x-contacto-servicio :telefono="$hotel->telefono" texto="Contacta directamente con {{ $hotel->nombre }} para reservar o preguntar disponibilidad." />
 
                 {{-- Reseñas --}}
                 <h3 class="mt-4 mb-3" style="font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 1.2rem;">⭐ Reseñas</h3>
@@ -40,16 +40,16 @@
                                 <strong>{{ $resena->user->name }}</strong>
                                 <span style="color: var(--color-gold);"><x-estrellas :calificacion="$resena->calificacion" /></span>
                             </div>
-                            <p class="mb-0 mt-1">{{ $resena->comentario }}</p>
+                            @if($resena->comentario)<p class="mb-0 mt-1">{{ $resena->comentario }}</p>@endif
                         </div>
                     @endforeach
                 @else
                     <p class="text-muted small">Aún no hay reseñas. ¡Sé el primero!</p>
                 @endif
                 @auth
-                    <a href="{{ route('resenas.create', ['tipo' => 'hotel', 'referencia_id' => $hotel->id]) }}" class="btn btn-sm rounded-pill mt-2" style="background: var(--color-primary); color: #fff;">✍️ Escribir Reseña</a>
+                    <x-resena-formulario tipo="hotel" :referenciaId="$hotel->id" :nombre="$hotel->nombre" />
                 @else
-                    <a href="{{ route('login') }}" class="text-decoration-none small">Inicia sesión</a> <span class="text-muted small">para dejar una reseña.</span>
+                    <p class="small mt-3">🔒 <a href="{{ route('login') }}" class="text-decoration-none fw-semibold">Inicia sesión</a> <span style="color: var(--color-muted-fg);">para dejar una reseña.</span></p>
                 @endauth
 
                 {{-- Acciones --}}

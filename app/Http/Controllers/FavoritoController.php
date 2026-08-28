@@ -10,7 +10,7 @@ class FavoritoController extends Controller
     public function toggle(Request $request)
     {
         $request->validate([
-            'tipo' => 'required|in:lugar,hotel,restaurante,tour,guia,agencia',
+            'tipo' => 'required|in:lugar,hotel,restaurante,tour,guia,agencia,transporte',
             'referencia_id' => 'required|integer',
         ]);
 
@@ -22,6 +22,7 @@ class FavoritoController extends Controller
             'tour' => \App\Models\Tour::class,
             'guia' => \App\Models\Guia::class,
             'agencia' => \App\Models\Agencia::class,
+            'transporte' => \App\Models\Transporte::class,
             default => null,
         };
 

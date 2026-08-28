@@ -130,3 +130,31 @@ input[type="button"] {
 :root {
     --navbar-height: 90px; /* valor de respaldo mientras carga el JS */
 }
+
+/* ===== Reseñas integradas: selector de estrellas ===== */
+.resena-estrellas {
+    display: inline-flex;
+    flex-direction: row-reverse;
+    gap: .25rem;
+}
+.resena-estrellas input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+.resena-estrellas label {
+    font-size: 1.75rem;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--color-border);
+    transition: color .15s ease, transform .15s ease;
+    user-select: none;
+}
+.resena-estrellas label:hover,
+.resena-estrellas label:hover ~ label,
+.resena-estrellas input:checked ~ label {
+    color: var(--color-gold);
+}
+.resena-estrellas label:hover {
+    transform: scale(1.15);
+}

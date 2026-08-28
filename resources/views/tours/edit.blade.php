@@ -52,29 +52,45 @@
                     <script>
                     function agregarPaqueteAgencia(agenciaId, nombre, valores = {}) {
                         if (document.getElementById('paquete-agencia-' + agenciaId)) return;
+
+                        // Construcción DOM segura: nunca innerHTML con datos dinámicos.
+                        function campo(claseCol, textoLabel, nameAttr, atributos, valor) {
+                            const col = document.createElement('div');
+                            col.className = claseCol;
+                            const label = document.createElement('label');
+                            label.className = 'form-label small';
+                            label.textContent = textoLabel;
+                            const input = document.createElement('input');
+                            input.type = atributos.tipo;
+                            input.name = nameAttr;
+                            input.className = 'form-control form-control-sm';
+                            input.value = valor || '';
+                            if (atributos.min !== undefined) input.min = atributos.min;
+                            if (atributos.step) input.step = atributos.step;
+                            col.appendChild(label);
+                            col.appendChild(input);
+                            return col;
+                        }
+
                         const div = document.createElement('div');
                         div.className = 'card mb-3';
                         div.id = 'paquete-agencia-' + agenciaId;
-                        div.innerHTML = `
-                            <div class="card-header bg-light"><strong>Paquete con: ${nombre}</strong></div>
-                            <div class="card-body row g-2">
-                                <div class="col-md-3">
-                                    <label class="form-label small">Precio</label>
-                                    <input type="number" name="paquetes[${agenciaId}][precio]" class="form-control form-control-sm" min="0" step="0.01" value="${valores.precio || ''}">
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label small">Duración (días)</label>
-                                    <input type="number" name="paquetes[${agenciaId}][duracion_dias]" class="form-control form-control-sm" min="1" value="${valores.duracion_dias || ''}">
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label small">Cupo máximo</label>
-                                    <input type="number" name="paquetes[${agenciaId}][cupo_maximo]" class="form-control form-control-sm" min="1" value="${valores.cupo_maximo || ''}">
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label small">Descripción</label>
-                                    <input type="text" name="paquetes[${agenciaId}][descripcion]" class="form-control form-control-sm" value="${valores.descripcion || ''}">
-                                </div>
-                            </div>`;
+
+                        const header = document.createElement('div');
+                        header.className = 'card-header bg-light';
+                        const strong = document.createElement('strong');
+                        strong.textContent = 'Paquete con: ' + nombre;
+                        header.appendChild(strong);
+
+                        const body = document.createElement('div');
+                        body.className = 'card-body row g-2';
+                        body.appendChild(campo('col-md-3', 'Precio', `paquetes[${agenciaId}][precio]`, { tipo: 'number', min: '0', step: '0.01' }, valores.precio));
+                        body.appendChild(campo('col-md-3', 'Duración (días)', `paquetes[${agenciaId}][duracion_dias]`, { tipo: 'number', min: '1' }, valores.duracion_dias));
+                        body.appendChild(campo('col-md-3', 'Cupo máximo', `paquetes[${agenciaId}][cupo_maximo]`, { tipo: 'number', min: '1' }, valores.cupo_maximo));
+                        body.appendChild(campo('col-md-3', 'Descripción', `paquetes[${agenciaId}][descripcion]`, { tipo: 'text' }, valores.descripcion));
+
+                        div.appendChild(header);
+                        div.appendChild(body);
                         document.getElementById('paquetes-container-tour').appendChild(div);
                     }
 

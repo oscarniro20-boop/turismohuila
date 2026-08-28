@@ -81,15 +81,19 @@ function buscarNombreServicio() {
     fetch(`{{ route('resenas.nombre-servicio') }}?tipo=${tipo}&id=${id}`)
         .then(r => r.json())
         .then(data => {
+            preview.textContent = '';
             if (!data.nombre) {
-                preview.innerHTML = '⚠️ No se encontró ningún servicio con ese ID.';
+                preview.textContent = '⚠️ No se encontró ningún servicio con ese ID.';
                 return;
             }
-            let html = `📌 Esta reseña va dirigida a: ${data.nombre}`;
+            const linea = document.createElement('div');
+            linea.textContent = `📌 Esta reseña va dirigida a: ${data.nombre}`;
+            preview.appendChild(linea);
             if (data.relacionados?.length) {
-                html += `<br>🔗 Relacionado con: ${data.relacionados.join(', ')}`;
+                const rel = document.createElement('div');
+                rel.textContent = `🔗 Relacionado con: ${data.relacionados.join(', ')}`;
+                preview.appendChild(rel);
             }
-            preview.innerHTML = html;
         });
 }
 

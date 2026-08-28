@@ -6,7 +6,7 @@ use App\Concerns\HasGalleryImages;
 use App\Concerns\HasUrlImagen;
 use App\Concerns\HasRating;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Agencia extends Model
 {
@@ -22,11 +22,17 @@ class Agencia extends Model
         'longitud',
     ];
 
-    public function tours(): BelongsToMany
+    public function tours(): HasManyThrough
     {
-        return $this->belongsToMany(Tour::class, 'agencia_tour')
-                    ->withPivot('precio')
-                    ->withTimestamps();
+        // Fuente oficial de verdad: tour_paquetes (no agencia_tour, tabla legacy).
+        return $this->hasManyThrough(
+            Tour::class,
+            TourPaquete::class,
+            'agencia_id',   // FK en tour_paquetes -> agencias.id
+            'id',           // FK en tours -> tour_paquetes.tour_id
+            'id',           // PK de agencias
+            'tour_id'       // FK en tour_paquetes -> tours.id
+        );
     }
 
     public function resenas()

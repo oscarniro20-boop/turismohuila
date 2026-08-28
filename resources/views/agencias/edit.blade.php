@@ -120,28 +120,61 @@ document.addEventListener('DOMContentLoaded', function () {
             const cupo = ex.cupo_maximo || tour.cupo_maximo || '';
             const descripcion = ex.descripcion || '';
             const bloque = document.createElement('div');
-
             bloque.className = 'card mb-3 p-3';
-            bloque.innerHTML = `
-                <h6 class="mb-3">${tour.nombre}</h6>
-                <div class="row g-2">
-                    <div class="col-md-4">
-                        <label class="form-label small">Precio por persona ($)</label>
-                        <input type="number" step="0.01" min="0" class="form-control form-control-sm" name="paquetes[${tourId}][precio]" value="${precio}">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label small">Duración (días)</label>
-                        <input type="number" min="1" class="form-control form-control-sm" name="paquetes[${tourId}][duracion_dias]" value="${duracion}">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label small">Cupo máximo</label>
-                        <input type="number" min="1" class="form-control form-control-sm" name="paquetes[${tourId}][cupo_maximo]" value="${cupo}">
-                    </div>
-                    <div class="col-12">
-                        <label class="form-label small">Descripción de este servicio (opcional)</label>
-                        <textarea class="form-control form-control-sm" rows="2" name="paquetes[${tourId}][descripcion]">${descripcion}</textarea>
-                    </div>
-                </div>`;
+
+            const titulo = document.createElement('h6');
+            titulo.className = 'mb-3';
+            titulo.textContent = tour.nombre; // textContent: seguro ante XSS
+            bloque.appendChild(titulo);
+
+            const row = document.createElement('div');
+            row.className = 'row g-2';
+
+            const campo = (cls) => {
+                const col = document.createElement('div');
+                col.className = cls;
+                const label = document.createElement('label');
+                label.className = 'form-label small';
+                col.appendChild(label);
+                return { col, label };
+            };
+
+            const p = campo('col-md-4');
+            p.label.textContent = 'Precio por persona ($)';
+            const i1 = document.createElement('input');
+            i1.type = 'number'; i1.step = '0.01'; i1.min = '0';
+            i1.className = 'form-control form-control-sm';
+            i1.name = `paquetes[${tourId}][precio]`;
+            i1.value = precio;
+            p.col.appendChild(i1); row.appendChild(p.col);
+
+            const d = campo('col-md-4');
+            d.label.textContent = 'Duración (días)';
+            const i2 = document.createElement('input');
+            i2.type = 'number'; i2.min = '1';
+            i2.className = 'form-control form-control-sm';
+            i2.name = `paquetes[${tourId}][duracion_dias]`;
+            i2.value = duracion;
+            d.col.appendChild(i2); row.appendChild(d.col);
+
+            const c = campo('col-md-4');
+            c.label.textContent = 'Cupo máximo';
+            const i3 = document.createElement('input');
+            i3.type = 'number'; i3.min = '1';
+            i3.className = 'form-control form-control-sm';
+            i3.name = `paquetes[${tourId}][cupo_maximo]`;
+            i3.value = cupo;
+            c.col.appendChild(i3); row.appendChild(c.col);
+
+            const desc = campo('col-12');
+            desc.label.textContent = 'Descripción de este servicio (opcional)';
+            const t4 = document.createElement('textarea');
+            t4.className = 'form-control form-control-sm'; t4.rows = 2;
+            t4.name = `paquetes[${tourId}][descripcion]`;
+            t4.textContent = descripcion;
+            desc.col.appendChild(t4); row.appendChild(desc.col);
+
+            bloque.appendChild(row);
             contenedor.appendChild(bloque);
         });
     }

@@ -12,12 +12,12 @@
         :esFavorito="$esFav">
 
         <x-slot:meta>
-            @if($tour->municipio)<span class="d-inline-flex align-items-center gap-1">📍 {{ $tour->municipio }}</span>@endif
-            @if($tour->duracion_dias)<span class="d-inline-flex align-items-center gap-1">⏱️ {{ $tour->duracion_dias }} día(s)</span>@endif
-            @if($tour->cupo_maximo)<span class="d-inline-flex align-items-center gap-1">👥 Cupo {{ $tour->cupo_maximo }}</span>@endif
-            @if($tour->precio)<span class="d-inline-flex align-items-center gap-1">💲 ${{ number_format($tour->precio, 0, ',', '.') }}</span>@endif
-            @if($tour->telefono_contacto)<span class="d-inline-flex align-items-center gap-1">📞 {{ $tour->telefono_contacto }}</span>@endif
-            <span class="d-inline-flex align-items-center gap-1">⭐ {{ number_format($tour->resenas->avg('calificacion') ?? 0, 1) }}</span>
+            @if($tour->municipio)<span class="badge rounded-pill px-3 py-2" style="background: rgba(255,255,255,0.92); color: var(--color-fg);">📍 {{ $tour->municipio }}</span>@endif
+            @if($tour->duracion_dias)<span class="badge rounded-pill px-3 py-2" style="background: rgba(255,255,255,0.92); color: var(--color-fg);">⏱️ {{ $tour->duracion_dias }} día(s)</span>@endif
+            @if($tour->cupo_maximo)<span class="badge rounded-pill px-3 py-2" style="background: rgba(255,255,255,0.92); color: var(--color-fg);">👥 Cupo {{ $tour->cupo_maximo }}</span>@endif
+            @if($tour->precio)<span class="badge rounded-pill px-3 py-2" style="background: rgba(255,255,255,0.92); color: var(--color-fg);">💲 ${{ number_format($tour->precio, 0, ',', '.') }}</span>@endif
+            @if($tour->telefono_contacto)<span class="badge rounded-pill px-3 py-2" style="background: rgba(255,255,255,0.92); color: var(--color-fg);">📞 {{ $tour->telefono_contacto }}</span>@endif
+            <span class="badge rounded-pill px-3 py-2" style="background: rgba(255,255,255,0.92); color: var(--color-fg);">⭐ {{ number_format($tour->resenas->avg('calificacion') ?? 0, 1) }}</span>
         </x-slot:meta>
     </x-cabecera-detalle>
 
@@ -27,7 +27,7 @@
                 <p class="fw-bold mb-1" style="color: var(--color-primary);">Incluye:</p>
                 <p class="mb-3">{{ $tour->incluye }}</p>
             @endif
-            <p class="mb-3">{{ $tour->descripcion ?: 'Sin descripción.' }}</p>
+            <p class="mb-3">@if($tour->descripcion)<span style="float: left; font-family: 'Fraunces', Georgia, serif; font-size: 3.5rem; line-height: 0.8; padding-right: 0.5rem; color: var(--color-primary); font-weight: 600;">{{ mb_substr($tour->descripcion, 0, 1) }}</span>{{ mb_substr($tour->descripcion, 1) }}@else Sin descripción. @endif</p>
 
             {{-- Agencias que ofrecen este tour --}}
             <h3 class="mt-4 mb-3" style="font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 1.2rem;">💬 Reserva con nuestras agencias</h3>
@@ -71,16 +71,16 @@
                             <strong>{{ $resena->user->name }}</strong>
                             <span style="color: var(--color-gold);"><x-estrellas :calificacion="$resena->calificacion" /></span>
                         </div>
-                        <p class="mb-0 mt-1">{{ $resena->comentario }}</p>
+                        @if($resena->comentario)<p class="mb-0 mt-1">{{ $resena->comentario }}</p>@endif
                     </div>
                 @endforeach
             @else
                 <p class="text-muted small">Aún no hay reseñas. ¡Sé el primero!</p>
             @endif
             @auth
-                <a href="{{ route('resenas.create', ['tipo' => 'tour', 'referencia_id' => $tour->id]) }}" class="btn btn-sm rounded-pill mt-2" style="background: var(--color-primary); color: #fff;">✍️ Escribir Reseña</a>
+                <x-resena-formulario tipo="tour" :referenciaId="$tour->id" :nombre="$tour->nombre" />
             @else
-                <a href="{{ route('login') }}" class="text-decoration-none small">Inicia sesión</a> <span class="text-muted small">para dejar una reseña.</span>
+                <p class="small mt-3">🔒 <a href="{{ route('login') }}" class="text-decoration-none fw-semibold">Inicia sesión</a> <span style="color: var(--color-muted-fg);">para dejar una reseña.</span></p>
             @endauth
 
             {{-- Acciones --}}
@@ -101,7 +101,7 @@
 
         <div class="col-lg-4">
             <div class="sticky-top" style="top: calc(var(--navbar-height, 90px) + 16px);">
-                <x-panel-contacto :telefono="$tour->telefono_contacto" />
+                <x-contacto-servicio :telefono="$tour->telefono_contacto" />
                 <x-tarjeta-compartir :titulo="$tour->nombre" tipo="tour" />
             </div>
         </div>

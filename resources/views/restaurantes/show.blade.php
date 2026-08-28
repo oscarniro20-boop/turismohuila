@@ -13,23 +13,23 @@
             :esFavorito="$esFav">
 
             <x-slot:meta>
-                @if($restaurante->municipio)<span class="d-inline-flex align-items-center gap-1">📍 {{ $restaurante->municipio }}</span>@endif
-                @if($restaurante->precio_promedio)<span class="d-inline-flex align-items-center gap-1">💲 ${{ number_format($restaurante->precio_promedio, 0, ',', '.') }}</span>@endif
-                @if($restaurante->telefono)<span class="d-inline-flex align-items-center gap-1">📞 {{ $restaurante->telefono }}</span>@endif
-                <span class="d-inline-flex align-items-center gap-1">⭐ {{ number_format($restaurante->resenas->avg('calificacion') ?? 0, 1) }}</span>
+                @if($restaurante->municipio)<span class="badge rounded-pill px-3 py-2" style="background: rgba(255,255,255,0.92); color: var(--color-fg);">📍 {{ $restaurante->municipio }}</span>@endif
+                @if($restaurante->precio_promedio)<span class="badge rounded-pill px-3 py-2" style="background: rgba(255,255,255,0.92); color: var(--color-fg);">💲 ${{ number_format($restaurante->precio_promedio, 0, ',', '.') }}</span>@endif
+                @if($restaurante->telefono)<span class="badge rounded-pill px-3 py-2" style="background: rgba(255,255,255,0.92); color: var(--color-fg);">📞 {{ $restaurante->telefono }}</span>@endif
+                <span class="badge rounded-pill px-3 py-2" style="background: rgba(255,255,255,0.92); color: var(--color-fg);">⭐ {{ number_format($restaurante->resenas->avg('calificacion') ?? 0, 1) }}</span>
             </x-slot:meta>
         </x-cabecera-detalle>
 
         <div class="row g-4" style="min-height: calc(100vh - var(--navbar-height, 90px));">
             <div class="col-lg-8">
-                <p class="mb-3">{{ $restaurante->descripcion ?: 'Sin descripción.' }}</p>
+                <p class="mb-3">@if($restaurante->descripcion)<span style="float: left; font-family: 'Fraunces', Georgia, serif; font-size: 3.5rem; line-height: 0.8; padding-right: 0.5rem; color: var(--color-primary); font-weight: 600;">{{ mb_substr($restaurante->descripcion, 0, 1) }}</span>{{ mb_substr($restaurante->descripcion, 1) }}@else Sin descripción. @endif</p>
 
                 {{-- Galería --}}
                 @if($restaurante->imagenes->count() > 0)
                     <x-galeria-grid :imagenes="$restaurante->imagenes->sortBy('orden')" :alt="$restaurante->nombre" />
                 @endif
 
-                <x-barra-contacto :telefono="$restaurante->telefono" texto="Contacta directamente con {{ $restaurante->nombre }} para reservar o preguntar disponibilidad." />
+                <x-contacto-servicio :telefono="$restaurante->telefono" texto="Contacta directamente con {{ $restaurante->nombre }} para reservar o preguntar disponibilidad." />
 
                 {{-- Reseñas --}}
                 <h3 class="mt-4 mb-3" style="font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 1.2rem;">⭐ Reseñas</h3>
@@ -40,16 +40,16 @@
                                 <strong>{{ $resena->user->name }}</strong>
                                 <span style="color: var(--color-gold);"><x-estrellas :calificacion="$resena->calificacion" /></span>
                             </div>
-                            <p class="mb-0 mt-1">{{ $resena->comentario }}</p>
+                            @if($resena->comentario)<p class="mb-0 mt-1">{{ $resena->comentario }}</p>@endif
                         </div>
                     @endforeach
                 @else
                     <p class="text-muted small">Aún no hay reseñas. ¡Sé el primero!</p>
                 @endif
                 @auth
-                    <a href="{{ route('resenas.create', ['tipo' => 'restaurante', 'referencia_id' => $restaurante->id]) }}" class="btn btn-sm rounded-pill mt-2" style="background: var(--color-primary); color: #fff;">✍️ Escribir Reseña</a>
+                    <x-resena-formulario tipo="restaurante" :referenciaId="$restaurante->id" :nombre="$restaurante->nombre" />
                 @else
-                    <a href="{{ route('login') }}" class="text-decoration-none small">Inicia sesión</a> <span class="text-muted small">para dejar una reseña.</span>
+                    <p class="small mt-3">🔒 <a href="{{ route('login') }}" class="text-decoration-none fw-semibold">Inicia sesión</a> <span style="color: var(--color-muted-fg);">para dejar una reseña.</span></p>
                 @endauth
 
                 {{-- Acciones --}}

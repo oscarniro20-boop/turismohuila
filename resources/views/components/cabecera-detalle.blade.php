@@ -25,7 +25,7 @@
                 {{ $titulo }}
             </h1>
             @auth
-                @if($favoritoTipo && !auth()->user()->esAdmin())
+                @if($favoritoTipo)
                     <x-favorito-boton :tipo="$favoritoTipo" :id="$favoritoId" :activo="$esFavorito" />
                 @endif
             @endauth

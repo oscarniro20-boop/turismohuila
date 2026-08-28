@@ -13,14 +13,14 @@
             :esFavorito="$esFav">
 
             <x-slot:meta>
-                @if($lugar->municipio)<span class="d-inline-flex align-items-center gap-1">📍 {{ $lugar->municipio }}</span>@endif
-                <span class="d-inline-flex align-items-center gap-1">⭐ {{ number_format($lugar->resenas->avg('calificacion') ?? 0, 1) }}</span>
+                @if($lugar->municipio)<span class="badge rounded-pill px-3 py-2" style="background: rgba(255,255,255,0.92); color: var(--color-fg);">📍 {{ $lugar->municipio }}</span>@endif
+                <span class="badge rounded-pill px-3 py-2" style="background: rgba(255,255,255,0.92); color: var(--color-fg);">⭐ {{ number_format($lugar->resenas->avg('calificacion') ?? 0, 1) }}</span>
             </x-slot:meta>
         </x-cabecera-detalle>
 
         <div class="row g-4" style="min-height: calc(100vh - var(--navbar-height, 90px));">
             <div class="col-lg-8">
-                <p class="mb-3">{{ $lugar->descripcion ?: 'Sin descripción.' }}</p>
+                <p class="mb-3">@if($lugar->descripcion)<span style="float: left; font-family: 'Fraunces', Georgia, serif; font-size: 3.5rem; line-height: 0.8; padding-right: 0.5rem; color: var(--color-primary); font-weight: 600;">{{ mb_substr($lugar->descripcion, 0, 1) }}</span>{{ mb_substr($lugar->descripcion, 1) }}@else Sin descripción. @endif</p>
 
                 {{-- Galería --}}
                 @if($lugar->imagenes->count() > 0)
@@ -36,16 +36,16 @@
                                 <strong>{{ $resena->user->name }}</strong>
                                 <span style="color: var(--color-gold);"><x-estrellas :calificacion="$resena->calificacion" /></span>
                             </div>
-                            <p class="mb-0 mt-1">{{ $resena->comentario }}</p>
+                            @if($resena->comentario)<p class="mb-0 mt-1">{{ $resena->comentario }}</p>@endif
                         </div>
                     @endforeach
                 @else
                     <p class="text-muted small">Aún no hay reseñas. ¡Sé el primero!</p>
                 @endif
                 @auth
-                    <a href="{{ route('resenas.create', ['tipo' => 'lugar', 'referencia_id' => $lugar->id]) }}" class="btn btn-sm rounded-pill mt-2" style="background: var(--color-primary); color: #fff;">✍️ Escribir Reseña</a>
+                    <x-resena-formulario tipo="lugar" :referenciaId="$lugar->id" :nombre="$lugar->nombre" />
                 @else
-                    <a href="{{ route('login') }}" class="text-decoration-none small">Inicia sesión</a> <span class="text-muted small">para dejar una reseña.</span>
+                    <p class="small mt-3">🔒 <a href="{{ route('login') }}" class="text-decoration-none fw-semibold">Inicia sesión</a> <span style="color: var(--color-muted-fg);">para dejar una reseña.</span></p>
                 @endauth
 
                 {{-- Acciones --}}

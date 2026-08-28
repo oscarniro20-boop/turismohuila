@@ -8,6 +8,7 @@ use App\Concerns\HasRating;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Tour extends Model
 {
@@ -41,11 +42,17 @@ class Tour extends Model
                     ->where('tipo', 'tour');
     }
 
-    public function agencias(): BelongsToMany
+    public function agencias(): HasManyThrough
     {
-        return $this->belongsToMany(Agencia::class, 'agencia_tour')
-                    ->withPivot('precio')
-                    ->withTimestamps();
+        // Fuente oficial de verdad: tour_paquetes (no agencia_tour, tabla legacy).
+        return $this->hasManyThrough(
+            Agencia::class,
+            TourPaquete::class,
+            'tour_id',      // FK en tour_paquetes -> tours.id
+            'id',           // FK en agencias -> tour_paquetes.agencia_id
+            'id',           // PK de tours
+            'agencia_id'    // FK en tour_paquetes -> agencias.id
+        );
     }
 
     public function guias(): BelongsToMany
