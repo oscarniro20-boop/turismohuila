@@ -65,4 +65,40 @@ trait ManagesImages
             app(GaleriaImagenService::class)->guardar($entidad, $request->file('imagenes'), $directorio);
         }
     }
+
+    /**
+     * Reglas de validación para la galería de imágenes.
+     * Nota: hasta ahora HotelController las llamaba pero no existían
+     * (bug latente); se definieron al integrar el módulo Transporte.
+     */
+    public function reglasGaleria(): array
+    {
+        return [
+            'imagenes'              => 'nullable|array|max:10',
+            'imagenes.*'            => 'image|mimes:jpg,jpeg,png,webp|max:5120',
+            'eliminar_imagenes'     => 'nullable|array',
+            'eliminar_imagenes.*'   => 'integer',
+        ];
+    }
+
+    /**
+     * Elimina de la galería de una entidad las imágenes seleccionadas por id,
+     * verificando que pertenezcan a dicha entidad. Devuelve cuántas se borraron.
+     */
+    public function eliminarImagenesGaleriaSeleccionadas(Model $entidad, Request $request): int
+    {
+        $ids = array_map('intval', (array) $request->input('eliminar_imagenes', []));
+        if ($ids === []) {
+            return 0;
+        }
+
+        $eliminadas = 0;
+        foreach ($entidad->imagenes()->whereIn('id', $ids)->get() as $imagen) {
+            $this->eliminarImagen($imagen->ruta);
+            $imagen->delete();
+            $eliminadas++;
+        }
+
+        return $eliminadas;
+    }
 }

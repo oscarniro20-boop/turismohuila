@@ -73,3 +73,15 @@
 - [ ] Archivos de producción subidos
 - [ ] `.env` de producción creado
 - [ ] `public_html/` configurado correctamente
+
+## Seguridad (H06/H05)
+
+- [ ] `SESSION_SECURE_COOKIE=true` definido en `.env` de producción (requiere HTTPS)
+- [ ] `APP_DEBUG=false`, `APP_ENV=production`
+- [ ] Revisar cabecera CSP generada por `CabecerasSeguridad` (no debe romper mapa/fuentes)
+- [ ] Cloudinary configurado (`CLOUDINARY_URL`) y probado con subida real
+- [ ] `npm run build` ejecutado y `public/build/manifest.json` incluido
+- [ ] `php artisan test` verde antes del despliegue
+- [ ] Backups de base de datos programados
+- [ ] Certificado SSL activo y forzado
+- [ ] Permisos de `storage/` correctos, logs rotados

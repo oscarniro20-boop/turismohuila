@@ -17,14 +17,14 @@ class UserSeeder extends Seeder
         User::create([
             'name'     => 'Administrador',
             'email'    => 'admin@turismo-huila.com',
-            'password' => Hash::make('password123'),
+            'password' => Hash::make(env('SEED_PASSWORD', 'password123')),
             'rol'      => 'admin',
         ]);
 
         User::create([
             'name'     => 'Oscar Nicolas',
             'email'    => 'oscar@turismo-huila.com',
-            'password' => Hash::make('password123'),
+            'password' => Hash::make(env('SEED_PASSWORD', 'password123')),
             'rol'      => 'turista',
         ]);
     }

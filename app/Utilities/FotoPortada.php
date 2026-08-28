@@ -102,6 +102,12 @@ class FotoPortada
      */
     protected static function eliminarArchivo(string $ruta): void
     {
+        // URLs remotas (Cloudinary): delegar al servicio existente.
+        if (str_starts_with($ruta, 'http')) {
+            app(\App\Services\CloudinaryImageService::class)->eliminarPorUrl($ruta);
+            return;
+        }
+
         if (str_starts_with($ruta, 'storage://')) {
             Storage::disk('public')->delete(substr($ruta, 9));
             return;

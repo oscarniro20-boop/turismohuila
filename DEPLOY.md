@@ -1,3 +1,18 @@
+## Seguridad de sesión y cookies (H06)
+
+En producción con HTTPS, definir obligatoriamente en `.env`:
+
+```env
+SESSION_SECURE_COOKIE=true
+SESSION_HTTP_ONLY=true
+SESSION_SAME_SITE=lax
+```
+
+- `SESSION_SECURE_COOKIE=true`: la cookie de sesión solo se envía por HTTPS.
+- En desarrollo local HTTP puede dejarse en `false` (ver `.env.example`).
+- Nunca subir credenciales reales al repositorio.
+
+
 # 🚀 Guía de Despliegue - TurismoHuila
 
 ## Despliegue en InfinityFree

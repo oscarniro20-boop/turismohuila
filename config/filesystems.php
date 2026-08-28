@@ -33,7 +33,7 @@ return [
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),
-            'serve' => true,
+            'serve' => false, // H04: no exponer storage/app/private vía rutas storage.*
             'throw' => false,
             'report' => false,
         ],
