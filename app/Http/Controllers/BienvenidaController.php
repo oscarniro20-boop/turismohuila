@@ -8,6 +8,7 @@ use App\Models\Restaurante;
 use App\Models\Tour;
 use App\Models\Guia;
 use App\Models\Agencia;
+use App\Models\Transporte;
 use App\Models\LugarImagen;
 use App\Models\Resena;
 
@@ -24,6 +25,7 @@ class BienvenidaController extends Controller
         $toursCount = Tour::count();
         $guiasCount = Guia::count();
         $agenciasCount = Agencia::count();
+        $transportesCount = Transporte::count();
 
         $galeria = LugarImagen::inRandomOrder()->take(8)->get();
 
@@ -54,6 +56,7 @@ class BienvenidaController extends Controller
             'toursCount',
             'guiasCount',
             'agenciasCount',
+            'transportesCount',
             'galeria',
             'testimonios'
         ));
