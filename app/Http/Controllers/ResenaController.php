@@ -23,6 +23,7 @@ class ResenaController extends Controller
             'tour'        => \App\Models\Tour::class,
             'guia'        => \App\Models\Guia::class,
             'agencia'     => \App\Models\Agencia::class,
+            'transporte'  => \App\Models\Transporte::class,
             default       => null,
         };
 
@@ -76,13 +77,14 @@ class ResenaController extends Controller
             'tour'        => \App\Models\Tour::class,
             'guia'        => \App\Models\Guia::class,
             'agencia'     => \App\Models\Agencia::class,
+            'transporte'  => \App\Models\Transporte::class,
         ];
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'tipo'         => 'required|in:lugar,hotel,restaurante,tour,guia,agencia',
+            'tipo'         => 'required|in:lugar,hotel,restaurante,tour,guia,agencia,transporte',
             'referencia_id'=> [
                 'required',
                 'integer',
@@ -93,7 +95,7 @@ class ResenaController extends Controller
                     }
                 },
             ],
-            'comentario'   => 'required|string|max:1000',
+            'comentario'   => 'nullable|string|max:1000',
             'calificacion' => 'required|integer|min:1|max:5',
         ]);
 
@@ -101,11 +103,20 @@ class ResenaController extends Controller
             'user_id'      => Auth::id(),
             'tipo'         => $request->tipo,
             'referencia_id'=> $request->referencia_id,
-            'comentario'   => $request->comentario,
+            'comentario'   => $request->comentario ?? '',
             'calificacion' => $request->calificacion,
         ]);
 
-        return redirect()->route(auth()->user()->esAdmin() ? 'resenas.index' : 'resenas.mis')
+        // Retorno opcional a la página del servicio (reseñas integradas).
+        // Por seguridad solo se aceptan URLs internas de la propia aplicación.
+        $retorno = $request->input('retorno');
+        if ($retorno && ! str_starts_with($retorno, url('/'))) {
+            $retorno = null;
+        }
+
+        $destino = $retorno ?: route(auth()->user()->esAdmin() ? 'resenas.index' : 'resenas.mis');
+
+        return redirect()->to($destino)
                          ->with('success', 'Reseña creada correctamente.');
     }
 
@@ -126,11 +137,14 @@ class ResenaController extends Controller
         $this->authorize('update', $resena);
 
         $request->validate([
-            'comentario'   => 'required|string|max:1000',
+            'comentario'   => 'nullable|string|max:1000',
             'calificacion' => 'required|integer|min:1|max:5',
         ]);
 
-        $resena->update($request->only(['comentario', 'calificacion']));
+        $resena->update([
+            'comentario'   => $request->comentario ?? '',
+            'calificacion' => $request->calificacion,
+        ]);
 
         return redirect()->route(auth()->user()->esAdmin() ? 'resenas.index' : 'resenas.mis')
                          ->with('success', 'Reseña actualizada correctamente.');

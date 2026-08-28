@@ -6,7 +6,8 @@ use Illuminate\Database\Seeder;
 use App\Models\Lugar;
 use App\Models\Hotel;
 use App\Models\Restaurante;
-use App\Models\Tour;
+
+use App\Models\Transporte;
 
 class TurismoSeeder extends Seeder
 {
@@ -43,6 +44,12 @@ class TurismoSeeder extends Seeder
             ['nombre' => 'Tour Desierto Tatacoa', 'descripcion' => 'Recorrido completo por el desierto de la Tatacoa incluyendo observación de estrellas nocturna con telescopio profesional.', 'municipio' => 'Villavieja', 'latitud' => 3.2258, 'longitud' => -75.2231, 'precio' => 85000, 'duracion_dias' => 1, 'incluye' => 'Transporte, guía especializado, observación astronómica, hidratación', 'cupo_maximo' => 15, 'imagen' => null, 'created_at' => now(), 'updated_at' => now()],
             ['nombre' => 'Tour Arqueológico San Agustín', 'descripcion' => 'Visita guiada por los principales sitios arqueológicos de San Agustín declarados Patrimonio de la Humanidad por la UNESCO.', 'municipio' => 'San Agustín', 'latitud' => 1.8792, 'longitud' => -76.2696, 'precio' => 120000, 'duracion_dias' => 2, 'incluye' => 'Transporte, guía certificado, entrada a parques, alojamiento 1 noche, desayuno', 'cupo_maximo' => 12, 'imagen' => null, 'created_at' => now(), 'updated_at' => now()],
             ['nombre' => 'Tour Termales Rivera', 'descripcion' => 'Día de relax en los termales naturales de Rivera con masajes y tratamientos de bienestar incluidos.', 'municipio' => 'Rivera', 'latitud' => 2.7822, 'longitud' => -75.2547, 'precio' => 95000, 'duracion_dias' => 1, 'incluye' => 'Transporte, entrada a termales, masaje relajante, almuerzo típico', 'cupo_maximo' => 20, 'imagen' => null, 'created_at' => now(), 'updated_at' => now()],
+        ]);
+        // TRANSPORTES
+        Transporte::insert([
+            ['nombre' => 'TransHuila Turismo', 'descripcion' => 'Servicio de transporte turistico en buses comodos y climatizados hacia los principales destinos del Huila: Tatacoa, San Agustin y Termales de Rivera.', 'municipio' => 'Neiva', 'tipo' => 'Bus', 'precio' => 45000, 'capacidad' => 40, 'telefono' => '3201234567', 'latitud' => 2.9273, 'longitud' => -75.2819, 'imagen' => null, 'created_at' => now(), 'updated_at' => now()],
+            ['nombre' => 'Vans Tatacoa Explorer', 'descripcion' => 'Transporte en vans para grupos pequenos al desierto de la Tatacoa. Salidas diarias desde Neiva con guia a bordo y flexibilidad de horarios.', 'municipio' => 'Villavieja', 'tipo' => 'Van', 'precio' => 60000, 'capacidad' => 12, 'telefono' => '3212345678', 'latitud' => 3.2258, 'longitud' => -75.2231, 'imagen' => null, 'created_at' => now(), 'updated_at' => now()],
+            ['nombre' => 'Taxi Turistico San Agustin', 'descripcion' => 'Recorridos privados por el parque arqueologico y sitios cercanos en vehiculos particulares. Conductor local certificado con amplio conocimiento de la zona.', 'municipio' => 'San Agustin', 'tipo' => 'Taxi turistico', 'precio' => 120000, 'capacidad' => 4, 'telefono' => '3223456789', 'latitud' => 1.8792, 'longitud' => -76.2696, 'imagen' => null, 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 }

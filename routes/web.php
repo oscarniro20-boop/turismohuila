@@ -10,6 +10,7 @@ use App\Http\Controllers\ResenaController;
 use App\Http\Controllers\GuiaController;
 use App\Http\Controllers\AgenciaController;
 use App\Http\Controllers\FavoritoController;
+use App\Http\Controllers\TransporteController;
 use App\Http\Controllers\BusquedaController;
 use App\Http\Controllers\ContactoController;
 use App\Http\Controllers\BienvenidaController;
@@ -56,6 +57,10 @@ Route::middleware(['auth', 'rol:admin'])->group(function () {
     Route::resource('agencias', AgenciaController::class)
         ->except(['index', 'show']);
 
+    Route::resource('transportes', TransporteController::class)
+        ->parameters(['transportes' => 'transporte'])
+        ->except(['index', 'show']);
+
     Route::resource('resenas', ResenaController::class)
         ->parameters(['resenas' => 'resena'])
         ->only(['index']);
@@ -65,9 +70,12 @@ Route::middleware(['auth', 'rol:admin'])->group(function () {
 // IMPORTANTE: debe ir ANTES del resource público de abajo, para que
 // /resenas/create no sea interceptada por /resenas/{resena} (show)
 Route::middleware(['auth'])->group(function () {
+    // H08: rate limiting anti-spam en escritura de reseñas (creación, edición,
+    // borrado). Límite generoso para usuarios legítimos, duro contra abuso.
     Route::resource('resenas', ResenaController::class)
         ->parameters(['resenas' => 'resena'])
-        ->except(['index', 'show']);
+        ->except(['index', 'show'])
+        ->middleware('throttle:10,1');
 
     // IMPORTANTE: debe ir antes del resource público de abajo, para que
     // /resenas/nombre-servicio no sea interceptada por /resenas/{resena} (show)
@@ -100,6 +108,10 @@ Route::resource('resenas', ResenaController::class)
     ->only(['show']);
 
 Route::resource('agencias', AgenciaController::class)
+    ->only(['index', 'show']);
+
+Route::resource('transportes', TransporteController::class)
+    ->parameters(['transportes' => 'transporte'])
     ->only(['index', 'show']);
 
 // ── Rutas públicas de Guías (ver listado y perfil) ─────────────────────────

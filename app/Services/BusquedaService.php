@@ -8,6 +8,7 @@ use App\Models\Restaurante;
 use App\Models\Tour;
 use App\Models\Guia;
 use App\Models\Agencia;
+use App\Models\Transporte;
 use Illuminate\Support\Collection;
 
 class BusquedaService
@@ -19,6 +20,7 @@ class BusquedaService
         'tour' => 'tours.show',
         'guia' => 'guias.show',
         'agencia' => 'agencias.show',
+        'transporte' => 'transportes.show',
     ];
 
     public function buscarEnTodos(string $query, int $limite = 4): Collection
@@ -30,6 +32,7 @@ class BusquedaService
             ['modelo' => Tour::class, 'tipo' => 'tour', 'subtitulo' => 'municipio'],
             ['modelo' => Guia::class, 'tipo' => 'guia', 'subtitulo' => 'zonas'],
             ['modelo' => Agencia::class, 'tipo' => 'agencia', 'subtitulo' => 'municipio'],
+            ['modelo' => Transporte::class, 'tipo' => 'transporte', 'subtitulo' => 'municipio'],
         ];
 
         $resultados = collect();

@@ -14,6 +14,7 @@
                     'tours.index' => ['label' => 'Tours', 'match' => 'tours*'],
                     'guias.index' => ['label' => 'Guías', 'match' => 'guias*'],
                     'agencias.index' => ['label' => 'Agencias', 'match' => 'agencias*'],
+'transportes.index' => ['label' => 'Transporte', 'match' => 'transportes*'],
                 ];
             @endphp
             <div class="d-none d-lg-flex align-items-center gap-1">

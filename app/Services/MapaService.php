@@ -8,6 +8,7 @@ use App\Models\Restaurante;
 use App\Models\Tour;
 use App\Models\Guia;
 use App\Models\Agencia;
+use App\Models\Transporte;
 use Illuminate\Support\Collection;
 
 class MapaService
@@ -26,6 +27,7 @@ class MapaService
             'tour' => ['modelo' => Tour::class, 'sub' => 'municipio', 'ruta' => 'tours.show', 'icono' => '🚌'],
             'guia' => ['modelo' => Guia::class, 'sub' => 'zonas', 'ruta' => 'guias.show', 'icono' => '🎯'],
             'agencia' => ['modelo' => Agencia::class, 'sub' => 'municipio', 'ruta' => 'agencias.show', 'icono' => '🧳'],
+            'transporte' => ['modelo' => Transporte::class, 'sub' => 'municipio', 'ruta' => 'transportes.show', 'icono' => '🚐'],
         ];
 
         $puntos = collect();
