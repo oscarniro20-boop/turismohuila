@@ -1,26 +1,23 @@
 @extends('layouts.app')
 
-@section('title', 'Nosotros')
+@section('title', __('ui.about.title'))
 
 @section('content')
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <h1 class="mb-4" style="font-family: 'Fraunces', Georgia, serif; font-weight: 600;">Sobre TurismoHuila</h1>
+            <h1 class="mb-4" style="font-family: 'Fraunces', Georgia, serif; font-weight: 600;">{{ __('ui.about.title') }}</h1>
             <p class="lead text-muted mb-4">
-                TurismoHuila es la plataforma que centraliza la oferta turística del departamento del Huila. 
-                Conectamos a visitantes y operadores locales en un solo lugar, facilitando el descubrimiento 
-                de lugares, hoteles, restaurantes, tours, guías y agencias verificadas.
+                {{ __('ui.about.intro') }}
             </p>
 
             <div class="row g-4 my-4">
                 <div class="col-md-6">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body">
-                            <h5 class="card-title">📍 Localidad</h5>
+                            <h5 class="card-title">📍 {{ __('ui.about.locality') }}</h5>
                             <p class="card-text text-muted">
-                                Información curada por municipios y zonas del Huila, con datos prácticos 
-                                para planificar tu visita.
+                                {{ __('ui.about.locality_text') }}
                             </p>
                         </div>
                     </div>
@@ -28,9 +25,9 @@
                 <div class="col-md-6">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body">
-                            <h5 class="card-title">🤝 Confianza</h5>
+                            <h5 class="card-title">🤝 {{ __('ui.about.trust') }}</h5>
                             <p class="card-text text-muted">
-                                Perfiles verificados y reseñas reales de usuarios para que elijas con seguridad.
+                                {{ __('ui.about.trust_text') }}
                             </p>
                         </div>
                     </div>
@@ -38,9 +35,9 @@
                 <div class="col-md-6">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body">
-                            <h5 class="card-title">🔍 Descubrimiento</h5>
+                            <h5 class="card-title">🔍 {{ __('ui.about.discovery') }}</h5>
                             <p class="card-text text-muted">
-                                Explora opciones que se adaptan a tus gustos: naturaleza, cultura, gastronomía y aventura.
+                                {{ __('ui.about.discovery_text') }}
                             </p>
                         </div>
                     </div>
@@ -48,9 +45,9 @@
                 <div class="col-md-6">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body">
-                            <h5 class="card-title">🌱 Sostenibilidad</h5>
+                            <h5 class="card-title">🌱 {{ __('ui.about.sustainability') }}</h5>
                             <p class="card-text text-muted">
-                                Promovemos el turismo responsable y el apoyo a emprendimientos locales del Huila.
+                                {{ __('ui.about.sustainability_text') }}
                             </p>
                         </div>
                     </div>
@@ -58,11 +55,10 @@
             </div>
 
             <div class="alert alert-success mt-4">
-                <h5 class="alert-heading">¿Eres operador turístico?</h5>
+                <h5 class="alert-heading">{{ __('ui.about.operator_title') }}</h5>
                 <p class="mb-0">
-                    Si tienes un hotel, restaurante, tour, agencia o servicio guiado, 
-                    <a href="{{ route('contacto') }}" class="alert-link">escríbenos</a> 
-                    para incluirte en la plataforma.
+                    {{ __('ui.about.operator_text') }}
+                    <a href="{{ route('contacto') }}" class="alert-link">{{ __('ui.about.write_us') }}</a>.
                 </p>
             </div>
         </div>

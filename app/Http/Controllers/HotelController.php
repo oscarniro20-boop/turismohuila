@@ -16,17 +16,13 @@ class HotelController extends Controller
     {
         $hoteles = Hotel::withAvg('resenas', 'calificacion')
             ->withCount('resenas')
-            ->when($request->filled('municipio'), function ($query) use ($request) {
-                $query->where('municipio', $request->query('municipio'));
-            })
+            ->ubicacion($request->query('departamento'), $request->query('municipio'))
             ->orderBy('nombre')
             ->get();
 
-        $municipios = config('municipios.huila');
-
         $favoritosIds = $this->obtenerFavoritosIds(auth()->id(), 'hotel');
 
-        return view('hoteles.index', compact('hoteles', 'municipios', 'favoritosIds'));
+        return view('hoteles.index', compact('hoteles', 'favoritosIds'));
     }
 
     public function create()
@@ -72,7 +68,7 @@ class HotelController extends Controller
 
     public function show(Hotel $hotel)
     {
-        $hotel->load('imagenes', 'resenas');
+        $hotel->load('imagenes', 'resenas.user');
         $esFav = auth()->check()
             && !auth()->user()->esAdmin()
             && Favorito::where('user_id', auth()->id())->where('tipo', 'hotel')->where('referencia_id', $hotel->id)->exists();

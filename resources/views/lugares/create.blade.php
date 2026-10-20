@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Crear Lugar - TurismoHuila')
+@section('title', 'Crear Lugar - Turismo por Colombia')
 
 @section('content')
 <div class="row justify-content-center">
@@ -40,20 +40,7 @@
                             <div class="text-danger small mt-1">{{ $message }}</div>
                         @enderror
                     </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Municipio</label>
-                            <select name="municipio" class="form-select">
-                                <option value="">Seleccione municipio...</option>
-                                @error('municipio')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
-                                @enderror
-                                @foreach(config('municipios.huila') as $m)
-                                    <option value="{{ $m }}" {{ old('municipio') == $m ? 'selected' : '' }}>{{ $m }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
+                    <x-form-ubicacion />
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold">Categoría</label>
@@ -89,9 +76,9 @@
                         <input type="file" name="imagen" class="form-control" accept="image/*">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Imágenes Adicionales (Galería)</label>
+                        <label class="form-label fw-bold">Galería de Imágenes (Múltiples)</label>
                         <input type="file" name="imagenes[]" class="form-control" accept="image/*" multiple>
-                        <small class="text-muted">Puedes seleccionar múltiples imágenes</small>
+                        <small class="text-muted">Puedes seleccionar múltiples imágenes para la galería</small>
                     </div>
                     <div class="d-flex justify-content-between">
                         <a href="{{ route('lugares.index') }}" class="btn btn-secondary">← Volver</a>

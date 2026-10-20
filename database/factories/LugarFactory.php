@@ -14,6 +14,7 @@ class LugarFactory extends Factory
         return [
             'user_id' => \App\Models\User::factory(),
             'nombre' => $this->faker->unique()->city(),
+            'departamento' => 'Huila',
             'municipio' => $this->faker->randomElement(['Neiva', 'Garzón', 'Pitalito', 'San Agustín', 'La Plata']),
             'categoria' => $this->faker->randomElement(['Naturaleza', 'Cultura', 'Aventura']),
             'descripcion' => $this->faker->paragraph(),

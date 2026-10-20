@@ -8,10 +8,10 @@ use Tests\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
- * Cobertura CRUD de los mÃ³dulos administrativos:
- * Lugares, Hoteles, Restaurantes y Tours.
+ * Cobertura CRUD de los módulos administrativos:
+ * Lugares, Hoteles, Restaurantes, Tours, Guías, Agencias y Transportes.
  *
- * Comprueba acceso pÃºblico (index/show), protecciÃ³n de escritura
+ * Comprueba acceso público (index/show), protección de escritura
  * (visitante -> login, turista -> 403) y ciclo completo del admin
  * (store/update/destroy) sin archivos de imagen (nullable).
  */
@@ -36,24 +36,27 @@ class CrudModulosTest extends TestCase
             'hoteles'      => ['hoteles', 'hotel'],
             'restaurantes' => ['restaurantes', 'restaurante'],
             'tours'        => ['tours', 'tour'],
+            'guias'        => ['guias', 'guia'],
+            'agencias'     => ['agencias', 'agencia'],
+            'transportes'  => ['transportes', 'transporte'],
         ];
     }
 
     #[DataProvider('modulos')]
-    public function test_index_publico_es_accesible(string $plural): void
+    public function test_index_publico_es_accesible(string $plural, string $singular = ''): void
     {
         $this->get(route($plural . '.index'))->assertOk();
     }
 
     #[DataProvider('modulos')]
-    public function test_visitante_no_puede_acceder_al_formulario_de_creacion(string $plural): void
+    public function test_visitante_no_puede_acceder_al_formulario_de_creacion(string $plural, string $singular = ''): void
     {
         $this->get(route($plural . '.create'))
             ->assertRedirect(route('login'));
     }
 
     #[DataProvider('modulos')]
-    public function test_turista_no_puede_crear(string $plural): void
+    public function test_turista_no_puede_crear(string $plural, string $singular = ''): void
     {
         $this->actingAs($this->turista())
             ->post(route($plural . '.store'), [])
@@ -75,7 +78,7 @@ class CrudModulosTest extends TestCase
     }
 
     #[DataProvider('modulos')]
-    public function test_admin_puede_editar_y_actualizar(string $plural): void
+    public function test_admin_puede_editar_y_actualizar(string $plural, string $singular = ''): void
     {
         $singular = $this->singular($plural);
         $admin = $this->admin();
@@ -95,7 +98,7 @@ class CrudModulosTest extends TestCase
     }
 
     #[DataProvider('modulos')]
-    public function test_turista_no_puede_eliminar(string $plural): void
+    public function test_turista_no_puede_eliminar(string $plural, string $singular = ''): void
     {
         $registro = $this->crear($this->singular($plural), $this->admin());
 
@@ -105,7 +108,7 @@ class CrudModulosTest extends TestCase
     }
 
     #[DataProvider('modulos')]
-    public function test_admin_puede_eliminar(string $plural): void
+    public function test_admin_puede_eliminar(string $plural, string $singular = ''): void
     {
         $singular = $this->singular($plural);
         $admin = $this->admin();
@@ -119,7 +122,7 @@ class CrudModulosTest extends TestCase
     }
 
     #[DataProvider('modulos')]
-    public function test_validacion_rechaza_datos_incompletos_para_admin(string $plural): void
+    public function test_validacion_rechaza_datos_incompletos_para_admin(string $plural, string $singular = ''): void
     {
         $this->actingAs($this->admin())
             ->post(route($plural . '.store'), [])
@@ -135,6 +138,9 @@ class CrudModulosTest extends TestCase
             'hoteles'      => 'hotel',
             'restaurantes' => 'restaurante',
             'tours'        => 'tour',
+            'guias'        => 'guia',
+            'agencias'     => 'agencia',
+            'transportes'  => 'transporte',
         ][$plural];
     }
 
@@ -145,12 +151,15 @@ class CrudModulosTest extends TestCase
             'hotel'       => 'hoteles',
             'restaurante' => 'restaurantes',
             'tour'        => 'tours',
+            'guia'        => 'guias',
+            'agencia'     => 'agencias',
+            'transporte'  => 'transportes',
         ][$singular];
     }
 
     /**
-     * Crea un registro real. Lugares tiene factory; los demÃ¡s mÃ³dulos se
-     * crean vÃ­a HTTP (store) para respetar el flujo real del controlador.
+     * Crea un registro real. Lugares tiene factory; los demás módulos se
+     * crean vía HTTP (store) para respetar el flujo real del controlador.
      */
     private function crear(string $singular, User $autor)
     {
@@ -169,22 +178,23 @@ class CrudModulosTest extends TestCase
     }
 
     /**
-     * Datos mÃ­nimos vÃ¡lidos segÃºn las validaciones reales de cada
+     * Datos mínimos válidos según las validaciones reales de cada
      * controlador. Sin 'imagen' (nullable) para no depender de Cloudinary.
      */
     private function datosValidos(string $plural): array
     {
         $base = [
             'nombre'      => 'Prueba ' . uniqid(),
-            'descripcion' => 'DescripciÃ³n de prueba suficientemente larga.',
+            'descripcion' => 'Descripción de prueba suficientemente larga.',
             'municipio'   => 'Neiva',
         ];
 
         return match ($plural) {
             'lugares' => $base + [
-                'categoria' => 'Naturaleza',
-                'latitud'   => 2.9273,
-                'longitud'  => -75.2819,
+                'departamento' => 'Huila',
+                'categoria'    => 'Naturaleza',
+                'latitud'      => 2.9273,
+                'longitud'     => -75.2819,
             ],
             'hoteles' => $base + [
                 'precio_noche' => 150000,
@@ -201,8 +211,17 @@ class CrudModulosTest extends TestCase
             'tours' => $base + [
                 'precio'        => 200000,
                 'duracion_dias' => 2,
-                'incluye'       => 'Transporte, guÃ­a y almuerzo',
+                'incluye'       => 'Transporte, guía y almuerzo',
                 'cupo_maximo'   => 15,
+            ],
+            'guias' => [
+                'nombre' => 'Prueba ' . uniqid(),
+            ],
+            'agencias' => [
+                'nombre' => 'Prueba ' . uniqid(),
+            ],
+            'transportes' => $base + [
+                'tipo' => 'Bus',
             ],
         };
     }

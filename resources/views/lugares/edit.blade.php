@@ -1,7 +1,7 @@
 
 @extends('layouts.app')
 
-@section('title', 'Editar Lugar - TurismoHuila')
+@section('title', 'Editar Lugar - Turismo por Colombia')
 
 @section('content')
 <div class="row justify-content-center">
@@ -40,20 +40,7 @@
                             <div class="text-danger small mt-1">{{ $message }}</div>
                         @enderror
                     </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Municipio</label>
-                            <select name="municipio" class="form-select">
-                                <option value="">Seleccione municipio...</option>
-                                @error('municipio')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
-                                @enderror
-                                @foreach(config('municipios.huila') as $m)
-                                    <option value="{{ $m }}" {{ old('municipio', $lugar->municipio) == $m ? 'selected' : '' }}>{{ $m }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
+                    <x-form-ubicacion :departamento="$lugar->departamento" :municipio="$lugar->municipio" />
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold">Categoría</label>
@@ -92,7 +79,7 @@
                         <input type="file" name="imagen" class="form-control mt-1" accept="image/*">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Imágenes Adicionales (Galería)</label>
+                        <label class="form-label fw-bold">Galería de Imágenes (Múltiples)</label>
                         @if($lugar->imagenes->count() > 0)
                             <div class="row mb-2">
                                 @foreach($lugar->imagenes as $img)

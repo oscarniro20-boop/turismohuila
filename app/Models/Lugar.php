@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Concerns\HasGalleryImages;
+use App\Concerns\HasUbicacion;
 use App\Concerns\HasUrlImagen;
 use App\Concerns\HasRating;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,13 +11,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Lugar extends Model
 {
-    use HasFactory, HasGalleryImages, HasRating, HasUrlImagen;
+    use HasFactory, HasGalleryImages, HasRating, HasUrlImagen, HasUbicacion;
 
     protected $table = 'lugares';
 
     protected $fillable = [
         'user_id',
         'nombre',
+        'departamento',
         'municipio',
         'categoria',
         'descripcion',

@@ -16,17 +16,13 @@ class TransporteController extends Controller
     {
         $transportes = Transporte::withAvg('resenas', 'calificacion')
             ->withCount('resenas')
-            ->when($request->filled('municipio'), function ($query) use ($request) {
-                $query->where('municipio', $request->query('municipio'));
-            })
+            ->ubicacion($request->query('departamento'), $request->query('municipio'))
             ->orderBy('nombre')
             ->get();
 
-        $municipios = config('municipios.huila');
-
         $favoritosIds = $this->obtenerFavoritosIds(auth()->id(), 'transporte');
 
-        return view('transportes.index', compact('transportes', 'municipios', 'favoritosIds'));
+        return view('transportes.index', compact('transportes', 'favoritosIds'));
     }
 
     public function create()
@@ -72,6 +68,7 @@ class TransporteController extends Controller
     {
         $transporte->load(['imagenes', 'resenas.user']);
         $esFav = auth()->check()
+            && !auth()->user()->esAdmin()
             && Favorito::where('user_id', auth()->id())->where('tipo', 'transporte')->where('referencia_id', $transporte->id)->exists();
 
         return view('transportes.show', compact('transporte', 'esFav'));
@@ -98,7 +95,7 @@ class TransporteController extends Controller
             'tipo'        => 'required|string|max:100',
             'precio'      => 'nullable|numeric|min:0',
             'capacidad'   => 'nullable|integer|min:1',
-            'imagen'      => 'nullable|image|mimes:jpg,jpeg,png,max:2048',
+            'imagen'      => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'telefono'    => 'nullable|string|max:20',
             'latitud'     => 'nullable|numeric|between:-90,90',
             'longitud'    => 'nullable|numeric|between:-180,180',

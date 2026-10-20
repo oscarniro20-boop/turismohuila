@@ -106,4 +106,32 @@ class ResenaPolicyTest extends TestCase
         $response->assertRedirect();
         $this->assertDatabaseMissing('resenas', ['id' => $resena->id]);
     }
+
+    public function test_admin_can_update_any_resena(): void
+    {
+        $admin = User::factory()->create(['rol' => 'admin']);
+        $author = User::factory()->create();
+        $lugar = Lugar::factory()->create();
+
+        $resena = Resena::create([
+            'user_id' => $author->id,
+            'tipo' => 'lugar',
+            'referencia_id' => $lugar->id,
+            'comentario' => 'Excelente lugar',
+            'calificacion' => 5,
+        ]);
+
+        $this->actingAs($admin);
+
+        $response = $this->patch(route('resenas.update', $resena), [
+            'comentario' => 'Editado por admin',
+            'calificacion' => 3,
+        ]);
+
+        $response->assertRedirect();
+        $this->assertDatabaseHas('resenas', [
+            'id' => $resena->id,
+            'comentario' => 'Editado por admin',
+        ]);
+    }
 }

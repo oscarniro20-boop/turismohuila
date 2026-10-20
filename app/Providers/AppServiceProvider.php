@@ -27,6 +27,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // El proyecto usa Bootstrap 5 (no Tailwind): los enlaces de paginación
+        // (->links()) deben renderizar con el paginador de Bootstrap 5.
+        \Illuminate\Pagination\Paginator::useBootstrapFive();
+
         // Mapeo de tipos para relaciones morfables (Resena, Favorito)
         Relation::morphMap([
             'lugar' => Lugar::class,

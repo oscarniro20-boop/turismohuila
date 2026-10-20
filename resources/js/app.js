@@ -1,11 +1,13 @@
-﻿import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import './ubicacion.js';
 
-// FunciÃ³n global para copiar enlace al portapapeles
+
+// Función global para copiar enlace al portapapeles
 window.copiarEnlace = function (url) {
     if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(url).then(() => {
-            alert('Â¡Enlace copiado!');
+            alert('¡Enlace copiado!');
         }).catch(() => {
             fallbackCopiar(url);
         });
@@ -14,14 +16,14 @@ window.copiarEnlace = function (url) {
     }
 };
 
-// FunciÃ³n para compartir usando navigator.share o copiar enlace
+// Función para compartir usando navigator.share o copiar enlace
 window.compartirNativo = function (titulo, url) {
     if (navigator.share) {
         navigator.share({
             title: titulo,
             url: url
         }).then(() => {
-            console.log('Compartido exitosamente');
+            // Compartido exitosamente.
         }).catch((error) => {
             console.error('Error al compartir:', error);
             copiarEnlace(url);
@@ -40,7 +42,7 @@ function fallbackCopiar(url) {
     textarea.select();
     try {
         document.execCommand('copy');
-        alert('Â¡Enlace copiado!');
+        alert('¡Enlace copiado!');
     } catch (err) {
         console.error('No se pudo copiar:', err);
     }
@@ -84,7 +86,7 @@ document.addEventListener('click', function (e) {
     .then(data => {
         if (!data) return;
         btn.classList.toggle('activo', data.activo);
-        btn.innerHTML = data.activo ? 'â¤ï¸' : 'ðŸ¤';
+        btn.innerHTML = data.activo ? '❤️' : '🤍';
     })
     .catch(() => {
         alert('No se pudo actualizar el favorito. Intenta de nuevo.');
@@ -92,7 +94,7 @@ document.addEventListener('click', function (e) {
 });
 
 
-// â”€â”€ BÃºsqueda global â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Búsqueda global ───────────────────────────────────────────────────────────
 (function () {
     const input = document.getElementById('busqueda-input');
     const resultados = document.getElementById('busqueda-resultados');
@@ -101,12 +103,12 @@ document.addEventListener('click', function (e) {
     let debounceTimer;
 
     const iconosPorTipo = {
-        lugar: 'ðŸ“',
-        hotel: 'ðŸ¨',
-        restaurante: 'ðŸ½ï¸',
-        tour: 'ðŸ¥¾',
-        guia: 'ðŸ§‘â€ðŸ«',
-        agencia: 'ðŸ¢',
+        lugar: '📍',
+        hotel: '🏨',
+        restaurante: '🍽️',
+        tour: '🥾',
+        guia: '🧑‍🏫',
+        agencia: '🏢',
     };
 
     const nombresPorTipo = {
@@ -114,7 +116,7 @@ document.addEventListener('click', function (e) {
         hotel: 'Hoteles',
         restaurante: 'Restaurantes',
         tour: 'Tours',
-        guia: 'GuÃ­as',
+        guia: 'Guías',
         agencia: 'Agencias',
     };
 
@@ -159,7 +161,7 @@ document.addEventListener('click', function (e) {
                 flex.className = 'd-flex align-items-center gap-2';
 
                 const icono = document.createElement('span');
-                icono.textContent = iconosPorTipo[item.tipo] || 'ðŸ”Ž';
+                icono.textContent = iconosPorTipo[item.tipo] || '🍍';
                 flex.appendChild(icono);
 
                 const info = document.createElement('div');
@@ -220,7 +222,7 @@ document.addEventListener('click', function (e) {
     });
 })();
 
-// â”€â”€ Altura dinÃ¡mica del navbar para el sidebar sticky â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Altura dinámica del navbar para el sidebar sticky ──────────────────────
 (function () {
     const nav = document.querySelector('nav.sticky-top');
     if (!nav) return;

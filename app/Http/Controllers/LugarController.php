@@ -12,6 +12,7 @@ use App\Models\Agencia;
 use App\Models\Resena;
 use App\Models\Favorito;
 use App\Concerns\ManagesImages;
+use App\Rules\MunicipioDeDepartamento;
 use App\Services\MapaService;
 use Illuminate\Http\Request;
 
@@ -23,10 +24,11 @@ class LugarController extends Controller
         private MapaService $mapaService
     ) {}
 
-    public function index()
+    public function index(Request $request)
     {
         $lugares = Lugar::withAvg('resenas', 'calificacion')
             ->withCount('resenas')
+            ->ubicacion($request->query('departamento'), $request->query('municipio'))
             ->orderBy('nombre')
             ->get();
 
@@ -42,9 +44,10 @@ class LugarController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $datos = $request->validate([
             'nombre'       => 'required|string|max:255',
-            'municipio'    => 'required|string|max:255',
+            'departamento' => 'required|string|in:'.implode(',', \App\Support\Colombia::departamentos()),
+            'municipio'    => ['required', 'string', 'max:255', new MunicipioDeDepartamento],
             'categoria'    => 'required|string|max:100',
             'latitud'      => 'nullable|numeric|between:-90,90',
             'longitud'     => 'nullable|numeric|between:-180,180',
@@ -52,8 +55,8 @@ class LugarController extends Controller
             'imagen'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $datos = $request->all();
         $datos['user_id'] = auth()->id();
+        $datos['departamento'] = $datos['departamento'] ?? 'Huila';
 
         if ($request->hasFile('imagen')) {
             $datos['imagen'] = $this->subirImagenPrincipal($request->file('imagen'), 'lugares');
@@ -70,7 +73,7 @@ class LugarController extends Controller
 
     public function show(Lugar $lugar)
     {
-        $lugar->load('imagenes', 'resenas');
+        $lugar->load('imagenes', 'resenas.user');
         $esFav = auth()->check()
             && !auth()->user()->esAdmin()
             && Favorito::where('user_id', auth()->id())->where('tipo', 'lugar')->where('referencia_id', $lugar->id)->exists();
@@ -87,7 +90,8 @@ class LugarController extends Controller
     {
         $request->validate([
             'nombre'       => 'required|string|max:255',
-            'municipio'    => 'required|string|max:255',
+            'departamento' => 'required|string|in:'.implode(',', \App\Support\Colombia::departamentos()),
+            'municipio'    => ['required', 'string', 'max:255', new MunicipioDeDepartamento],
             'categoria'    => 'required|string|max:100',
             'latitud'      => 'nullable|numeric|between:-90,90',
             'longitud'     => 'nullable|numeric|between:-180,180',

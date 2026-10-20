@@ -29,12 +29,16 @@ class BienvenidaController extends Controller
 
         $galeria = LugarImagen::inRandomOrder()->take(8)->get();
 
-        $testimonios = Resena::with('user', 'servicio')
+                $testimonios = Resena::with('user', 'servicio')
             ->where('calificacion', '>=', 4)
             ->whereNotNull('comentario')
             ->latest()
             ->take(3)
             ->get();
+
+        $totalExperiencias = $lugaresCount + $hotelesCount + $restaurantesCount
+            + $toursCount + $transportesCount;
+        $calidadMedia = number_format(Resena::avg('calificacion') ?? 0, 1);
 
         if ($galeria->count() == 0) {
             $galeria = collect([
@@ -58,7 +62,9 @@ class BienvenidaController extends Controller
             'agenciasCount',
             'transportesCount',
             'galeria',
-            'testimonios'
+            'testimonios',
+            'totalExperiencias',
+            'calidadMedia'
         ));
     }
 }

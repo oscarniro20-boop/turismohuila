@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Agencias de Viaje - TurismoHuila')
+@section('title', 'Agencias de Viaje - Turismo por Colombia')
 
 @section('content')
-<x-page-header titulo="Agencias de viaje" descripcion="Operadores turísticos certificados para planificar tu viaje por el Huila.">
+<x-page-header :titulo="__('ui.catalog.agencies_title')" :descripcion="__('ui.catalog.agencies_description')">
     @auth
         @if(auth()->user()->esAdmin())
             <x-slot:actions>
@@ -17,13 +17,14 @@
 </x-page-header>
 
 <div class="container pb-5">
+    <x-filtro-ubicacion :accion="route('agencias.index')" />
     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 mt-1">
         @forelse($agencias as $agencia)
             <div class="col tarjeta-item">
                 <x-card-turismo
                     :imagen="$agencia->url_imagen"
                     :titulo="$agencia->nombre"
-                    :ubicacion="$agencia->municipio . ' · ' . $agencia->tours_count . ' tours'"
+                    :ubicacion="$agencia->ubicacion_texto . ' · ' . $agencia->tours_count . ' tours'"
                     :rating="$agencia->resenas_avg_calificacion"
                                     :descripcion="Str::limit($agencia->descripcion, 110)"
                     :url="route('agencias.show', $agencia)"
@@ -32,12 +33,13 @@
                     favoritoTipo="agencia"
                     :favoritoId="$agencia->id"
                     :esFavorito="in_array($agencia->id, $favoritosIds ?? [])"
+                    icono="🏢"
                 />
             </div>
         @empty
             <div class="col-12">
                 <div class="alert" style="background-color: var(--color-muted); color: var(--color-muted-fg); border: none;">
-                    No hay agencias registradas todavía.
+                    {{ __('ui.catalog.no_agencies') }}
                 </div>
             </div>
         @endforelse

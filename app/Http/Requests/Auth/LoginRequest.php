@@ -50,6 +50,24 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        // Cuentas desactivadas: se autenticó con credenciales válidas pero el
+        // acceso está revocado. Se cierra la sesión de inmediato (incluida la
+        // cookie "remember") y se rechaza el inicio de sesión en el flujo real.
+        $usuario = Auth::user();
+        if ($usuario !== null && ! $usuario->estaActivo()) {
+            Auth::logout();
+            $this->session()->invalidate();
+            $this->session()->regenerateToken();
+
+            // invalidate() borró la URL previa; sin esto, back() caería en la
+            // raíz del sitio y el mensaje de "cuenta desactivada" no se vería.
+            $this->session()->setPreviousUrl(route('login'));
+
+            throw ValidationException::withMessages([
+                'email' => trans('auth.disabled'),
+            ]);
+        }
+
         RateLimiter::clear($this->throttleKey());
     }
 

@@ -29,15 +29,7 @@ class Favorito extends Model
             return $this->getRelation('servicio');
         }
 
-        $modelo = match ($this->tipo) {
-            'lugar'       => \App\Models\Lugar::class,
-            'hotel'       => \App\Models\Hotel::class,
-            'restaurante' => \App\Models\Restaurante::class,
-            'tour'        => \App\Models\Tour::class,
-            'guia'        => \App\Models\Guia::class,
-            'agencia'     => \App\Models\Agencia::class,
-            default       => null,
-        };
+        $modelo = \Illuminate\Database\Eloquent\Relations\Relation::getMorphedModel($this->tipo);
 
         if (!$modelo) {
             return null;

@@ -12,6 +12,7 @@
     'favoritoTipo' => null,
     'favoritoId' => null,
     'esFavorito' => false,
+    'icono' => '🏞️',
 ])
 
 <div class="h-100 hover-lift rounded-4" style="box-shadow: var(--shadow-ring);">
@@ -20,7 +21,7 @@
         @if($imagen)
             <img src="{{ $imagen }}" alt="{{ $titulo }}" class="w-100 h-100" style="object-fit: cover;">
         @else
-            <div class="w-100 h-100 d-flex align-items-center justify-content-center" style="color: var(--color-muted-fg); font-size: 2rem;">🏞️</div>
+            <div class="w-100 h-100 d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); color: #fff; font-size: 3rem;">{{ $icono }}</div>
         @endif
 
         @if(!is_null($rating) && $rating > 0)
@@ -40,15 +41,15 @@
                 @endif
 
                 @if(auth()->user()->esAdmin())
-                    @if($editUrl)
-                        <a href="{{ $editUrl }}" title="Editar" onclick="event.stopPropagation();"
+                        @if($editUrl)
+                        <a href="{{ $editUrl }}" title="{{ __('ui.common.edit') }}" onclick="event.stopPropagation();"
                            class="d-flex align-items-center justify-content-center rounded-circle"
                            style="width:32px; height:32px; background: rgba(255,255,255,0.94); text-decoration:none;">✏️</a>
                     @endif
                     @if($deleteUrl)
-                        <form action="{{ $deleteUrl }}" method="POST" onsubmit="event.stopPropagation(); return confirm('¿Eliminar {{ $titulo }}?');" onclick="event.stopPropagation();">
+                        <form action="{{ $deleteUrl }}" method="POST" data-confirm="{{ __('ui.common.delete') . ' ' . $titulo . '?' }}" onsubmit="event.stopPropagation(); return confirm(this.dataset.confirm);" onclick="event.stopPropagation();">
                             @csrf @method('DELETE')
-                            <button type="submit" title="Eliminar" class="d-flex align-items-center justify-content-center rounded-circle border-0"
+                            <button type="submit" title="{{ __('ui.common.delete') }}" class="d-flex align-items-center justify-content-center rounded-circle border-0"
                                     style="width:32px; height:32px; background: rgba(255,255,255,0.94);">🗑️</button>
                         </form>
                     @endif

@@ -57,6 +57,7 @@ class BusquedaService
     private function buscarEnModelo(string $modelo, string $query, int $limite, string $campoSubtitulo): Collection
     {
         return $modelo::where('nombre', 'like', "%{$query}%")
+            ->orWhere($campoSubtitulo, 'like', "%{$query}%")
             ->limit($limite)
             ->get(['id', 'nombre', $campoSubtitulo]);
     }

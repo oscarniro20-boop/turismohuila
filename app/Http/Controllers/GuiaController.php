@@ -15,10 +15,12 @@ class GuiaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $guias = Guia::withAvg('resenas', 'calificacion')
             ->withCount('resenas')
+            ->ubicacion($request->query('departamento'), null)
+            ->orderBy('nombre')
             ->get()
             ->each(function ($guia) {
                 $guia->total_resenas = $guia->resenas_count;
@@ -43,7 +45,7 @@ class GuiaController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $datos = $request->validate([
             'nombre' => 'required|string|max:255',
             'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'bio' => 'nullable|string|max:1000',
@@ -58,8 +60,6 @@ class GuiaController extends Controller
             'latitud'      => 'nullable|numeric|between:-90,90',
             'longitud'     => 'nullable|numeric|between:-180,180',
         ]);
-
-        $datos = $request->all();
 
         if ($request->hasFile('foto')) {
             $datos['foto'] = $this->subirImagenPrincipal($request->file('foto'), 'guias');
@@ -84,7 +84,7 @@ class GuiaController extends Controller
      */
     public function show(Guia $guia)
     {
-        $guia->load('lugares', 'imagenes', 'resenas');
+        $guia->load('lugares', 'imagenes', 'resenas.user');
         $esFav = auth()->check()
             && !auth()->user()->esAdmin()
             && Favorito::where('user_id', auth()->id())->where('tipo', 'guia')->where('referencia_id', $guia->id)->exists();

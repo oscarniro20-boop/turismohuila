@@ -14,14 +14,15 @@ class UserSeeder extends Seeder
             return;
         }
 
-        User::create([
+        // forceCreate porque 'rol' no es mass-assignable (Fase 5).
+        User::forceCreate([
             'name'     => 'Administrador',
             'email'    => 'admin@turismo-huila.com',
             'password' => Hash::make(env('SEED_PASSWORD', 'password123')),
             'rol'      => 'admin',
         ]);
 
-        User::create([
+        User::forceCreate([
             'name'     => 'Oscar Nicolas',
             'email'    => 'oscar@turismo-huila.com',
             'password' => Hash::make(env('SEED_PASSWORD', 'password123')),

@@ -14,11 +14,27 @@ use App\Http\Controllers\TransporteController;
 use App\Http\Controllers\BusquedaController;
 use App\Http\Controllers\ContactoController;
 use App\Http\Controllers\BienvenidaController;
+use App\Http\Controllers\DestinoController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ImportacionController;
+use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\AuditoriaController;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Http\Request;
 
 // Página de inicio
 // "/" y "/bienvenida" comparten BienvenidaController::index() (vista 'bienvenida')
 Route::get('/', [BienvenidaController::class, 'index'])->name('home');
+
+Route::post('/idioma', function (Request $request) {
+    $locale = $request->validate([
+        'locale' => ['required', 'in:es,en'],
+    ])['locale'];
+
+    $request->session()->put('locale', $locale);
+
+    return back();
+})->name('locale.update');
 
 Route::get('/buscar', [BusquedaController::class, 'buscar'])
     ->middleware('throttle:30,1')
@@ -64,6 +80,39 @@ Route::middleware(['auth', 'rol:admin'])->group(function () {
     Route::resource('resenas', ResenaController::class)
         ->parameters(['resenas' => 'resena'])
         ->only(['index']);
+
+    Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
+    // ── Importación masiva CSV (solo administradores) ────────────────────────
+    // Lista de categorías cerrada en config/importacion.php; plantillas
+    // descargables por categoría y procesamiento síncrono del archivo subido.
+    Route::get('/admin/importacion', [ImportacionController::class, 'index'])
+        ->name('admin.importacion.index');
+    Route::get('/admin/importacion/plantilla/{categoria}', [ImportacionController::class, 'plantilla'])
+        ->name('admin.importacion.plantilla');
+    Route::post('/admin/importacion', [ImportacionController::class, 'procesar'])
+        ->middleware('throttle:6,1')
+        ->name('admin.importacion.procesar');
+
+    // ── Gestión de usuarios (Fase 5) ─────────────────────────────────────────
+    // 'rol' no es mass-assignable; lista cerrada admin|turista validada en el
+    // controlador. Cada operación queda registrada en la auditoría central.
+    Route::get('/admin/usuarios', [AdminUserController::class, 'index'])
+        ->name('admin.usuarios.index');
+    Route::post('/admin/usuarios', [AdminUserController::class, 'store'])
+        ->name('admin.usuarios.store');
+    Route::put('/admin/usuarios/{user}', [AdminUserController::class, 'update'])
+        ->name('admin.usuarios.update');
+    Route::delete('/admin/usuarios/{user}', [AdminUserController::class, 'destroy'])
+        ->name('admin.usuarios.destroy');
+
+    // Activar / desactivar cuenta (sin borrado físico de datos).
+    Route::post('/admin/usuarios/{user}/estado', [AdminUserController::class, 'estado'])
+        ->name('admin.usuarios.estado');
+
+    // ── Auditoría central (Fase 6) ───────────────────────────────────────────
+    Route::get('/admin/auditorias', [AuditoriaController::class, 'index'])
+        ->name('admin.auditorias.index');
 });
 
 // ── Rutas TURISTA (dejar reseñas) ─────────────────────────────────────────
@@ -90,6 +139,12 @@ Route::resource('lugares', LugarController::class)
     ->only(['index', 'show']);
 
 Route::get('/mapa', [LugarController::class, 'mapa'])->name('mapa');
+
+// ── Destinos nacionales (región natural + departamento) ────────────────────
+// "/destinos" agrupa los 33 departamentos del catálogo en sus 6 regiones;
+// "/destinos/{departamento}" recibe el slug estable del nombre del depto.
+Route::get('/destinos', [DestinoController::class, 'index'])->name('destinos.index');
+Route::get('/destinos/{departamento}', [DestinoController::class, 'show'])->name('destinos.show');
 
 Route::resource('hoteles', HotelController::class)
     ->parameters(['hoteles' => 'hotel'])

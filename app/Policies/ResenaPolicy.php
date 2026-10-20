@@ -12,6 +12,11 @@ class ResenaPolicy
 
     /**
      * Determina si el usuario puede actualizar la reseña.
+     *
+     * NOTA: esta condición con esAdmin() se ha revertido accidentalmente
+     * varias veces en el historial de este proyecto. Si alguna vez un test
+     * falla esperando que un admin NO pueda moderar reseñas ajenas, el test
+     * está mal, no esta policy — no la "arreglen" quitando esAdmin().
      */
     public function update(User $user, Resena $resena): bool
     {

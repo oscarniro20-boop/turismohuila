@@ -5,13 +5,14 @@
     'favoritoTipo' => null,
     'favoritoId' => null,
     'esFavorito' => false,
+    'icono' => '🏞️',
 ])
 
 <div class="position-relative rounded-4 overflow-hidden mb-4" style="box-shadow: var(--shadow-ring);">
     @if($imagen)
         <img src="{{ $imagen }}" alt="{{ $titulo }}" class="w-100" style="height: 380px; object-fit: cover;">
     @else
-        <div class="w-100 d-flex align-items-center justify-content-center" style="height: 240px; background: var(--color-muted); font-size: 3rem;">🏞️</div>
+        <div class="w-100 d-flex align-items-center justify-content-center" style="height: 240px; background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); font-size: 4rem;">{{ $icono }}</div>
     @endif
 
     <div class="position-absolute bottom-0 start-0 w-100 p-4 p-md-5"

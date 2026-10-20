@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Editar Agencia - TurismoHuila')
+@section('title', 'Editar Agencia - Turismo por Colombia')
 
 @section('content')
 <div class="row justify-content-center">

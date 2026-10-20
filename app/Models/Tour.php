@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Concerns\HasGalleryImages;
+use App\Concerns\HasUbicacion;
 use App\Concerns\HasUrlImagen;
 use App\Concerns\HasRating;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,13 +13,14 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Tour extends Model
 {
-    use HasFactory, HasGalleryImages, HasRating, HasUrlImagen;
+    use HasFactory, HasGalleryImages, HasRating, HasUrlImagen, HasUbicacion;
 
     protected $table = 'tours';
 
     protected $fillable = [
         'nombre',
         'descripcion',
+        'departamento',
         'municipio',
         'precio',
         'duracion_dias',

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Bienvenido - TurismoHuila')
+@section('title', 'Bienvenido - Turismo por Colombia')
 
 @section('content')
 <!-- Hero principal -->
@@ -8,14 +8,14 @@
     <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.7));"></div>
     <div class="container position-relative h-100 d-flex align-items-center" style="min-height: 80vh;">
         <div class="text-white" style="max-width: 700px;">
-            <span class="badge bg-warning text-dark mb-3 px-3 py-2">HUILA, COLOMBIA</span>
+            <span class="badge bg-warning text-dark mb-3 px-3 py-2">{{ __('ui.welcome.badge') }}</span>
             <h1 class="display-3 fw-bold mb-3" style="font-family: 'Fraunces', Georgia, serif; line-height: 1.2;">
-                El Huila que <em style="color: var(--color-gold);">te espera</em>
+                {{ __('ui.welcome.hero_title') }}
             </h1>
-            <p class="lead mb-4 fs-5">Descubre paisajes, cultura y experiencias únicas en el corazón de Colombia.</p>
+            <p class="lead mb-4 fs-5">{{ __('ui.welcome.hero_description') }}</p>
             <div class="d-flex gap-3 flex-wrap">
-                <a href="{{ route('tours.index') }}" class="btn btn-lg rounded-pill px-4 py-3" style="background-color: var(--color-secondary); color:#fff; border-color: var(--color-secondary); box-shadow: 0 4px 15px rgba(0,0,0,0.2);">Ver tours</a>
-                <a href="{{ route('lugares.index') }}" class="btn btn-lg rounded-pill px-4 py-3" style="color:#fff; border: 2px solid #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">Explorar lugares</a>
+                <a href="{{ route('tours.index') }}" class="btn btn-lg rounded-pill px-4 py-3" style="background-color: var(--color-secondary); color:#fff; border-color: var(--color-secondary); box-shadow: 0 4px 15px rgba(0,0,0,0.2);">{{ __('ui.welcome.see_tours') }}</a>
+                <a href="{{ route('lugares.index') }}" class="btn btn-lg rounded-pill px-4 py-3" style="color:#fff; border: 2px solid #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">{{ __('ui.welcome.explore_places') }}</a>
             </div>
         </div>
     </div>
@@ -25,8 +25,8 @@
 <section class="py-5" style="background: #fafafa;">
     <div class="container py-5">
         <div class="text-center mb-5">
-            <h2 class="display-5 fw-bold" style="font-family: 'Fraunces', Georgia, serif; color: var(--color-fg);">Tres maneras de vivir el Huila</h2>
-            <p class="lead text-muted mt-3">Experiencias únicas te esperan en cada rincón</p>
+            <h2 class="display-5 fw-bold" style="font-family: 'Fraunces', Georgia, serif; color: var(--color-fg);">{{ __('ui.welcome.ways_title') }}</h2>
+            <p class="lead text-muted mt-3">{{ __('ui.welcome.ways_description') }}</p>
         </div>
         <div class="row g-4">
             <div class="col-md-4">
@@ -35,9 +35,9 @@
                         <img src="{{ asset('imagenes/lugares/1783842423_Parque Arqueológico San Agustín.jpg') }}" alt="Naturaleza" class="w-100 h-100 object-fit-cover" style="transition: transform 0.5s ease;">
                         <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6));"></div>
                         <div class="position-absolute bottom-0 start-0 w-100 p-4 text-white">
-                            <h3 class="fw-bold mb-2" style="font-family: 'Fraunces', Georgia, serif; font-size: 1.75rem;">Naturaleza</h3>
-                            <p class="small mb-3">Desiertos, cascadas y termales</p>
-                            <a href="{{ route('lugares.index') }}" class="btn btn-light btn-sm rounded-pill px-4">Explorar</a>
+                            <h3 class="fw-bold mb-2" style="font-family: 'Fraunces', Georgia, serif; font-size: 1.75rem;">{{ __('ui.welcome.nature') }}</h3>
+                            <p class="small mb-3">{{ __('ui.welcome.nature_description') }}</p>
+                            <a href="{{ route('lugares.index') }}" class="btn btn-light btn-sm rounded-pill px-4">{{ __('ui.common.explore') }}</a>
                         </div>
                     </div>
                 </div>
@@ -48,9 +48,9 @@
                         <img src="{{ asset('imagenes/lugares/1783842423_Parque Arqueológico San Agustín.jpg') }}" alt="Cultura" class="w-100 h-100 object-fit-cover" style="transition: transform 0.5s ease;">
                         <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6));"></div>
                         <div class="position-absolute bottom-0 start-0 w-100 p-4 text-white">
-                            <h3 class="fw-bold mb-2" style="font-family: 'Fraunces', Georgia, serif; font-size: 1.75rem;">Cultura</h3>
-                            <p class="small mb-3">San Agustín, arte precolombino</p>
-                            <a href="{{ route('lugares.index') }}" class="btn btn-light btn-sm rounded-pill px-4">Explorar</a>
+                            <h3 class="fw-bold mb-2" style="font-family: 'Fraunces', Georgia, serif; font-size: 1.75rem;">{{ __('ui.welcome.culture') }}</h3>
+                            <p class="small mb-3">{{ __('ui.welcome.culture_description') }}</p>
+                            <a href="{{ route('lugares.index') }}" class="btn btn-light btn-sm rounded-pill px-4">{{ __('ui.common.explore') }}</a>
                         </div>
                     </div>
                 </div>
@@ -61,9 +61,9 @@
                         <img src="{{ asset('imagenes/lugares/1783842423_Parque Arqueológico San Agustín.jpg') }}" alt="Aventura" class="w-100 h-100 object-fit-cover" style="transition: transform 0.5s ease;">
                         <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6));"></div>
                         <div class="position-absolute bottom-0 start-0 w-100 p-4 text-white">
-                            <h3 class="fw-bold mb-2" style="font-family: 'Fraunces', Georgia, serif; font-size: 1.75rem;">Aventura</h3>
-                            <p class="small mb-3">Rafting, pesca y astroturismo</p>
-                            <a href="{{ route('tours.index') }}" class="btn btn-light btn-sm rounded-pill px-4">Explorar</a>
+                            <h3 class="fw-bold mb-2" style="font-family: 'Fraunces', Georgia, serif; font-size: 1.75rem;">{{ __('ui.welcome.adventure') }}</h3>
+                            <p class="small mb-3">{{ __('ui.welcome.adventure_description') }}</p>
+                            <a href="{{ route('tours.index') }}" class="btn btn-light btn-sm rounded-pill px-4">{{ __('ui.common.explore') }}</a>
                         </div>
                     </div>
                 </div>
@@ -76,8 +76,8 @@
 <section class="py-5" style="background: #fff;">
     <div class="container py-5">
         <div class="text-center mb-5">
-            <h2 class="display-5 fw-bold" style="font-family: 'Fraunces', Georgia, serif; color: var(--color-fg);">Todo lo que necesitas para tu viaje</h2>
-            <p class="lead text-muted mt-3">Encuentra todo lo que necesitas para una experiencia inolvidable</p>
+            <h2 class="display-5 fw-bold" style="font-family: 'Fraunces', Georgia, serif; color: var(--color-fg);">{{ __('ui.welcome.needs_title') }}</h2>
+            <p class="lead text-muted mt-3">{{ __('ui.welcome.needs_description') }}</p>
         </div>
         <div class="row g-4 row-cols-2 row-cols-md-4">
             <div class="col">
@@ -87,9 +87,9 @@
                             <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px; background: rgba(var(--color-primary-rgb), 0.1);">
                                 <span style="font-size: 2rem;">🏞️</span>
                             </div>
-                            <h6 class="fw-semibold mb-2" style="color: var(--color-fg);">Lugares turísticos</h6>
-                            <p class="small text-muted mb-3">Explora los principales destinos del Huila</p>
-                            <span class="text-success fw-semibold small">Explorar →</span>
+                            <h6 class="fw-semibold mb-2" style="color: var(--color-fg);">{{ __('ui.nav.places') }}</h6>
+                            <p class="small text-muted mb-3">{{ __('ui.welcome.explore_places') }}</p>
+                            <span class="text-success fw-semibold small">{{ __('ui.common.explore') }} →</span>
                         </div>
                     </div>
                 </a>
@@ -101,9 +101,9 @@
                             <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px; background: rgba(var(--color-primary-rgb), 0.1);">
                                 <span style="font-size: 2rem;">🏨</span>
                             </div>
-                            <h6 class="fw-semibold mb-2" style="color: var(--color-fg);">Hoteles</h6>
-                            <p class="small text-muted mb-3">Encuentra el alojamiento perfecto</p>
-                            <span class="text-success fw-semibold small">Explorar →</span>
+                            <h6 class="fw-semibold mb-2" style="color: var(--color-fg);">{{ __('ui.nav.hotels') }}</h6>
+                            <p class="small text-muted mb-3">{{ __('ui.welcome.needs_description') }}</p>
+                            <span class="text-success fw-semibold small">{{ __('ui.common.explore') }} →</span>
                         </div>
                     </div>
                 </a>
@@ -115,9 +115,9 @@
                             <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px; background: rgba(var(--color-primary-rgb), 0.1);">
                                 <span style="font-size: 2rem;">🍽️</span>
                             </div>
-                            <h6 class="fw-semibold mb-2" style="color: var(--color-fg);">Restaurantes</h6>
-                            <p class="small text-muted mb-3">Degusta la gastronomía local</p>
-                            <span class="text-success fw-semibold small">Explorar →</span>
+                            <h6 class="fw-semibold mb-2" style="color: var(--color-fg);">{{ __('ui.nav.restaurants') }}</h6>
+                            <p class="small text-muted mb-3">{{ __('ui.welcome.culture_description') }}</p>
+                            <span class="text-success fw-semibold small">{{ __('ui.common.explore') }} →</span>
                         </div>
                     </div>
                 </a>
@@ -129,9 +129,9 @@
                             <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px; background: rgba(var(--color-primary-rgb), 0.1);">
                                 <span style="font-size: 2rem;">🚌</span>
                             </div>
-                            <h6 class="fw-semibold mb-2" style="color: var(--color-fg);">Tours</h6>
-                            <p class="small text-muted mb-3">Vive experiencias únicas</p>
-                            <span class="text-success fw-semibold small">Explorar →</span>
+                            <h6 class="fw-semibold mb-2" style="color: var(--color-fg);">{{ __('ui.nav.tours') }}</h6>
+                            <p class="small text-muted mb-3">{{ __('ui.welcome.ways_description') }}</p>
+                            <span class="text-success fw-semibold small">{{ __('ui.common.explore') }} →</span>
                         </div>
                     </div>
                 </a>
@@ -143,9 +143,9 @@
                             <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px; background: rgba(var(--color-primary-rgb), 0.1);">
                                 <span style="font-size: 2rem;">🗺️</span>
                             </div>
-                            <h6 class="fw-semibold mb-2" style="color: var(--color-fg);">Guías</h6>
-                            <p class="small text-muted mb-3">Expertos locales te acompañan</p>
-                            <span class="text-success fw-semibold small">Explorar →</span>
+                            <h6 class="fw-semibold mb-2" style="color: var(--color-fg);">{{ __('ui.nav.guides') }}</h6>
+                            <p class="small text-muted mb-3">{{ __('ui.welcome.connection_description') }}</p>
+                            <span class="text-success fw-semibold small">{{ __('ui.common.explore') }} →</span>
                         </div>
                     </div>
                 </a>
@@ -157,9 +157,9 @@
                             <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px; background: rgba(var(--color-primary-rgb), 0.1);">
                                 <span style="font-size: 2rem;">🧳</span>
                             </div>
-                            <h6 class="fw-semibold mb-2" style="color: var(--color-fg);">Agencias</h6>
-                            <p class="small text-muted mb-3">Planifica tu viaje perfecto</p>
-                            <span class="text-success fw-semibold small">Explorar →</span>
+                            <h6 class="fw-semibold mb-2" style="color: var(--color-fg);">{{ __('ui.nav.agencies') }}</h6>
+                            <p class="small text-muted mb-3">{{ __('ui.welcome.cta_description') }}</p>
+                            <span class="text-success fw-semibold small">{{ __('ui.common.explore') }} →</span>
                         </div>
                     </div>
                 </a>
@@ -171,9 +171,9 @@
                             <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px; background: rgba(var(--color-primary-rgb), 0.1);">
                                 <span style="font-size: 2rem;">🚐</span>
                             </div>
-                            <h6 class="fw-semibold mb-2" style="color: var(--color-fg);">Transporte</h6>
-                            <p class="small text-muted mb-3">Moviliza tu viaje con comodidad</p>
-                            <span class="text-success fw-semibold small">Explorar →</span>
+                            <h6 class="fw-semibold mb-2" style="color: var(--color-fg);">{{ __('ui.nav.transport') }}</h6>
+                            <p class="small text-muted mb-3">{{ __('ui.welcome.connection_description') }}</p>
+                            <span class="text-success fw-semibold small">{{ __('ui.common.explore') }} →</span>
                         </div>
                     </div>
                 </a>
@@ -182,58 +182,71 @@
     </div>
 </section>
 
-<!-- Sección: Estadísticas -->
-<section class="py-5" style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));">
+<!-- Sección: Destinos de Colombia -->
+<section class="py-5" style="background: #fafafa;">
     <div class="container py-5">
-        <div class="row g-4 row-cols-2 row-cols-md-4 text-center text-white">
+        <div class="text-center mb-4">
+            <span class="d-block mb-2 small fw-semibold text-uppercase" style="color: var(--color-primary); letter-spacing: 0.1em;">{{ __('ui.welcome.destinos_kicker') }}</span>
+            <h2 class="display-5 fw-bold" style="font-family: 'Fraunces', Georgia, serif; color: var(--color-fg);">{{ __('ui.welcome.destinos_title') }}</h2>
+            <p class="lead text-muted mt-3 mb-4">{{ __('ui.welcome.destinos_description') }}</p>
+        </div>
+        <div class="d-flex flex-wrap justify-content-center gap-2 mb-4">
+            @foreach(\App\Support\Colombia::nombresRegiones() as $region)
+                <a href="{{ route('destinos.index') }}#{{ \Illuminate\Support\Str::slug($region) }}"
+                   class="btn btn-sm rounded-pill px-3 py-2 border fw-medium text-nowrap"
+                   style="border-color: var(--color-border); background: #fff; color: var(--color-fg);">
+                    <span aria-hidden="true">{{ \App\Support\Colombia::infoRegion($region)['icono'] ?? '📍' }}</span> {{ $region }}
+                </a>
+            @endforeach
+        </div>
+        <div class="text-center">
+            <a href="{{ route('destinos.index') }}" class="btn rounded-pill px-4 py-2" style="background-color: var(--color-primary); color: #fff;">
+                {{ __('ui.welcome.see_destinos') }} →
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Sección: Estadísticas -->
+<section class="py-5" style="background: var(--color-primary);">
+    <div class="container py-5">
+        <div class="text-center mb-4">
+            <span class="d-block mb-2 small fw-semibold text-uppercase" style="color: #E8A33D; letter-spacing: 0.1em;">{{ __('ui.welcome.statistics') }}</span>
+            <h2 class="fw-bold mb-3 text-white" style="font-family: 'Fraunces', Georgia, serif; font-size: 1.75rem;">
+                {{ __('ui.welcome.connection_title') }}
+            </h2>
+            <p class="text-light small mb-0 mx-auto" style="max-width: 600px;">
+                {{ __('ui.welcome.connection_description') }}
+            </p>
+        </div>
+        <div class="row g-3 row-cols-2 row-cols-md-4 text-center text-white">
             <div class="col">
-                <div class="mb-2">
-                    <span style="font-size: 2.5rem;">🏞️</span>
+                <div class="rounded-4 p-4 h-100 d-flex flex-column align-items-center justify-content-center" style="background: rgba(255,255,255,0.08);">
+                    <span class="mb-2" style="font-size: 2rem;">📍</span>
+                    <div class="display-4 fw-bold" style="font-family: 'Fraunces', Georgia, serif;">{{ $totalExperiencias }}+</div>
+                    <div class="small">{{ __('ui.welcome.experiences') }}</div>
                 </div>
-                 <div class="display-4 fw-bold">{{ $lugaresCount }}</div>
-                <div class="small text-white-50">Lugares turísticos</div>
             </div>
             <div class="col">
-                <div class="mb-2">
-                    <span style="font-size: 2.5rem;">🏨</span>
+                <div class="rounded-4 p-4 h-100 d-flex flex-column align-items-center justify-content-center" style="background: rgba(255,255,255,0.08);">
+                    <span class="mb-2" style="font-size: 2rem;">🧑‍🤝‍🧑</span>
+                    <div class="display-4 fw-bold" style="font-family: 'Fraunces', Georgia, serif;">7</div>
+                    <div class="small">{{ __('ui.welcome.ways') }}</div>
                 </div>
-                <div class="display-4 fw-bold">{{ $hotelesCount }}</div>
-                <div class="small text-white-50">Hoteles</div>
             </div>
             <div class="col">
-                <div class="mb-2">
-                    <span style="font-size: 2.5rem;">🍽️</span>
+                <div class="rounded-4 p-4 h-100 d-flex flex-column align-items-center justify-content-center" style="background: rgba(255,255,255,0.08);">
+                    <span class="mb-2" style="font-size: 2rem;">⭐</span>
+                    <div class="display-4 fw-bold" style="font-family: 'Fraunces', Georgia, serif;">{{ $calidadMedia }}</div>
+                    <div class="small">{{ __('ui.welcome.average_reviews') }}</div>
                 </div>
-                <div class="display-4 fw-bold">{{ $restaurantesCount }}</div>
-                <div class="small text-white-50">Restaurantes</div>
             </div>
             <div class="col">
-                <div class="mb-2">
-                    <span style="font-size: 2.5rem;">🚌</span>
+                <div class="rounded-4 p-4 h-100 d-flex flex-column align-items-center justify-content-center" style="background: rgba(255,255,255,0.08);">
+                    <span class="mb-2" style="font-size: 2rem;">🏛️</span>
+                    <div class="display-4 fw-bold" style="font-family: 'Fraunces', Georgia, serif;">37</div>
+                    <div class="small">{{ __('ui.welcome.municipalities') }}</div>
                 </div>
-                <div class="display-4 fw-bold">{{ $toursCount }}</div>
-                <div class="small text-white-50">Tours</div>
-            </div>
-            <div class="col">
-                <div class="mb-2">
-                    <span style="font-size: 2.5rem;">🗺️</span>
-                </div>
-                <div class="display-4 fw-bold">{{ $guiasCount }}</div>
-                <div class="small text-white-50">Guías</div>
-            </div>
-            <div class="col">
-                <div class="mb-2">
-                    <span style="font-size: 2.5rem;">🏢</span>
-                </div>
-                <div class="display-4 fw-bold">{{ $agenciasCount }}</div>
-                <div class="small text-white-50">Agencias</div>
-            </div>
-            <div class="col">
-                <div class="mb-2">
-                    <span style="font-size: 2.5rem;">🚐</span>
-                </div>
-                <div class="display-4 fw-bold">{{ $transportesCount }}</div>
-                <div class="small text-white-50">Transporte</div>
             </div>
         </div>
     </div>
@@ -243,8 +256,8 @@
 <section class="py-5" style="background: #fafafa;">
     <div class="container py-5">
         <div class="text-center mb-5">
-            <h2 class="display-5 fw-bold" style="font-family: 'Fraunces', Georgia, serif; color: var(--color-fg);">Galería de experiencias</h2>
-            <p class="lead text-muted mt-3">Descubre la belleza del Huila a través de nuestras imágenes</p>
+            <h2 class="display-5 fw-bold" style="font-family: 'Fraunces', Georgia, serif; color: var(--color-fg);">{{ __('ui.welcome.gallery_title') }}</h2>
+            <p class="lead text-muted mt-3">{{ __('ui.welcome.gallery_description') }}</p>
         </div>
         <div class="row g-3">
             @foreach($galeria as $img)
@@ -266,8 +279,8 @@
 <section class="py-5" style="background: var(--color-bg);">
     <div class="container py-5">
         <div class="text-center mb-5">
-            <h2 class="display-5 fw-bold" style="font-family: 'Fraunces', Georgia, serif; color: var(--color-fg);">Testimonios</h2>
-            <p class="lead text-muted mt-3">Experiencias reales de quienes ya vivieron el Huila</p>
+            <h2 class="display-5 fw-bold" style="font-family: 'Fraunces', Georgia, serif; color: var(--color-fg);">{{ __('ui.welcome.testimonials') }}</h2>
+            <p class="lead text-muted mt-3">{{ __('ui.welcome.testimonials_description') }}</p>
         </div>
         @if($testimonios->isNotEmpty())
             <div class="row g-4">
@@ -294,7 +307,7 @@
                 @endforeach
             </div>
         @else
-            <p class="text-center text-muted mb-0">Aún no hay testimonios. ¡Sé el primero en compartir tu experiencia!</p>
+            <p class="text-center text-muted mb-0">{{ __('ui.welcome.no_testimonials') }}</p>
         @endif
     </div>
 </section>
@@ -303,11 +316,11 @@
     <section class="py-5" style="background: linear-gradient(135deg, var(--color-secondary), var(--color-primary)); position: relative; overflow: hidden;">
         <div class="container text-center text-white position-relative" style="z-index: 2;">
             <h2 class="display-4 fw-bold mb-3" style="font-family: 'Fraunces', Georgia, serif;">
-                ¿Listo para descubrir el Huila?
+                {{ __('ui.welcome.cta_title') }}
             </h2>
-            <p class="lead mb-4 fs-5">Crea tu cuenta y comienza a planificar tu próxima aventura.</p>
+            <p class="lead mb-4 fs-5">{{ __('ui.welcome.cta_description') }}</p>
             <a href="{{ route('register') }}" class="btn btn-light btn-lg rounded-pill px-5 py-3 fw-semibold" style="box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
-                Crear cuenta
+                {{ __('ui.welcome.create_account') }}
             </a>
         </div>
         <div class="position-absolute top-0 start-0 w-100 h-100" style="background: url('{{ asset('imagenes/lugares/1783842423_Parque Arqueológico San Agustín.jpg') }}') center/cover no-repeat; opacity: 0.1;"></div>

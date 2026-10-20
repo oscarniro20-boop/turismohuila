@@ -10,16 +10,19 @@ use App\Models\Favorito;
 use App\Concerns\ManagesImages;
 use App\Http\Requests\StoreAgenciaRequest;
 use App\Http\Requests\UpdateAgenciaRequest;
+use Illuminate\Http\Request;
 
 class AgenciaController extends Controller
 {
     use ManagesImages;
 
-    public function index()
+    public function index(Request $request)
     {
         $agencias = Agencia::withAvg('resenas', 'calificacion')
             ->withCount('resenas')
             ->withCount('tours')
+            ->ubicacion($request->query('departamento'), $request->query('municipio'))
+            ->orderBy('nombre')
             ->get()
             ->each(function ($agencia) {
                 $agencia->total_resenas = $agencia->resenas_count;
@@ -71,7 +74,7 @@ class AgenciaController extends Controller
 
     public function show(Agencia $agencia)
     {
-        $agencia->load('paquetes.tour', 'imagenes', 'resenas');
+        $agencia->load('paquetes.tour', 'imagenes', 'resenas.user');
         $esFav = auth()->check()
             && !auth()->user()->esAdmin()
             && Favorito::where('user_id', auth()->id())->where('tipo', 'agencia')->where('referencia_id', $agencia->id)->exists();

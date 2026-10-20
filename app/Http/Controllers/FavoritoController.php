@@ -15,16 +15,7 @@ class FavoritoController extends Controller
         ]);
 
         // Evita favoritos huerfanos: el recurso referenciado debe existir.
-        $clase = match ($request->tipo) {
-            'lugar' => \App\Models\Lugar::class,
-            'hotel' => \App\Models\Hotel::class,
-            'restaurante' => \App\Models\Restaurante::class,
-            'tour' => \App\Models\Tour::class,
-            'guia' => \App\Models\Guia::class,
-            'agencia' => \App\Models\Agencia::class,
-            'transporte' => \App\Models\Transporte::class,
-            default => null,
-        };
+        $clase = \Illuminate\Database\Eloquent\Relations\Relation::getMorphedModel($request->tipo);
 
         if ($clase === null || ! $clase::whereKey($request->referencia_id)->exists()) {
             return response()->json(['message' => 'El recurso indicado no existe.'], 404);

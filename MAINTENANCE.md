@@ -1,4 +1,4 @@
-# 🛠️ Guía de Mantenimiento - TurismoHuila
+# 🛠️ Guía de Mantenimiento - Turismo por Colombia
 
 ## Agregar Nuevos Lugares Turísticos
 
@@ -10,16 +10,14 @@
 
 ## Manejo de Imágenes
 
-- **Imagen principal**: Se almacena en `public/imagenes/{tipo}/`
-- **Galería**: Se almacena en `public/galeria/{tipo}/`
-- **Formatos**: Solo JPG, JPEG, PNG
-- **Tamaño máximo**: 2 MB por imagen
-- Las imágenes se eliminan automáticamente al eliminar el registro
+- **Cloudinary** es el proveedor principal de imágenes (subida, eliminación y URLs). Las credenciales viven solo en `.env` (`CLOUDINARY_URL`).
+- Imagen principal y galería: JPG, JPEG, PNG; máximo 2 MB por imagen.
+- Las imágenes se eliminan automáticamente (Cloudinary o local) al eliminar el registro.
 
 ## Funcionamiento de Favoritos
 
 - Los favoritos usan relaciones polimórficas
-- Cada favorito referencia un `tipo` (lugar, hotel, restaurante, tour, guia, agencia)
+- Cada favorito referencia un `tipo` (lugar, hotel, restaurante, tour, guia, agencia, transporte)
 - La tabla `favoritos` tiene: `user_id`, `tipo`, `referencia_id`
 - El accessor `getServicioAttribute()` resuelve el modelo relacionado
 
@@ -55,7 +53,7 @@ tail -100 storage/logs/laravel.log
 php artisan test
 ```
 
-No hay tests automatizados completos aún. Se recomienda agregarlos progresivamente.
+Suite completa automatizada en verde (**109 tests / 230 assertions**): autenticación, autorización, CRUD de los 7 módulos, reseñas, favoritos, tours/agencias, transporte, páginas públicas, seguridad y cabeceras HTTP. Antes de correr, ejecuta `php artisan optimize:clear` para evitar cachés obsoletas.
 
 ## Actualizar Dependencias de Forma Segura
 

@@ -1,16 +1,17 @@
 @extends('layouts.app')
-@section('title', 'Mapa - TurismoHuila')
+@section('title', 'Mapa - Turismo por Colombia')
 @section('content')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
 <div class="container py-4">
     <h1 class="h3 mb-3" style="font-family:'Fraunces',serif;">🗺️ Mapa de Servicios Turísticos</h1>
-    <div id="mapa-huila" style="height: 500px; border-radius: 1rem;"></div>
+    <div id="mapa-turismo" style="height: 500px; border-radius: 1rem;"></div>
 </div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script>
+window.addEventListener('load', function () {
 const puntos = @json($lugaresMapa);
 
 const colores = {
@@ -19,7 +20,8 @@ const colores = {
     restaurante: '#C62828',
     tour: '#EF6C00',
     guia: '#6A1B9A',
-    agencia: '#00838F',
+        agencia: '#00838F',
+    transporte: '#EFAC00',
 };
 
 function crearPin(color, emoji) {
@@ -62,5 +64,7 @@ mapa.addLayer(clusterGroup);
 if (puntos.length > 0) {
     mapa.fitBounds(clusterGroup.getBounds(), { padding: [30, 30], maxZoom: 12 });
 }
+
+});
 </script>
 @endsection

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión - TurismoHuila</title>
+    <title>Iniciar Sesión - Turismo por Colombia</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-light">
@@ -13,7 +13,7 @@
         <div class="col-md-5">
             <div class="card shadow-lg border-0">
                 <div class="card-header bg-success text-white text-center py-4">
-                    <h2 class="mb-0">🌿 TurismoHuila</h2>
+                    <h2 class="mb-0">🌿 Turismo por Colombia</h2>
                     <p class="mb-0 mt-2">Inicia sesión para continuar</p>
                 </div>
 

@@ -3,7 +3,12 @@
 namespace App\Services;
 
 use Cloudinary\Cloudinary;
+use Illuminate\Filesystem\FilesystemAdapter;
+use Illuminate\Http\File;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use RuntimeException;
+use Throwable;
 
 class CloudinaryImageService
 {
@@ -13,21 +18,43 @@ class CloudinaryImageService
      * @param string $rutaAbsoluta Ruta absoluta (real) del archivo a subir.
      * @param string $carpeta      Carpeta destino, ej. 'lugares', 'galeria/lugares'.
      *
-     * @return string secure_url completa de Cloudinary.
+     * @return string URL pública de Cloudinary o del almacenamiento local.
      */
     public function subir(string $rutaAbsoluta, string $carpeta): string
     {
-        $cloudinary = new Cloudinary($this->configuracion());
+        try {
+            $cloudinary = new Cloudinary($this->configuracion());
 
-        $resultado = $cloudinary->uploadApi()->upload($rutaAbsoluta, [
-            'folder' => 'turismo-huila/' . $this->carpetaNormalizada($carpeta),
-        ]);
+            $resultado = $cloudinary->uploadApi()->upload($rutaAbsoluta, [
+                'folder' => 'turismo-huila/' . $this->carpetaNormalizada($carpeta),
+            ]);
 
-        if (empty($resultado['secure_url'])) {
-            throw new RuntimeException('Cloudinary no devolvió un secure_url válido.');
+            if (empty($resultado['secure_url'])) {
+                throw new RuntimeException('Cloudinary no devolvió un secure_url válido.');
+            }
+
+            return $resultado['secure_url'];
+        } catch (Throwable) {
+            $carpetaLocal = $this->carpetaNormalizada($carpeta);
+            $extension = pathinfo($rutaAbsoluta, PATHINFO_EXTENSION) ?: 'jpg';
+            $nombre = Str::uuid() . '.' . strtolower($extension);
+            $rutaLocal = trim($carpetaLocal, '/') . '/' . $nombre;
+
+            $guardado = Storage::disk('public')->putFileAs(
+                $carpetaLocal,
+                new File($rutaAbsoluta),
+                $nombre
+            );
+
+            if ($guardado === false) {
+                throw new RuntimeException('No fue posible guardar la imagen localmente.');
+            }
+
+            /** @var FilesystemAdapter $discoPublico */
+            $discoPublico = Storage::disk('public');
+
+            return $discoPublico->url($rutaLocal);
         }
-
-        return $resultado['secure_url'];
     }
 
     /**

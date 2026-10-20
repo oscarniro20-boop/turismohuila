@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Concerns\HasGalleryImages;
+use App\Concerns\HasUbicacion;
 use App\Concerns\HasUrlImagen;
 use App\Concerns\HasRating;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,13 +11,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Restaurante extends Model
 {
-    use HasFactory, HasGalleryImages, HasRating, HasUrlImagen;
+    use HasFactory, HasGalleryImages, HasRating, HasUrlImagen, HasUbicacion;
 
     protected $table = 'restaurantes';
 
     protected $fillable = [
         'nombre',
         'descripcion',
+        'departamento',
         'municipio',
         'tipo_cocina',
         'precio_promedio',

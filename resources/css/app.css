@@ -122,11 +122,6 @@ input[type="button"] {
   object-fit: cover;
 }
 
-.migas-link:hover {
-    color: var(--color-primary) !important;
-    text-decoration: none;
-}
-
 :root {
     --navbar-height: 90px; /* valor de respaldo mientras carga el JS */
 }
@@ -155,6 +150,14 @@ input[type="button"] {
 .resena-estrellas input:checked ~ label {
     color: var(--color-gold);
 }
-.resena-estrellas label:hover {
-    transform: scale(1.15);
+/* ===== Leaflet: corrección de conflicto con Bootstrap ===== */
+.leaflet-container img {
+    max-width: none !important;
+}
+.leaflet-container .leaflet-tile {
+    max-width: none !important;
+    max-height: none !important;
+}
+nav.navbar.sticky-top {
+    z-index: 1030;
 }

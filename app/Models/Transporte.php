@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Concerns\HasGalleryImages;
+use App\Concerns\HasUbicacion;
 use App\Concerns\HasRating;
 use App\Concerns\HasUrlImagen;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,13 +11,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transporte extends Model
 {
-    use HasFactory, HasGalleryImages, HasRating, HasUrlImagen;
+    use HasFactory, HasGalleryImages, HasRating, HasUrlImagen, HasUbicacion;
 
     protected $table = 'transportes';
 
     protected $fillable = [
         'nombre',
         'descripcion',
+        'departamento',
         'municipio',
         'tipo',
         'precio',

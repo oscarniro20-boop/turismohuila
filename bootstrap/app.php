@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // scripts/styles inline y CDNs (Leaflet, OSM, MarkerCluster, Cloudinary,
         // Google Fonts); una CSP estricta rompería el mapa y el frontend.
         $middleware->web(append: [
+            \App\Http\Middleware\SetLocale::class,
             \App\Http\Middleware\CabecerasSeguridad::class,
         ]);
     })

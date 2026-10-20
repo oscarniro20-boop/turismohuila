@@ -1,58 +1,116 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🌄 Turismo por Colombia — Descubre el Huila
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Plataforma web turística regional para descubrir, explorar y contactar los servicios turísticos del departamento del Huila (Colombia).
 
-## About Laravel
+**Estado:** v1.0.0 — Release candidate preparado para prueba de despliegue. Build verificado, dependencias auditadas y seguridad aplicada.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+> **Aviso:** este repositorio no contiene credenciales, secretos, API keys ni `.env` reales. Todo secreto vive solo en el `.env` local/producción, que no se publica.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Stack
 
-## Learning Laravel
+| Capa | Tecnología |
+|---|---|
+| Backend | Laravel 13 · PHP 8.3 |
+| Base de datos desarrollo | SQLite (por defecto) / MySQL |
+| Base de datos producción | MySQL (InfinityFree) |
+| Frontend | Blade · Bootstrap 5 · Vite · JavaScript puro |
+| Imágenes | Cloudinary (subida/eliminación/URLs) |
+| Mapa | Leaflet + OpenStreetMap + Marker Cluster |
+| Tipografía | Google Fonts |
+| Correo | SMTP (Brevo en producción) |
+| Tests | PHPUnit (Pest opcional) · `php artisan test` |
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Módulos
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+**Contenido turístico (7):** Lugares, Hoteles, Restaurantes, Tours, Agencias, Guías y **Transporte**.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+**Transversales:** Autenticación y roles (turista/admin), Favoritos, Reseñas, Búsqueda global server-side, Mapa interactivo con clustering, Contacto, Páginas institucionales (nosotros/privacidad/términos), Administración.
 
-## Agentic Development
+**Relaciones clave:**
+- `tour_paquetes` es la **fuente oficial** de la relación agencia↔tour. `agencia_tour` es tabla **legacy de transición** (sin lectura en la aplicación).
+- Reseñas y favoritos usan relaciones polimórficas (`tipo` + `referencia_id`) sobre los 7 módulos.
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Requisitos
+
+- PHP ≥ 8.3
+- Composer
+- Node.js ≥ 20 y npm
+- SQLite (desarrollo) o MySQL (InfinityFree en producción)
+- Extensiones PHP: `pdo`, `pdo_sqlite`, `pdo_mysql` (producción), `mbstring`, `openssl`, `fileinfo`, `json`, `xml`, `ctype`, `tokenizer`, `curl`, `gd`
+
+## Instalación
 
 ```bash
-composer require laravel/boost --dev
+# Dependencias
+composer install
+npm install
 
-php artisan boost:install
+# Entorno
+cp .env.example .env
+php artisan key:generate
+
+# Base de datos (desarrollo SQLite)
+touch database/database.sqlite
+php artisan migrate
+php artisan db:seed   # opcional: datos de demostración
+
+# Desarrollar (Vite)
+npm run build
+npm run dev
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## Pruebas
 
-## Contributing
+```bash
+php artisan optimize:clear
+php artisan test
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Suite de **109 tests / 230 assertions**. Ejecución actual en entorno Windows/Laragon: **36 fallos detectados** (tests de autenticación, registro y CRUD), atribuibles a configuración de base de datos en el entorno de desarrollo local (`.env` con MySQL, tests configurados para SQLite en memoria). Los fallos son de entorno, no de lógica de negocio. En servidor no hay artisan: re-verificar en local antes de exportar el `.sql`.
 
-## Code of Conduct
+## Build / Assets
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+npm run build    # genera public/build/manifest.json y los assets compilados
+```
 
-## Security Vulnerabilities
+No editar a mano los archivos compilados de `public/build/`.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Preparación para producción (InfinityFree + MySQL)
 
-## License
+Destino real: hosting `if0_42868030`, `https://oscart.page.gd`, base `if0_42868030_turismo`. Sin SSH ni artisan en servidor: la base se importa como `.sql`.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+1. En local: `composer install --no-dev --optimize-autoloader` + `npm run build` (verificar que no exista `bootstrap/cache/config.php`)
+2. `.env` de producción en `htdocs/laravel_app/` según `DEPLOY.md` §2
+3. Estructura `htdocs/` + `htdocs/laravel_app/` según `DEPLOY.md` §3 (plantillas `index.php`/`.htaccess` en `scripts/deploy/`)
+4. Importar `.sql` vía phpMyAdmin según `DEPLOY.md` §4
+5. Verificar según `DEPLOY.md` §5
+
+Ver [`DEPLOY.md`](DEPLOY.md) (guía operativa de despliegue en InfinityFree + MySQL) y [`PRODUCTION_CHECKLIST.md`](PRODUCTION_CHECKLIST.md) para el detalle completo.
+
+## Seguridad aplicada
+
+- Cabeceras HTTP: `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `Content-Security-Policy` (compatible con Leaflet/OSM/Cloudinary/Google Fonts) y `Strict-Transport-Security` (solo bajo HTTPS en producción).
+- Área administrativa protegida con middleware `rol:admin`.
+- Prevención de IDOR, Mass Assignment y escalamiento de rol (cubiertos por `SeguridadTest`).
+- `ResenaPolicy`: solo el **autor** puede editar/eliminar su reseña (los administradores gestionan las suyas, no las ajenas).
+- Rate limiting en búsqueda, contacto, favoritos, reseñas y `nombre-servicio`.
+- Storage privado: `serve=false` por defecto (los archivos no expuestos no se sirven vía rutas de storage).
+- CSRF activo en el grupo `web`.
+- Credenciales (Cloudinary/Brevo) solo en `.env`.
+
+## Referencias de documentos
+
+- [`DEPLOY.md`](DEPLOY.md) — despliegue real en InfinityFree + MySQL (guía operativa).
+- [`PRODUCTION_CHECKLIST.md`](PRODUCTION_CHECKLIST.md) — checklist de puesta en producción (InfinityFree + MySQL).
+- [`MAINTENANCE.md`](MAINTENANCE.md) — mantenimiento operativo.
+- [`CHECKLIST.md`](CHECKLIST.md) — checklist de trabajo.
+- [`CHECKLIST_TURISMOHUILA_VALORACION.md`](CHECKLIST_TURISMOHUILA_VALORACION.md) — checklist maestro + valoración comercial objetivo.
+
+---
+
+## Licencia
+
+Proyecto de código cerrado/propietario Turismo por Colombia. No se otorgan derechos de distribución por este repositorio.

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Concerns\HasGalleryImages;
+use App\Concerns\HasUbicacion;
 use App\Concerns\HasUrlImagen;
 use App\Concerns\HasRating;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Guia extends Model
 {
-    use HasGalleryImages, HasRating, HasUrlImagen;
+    use HasGalleryImages, HasRating, HasUrlImagen, HasUbicacion;
     protected $fillable = [
         'nombre',
         'foto',
@@ -19,6 +20,7 @@ class Guia extends Model
         'idiomas',
         'experiencia_anios',
         'zonas',
+        'departamento',
         'whatsapp',
         'email',
         'telefono',

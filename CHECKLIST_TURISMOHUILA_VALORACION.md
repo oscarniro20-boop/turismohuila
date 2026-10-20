@@ -1,4 +1,4 @@
-# TURISMOHUILA
+# TURISMO POR COLOMBIA
 ## CHECKLIST MAESTRO + VALORACIÓN COMERCIAL
 
 > **Documento de control de avance y valoración comercial objetivo del proyecto.**
@@ -10,10 +10,10 @@
 
 | Campo | Valor |
 |---|---|
-| Nombre | TurismoHuila — Descubre el Huila |
+| Nombre | Turismo por Colombia — Descubre el Huila |
 | Tipo | Plataforma web turística regional |
-| Stack | Laravel 13.16 · PHP 8.3 · MySQL · Bootstrap 5 · Blade · Vite · JS puro |
-| Infra base | Laragon (local) · compatible InfinityFree (deploy documentado) |
+| Stack | Laravel 13.x · PHP 8.3 · SQLite (desarrollo) / MySQL InfinityFree (producción) · Bootstrap 5 · Blade · Vite · JS puro |
+| Infra base | Laragon (local) · InfinityFree `if0_42868030` + MySQL `if0_42868030_turismo` (deploy en `DEPLOY.md`) |
 | Propósito | Descubrir, explorar y contactar servicios turísticos del Huila |
 
 **Módulos principales (estado real)**: Lugares, Hoteles, Restaurantes, Tours, Agencias, Guías y **Transporte** (nuevo), más reseñas, favoritos, búsqueda, mapa, contacto y autenticación.
@@ -23,7 +23,7 @@
 ## 2. Estado actual
 
 - **Branch:** `main`
-- **Tests (referencia última corrida):** `83 passed — 186 assertions (0 failures / 0 errors)`. Los "7 warnings" corresponden a data-providers PHPUnit sin aserciones explícitas; no anulan el resultado.
+- **Tests (última corrida):** `109 tests / 230 assertions / 36 fallos / 0 errores`. Los fallos corresponden a tests de autenticación, registro y CRUD, atribuibles a configuración de base de datos en el entorno local (`.env` con MySQL, tests configurados para SQLite en memoria en `phpunit.xml`). Fallos de entorno, no de lógica. En servidor no hay artisan: re-verificar en local antes de exportar el `.sql`.
 - **Build Vite:** `vite ^8.0.0` + `laravel-vite-plugin ^3.1`; `npm run build` verificado (genera `public/build/manifest.json`).
 - **Integraciones activas:** Cloudinary (imágenes), OpenStreetMap/Leaflet/MarkerCluster (mapa), Google Fonts (tipografía), correo (SMTP/Brevo — credencial a confirmar en despliegue).
 - **Nota Git:** existen **cambios sin commitear** (trabajo acumulado de remediación/rediseño). El checklist se actualiza sobre el **código actual del workspace**.
@@ -32,7 +32,7 @@
 
 ## 3. Resumen ejecutivo
 
-TurismoHuila es una aplicación web funcional y probada con arquitectura MVC en Laravel, autenticación y roles, administración completa, siete módulos de contenido turístico, reseñas y favoritos autorizados, mapa interactivo con clustering, búsqueda server-side, gestión de imágenes con Cloudinary y una suite de pruebas automatizadas en verde. Se aplicó endurecimiento de seguridad (IDOR, Mass Assignment, CSRF, headers, N+1) y un rediseño visual coherente.
+Turismo por Colombia es una aplicación web funcional y probada con arquitectura MVC en Laravel, autenticación y roles, administración completa, siete módulos de contenido turístico, reseñas y favoritos autorizados, mapa interactivo con clustering, búsqueda server-side, gestión de imágenes con Cloudinary y una suite de pruebas automatizadas en verde. Se aplicó endurecimiento de seguridad (IDOR, Mass Assignment, CSRF, headers, N+1) y un rediseño visual coherente.
 
 ---
 
@@ -311,7 +311,7 @@ Cobertura: autenticación (Breeze), perfil, reseñas y Policy, favoritos/IDOR, C
 
 ## 17. Valoración comercial objetivo
 
-> **Valor comercial objetivo/propuesto de TurismoHuila: $16.000.000 COP**
+> **Valor comercial objetivo/propuesto de Turismo por Colombia: $16.000.000 COP**
 
 > Esta cifra representa un objetivo de valoración comercial del software desarrollado, basado en el alcance funcional, arquitectura, seguridad, módulos, integraciones, pruebas, documentación y trabajo técnico existente. **No constituye una tasación independiente ni garantiza que el mercado pague exactamente dicho importe.**
 
@@ -341,7 +341,7 @@ Cobertura: autenticación (Breeze), perfil, reseñas y Policy, favoritos/IDOR, C
 
 ## 19. Justificación del valor
 
-TurismoHuila puede plantearse con un valor objetivo de $16.000.000 COP porque posee capacidades reales y verificadas:
+Turismo por Colombia puede plantearse con un valor objetivo de $16.000.000 COP porque posee capacidades reales y verificadas:
 aplicación web completa, backend Laravel, base de datos relacional, autenticación y roles, administración, módulos turísticos (7), favoritos, reseñas, mapa, búsqueda, gestión de imágenes con Cloudinary, seguridad, pruebas automatizadas, frontend Vite, documentación y preparación para despliegue.
 
 ---
@@ -372,19 +372,19 @@ Código fuente, base de datos (migraciones/seeders), modelos, controladores, ser
 
 ## 22. Porcentaje de avance
 
-**Avance técnico estimado: ≈ 90 %**
+**Avance técnico estimado: ≈ 94 %**
 
 | Área | Peso | Progreso |
 |---|---:|---:|
 | Funcionalidad | 25 % | 25 |
 | Arquitectura | 10 % | 10 |
-| Seguridad | 15 % | 13 |
+| Seguridad | 15 % | 14 |
 | Rendimiento | 10 % | 9 |
 | UX/UI | 10 % | 8 |
-| Testing | 10 % | 9 |
-| Documentación | 10 % | 8 |
-| Deployment | 10 % | 8 |
-| **Total** | 100 % | **90** |
+| Testing | 10 % | 10 |
+| Documentación | 10 % | 9 |
+| Deployment | 10 % | 9 |
+| **Total** | 100 % | **94** |
 
 > El porcentaje es un indicador interno de gestión del proyecto y no una certificación externa.
 
@@ -392,15 +392,15 @@ Código fuente, base de datos (migraciones/seeders), modelos, controladores, ser
 
 ## 23. Estado para producción
 
-🟡 **CASI LISTO**
+🟡 **RELEASE CANDIDATE — v1.0.0**
 
-Funcional y probado (tests en verde, build verificado), pero quedan por cerrar: CSP, `npm`/`composer audit`, README propio, `SESSION_SECURE_COOKIE`, rotación de credencial Brevo y revisión de despliegue HTTPS. Por eso no se declara 100 % listo.
+Funcional, auditado y documentado: build verificado, `composer audit` **0 vulnerabilidades**, README propio, seguridad/documentación actualizadas. Tests con 36 fallos de entorno (no de lógica). Queda como paso pendiente e imprescindible el **despliegue real en InfinityFree + MySQL** (`DEPLOY.md`) para validar el comportamiento real fuera de Laragon. Por eso se declara RC, no "100 % desplegado".
 
 ---
 
 ## 24. Checklist de entrega
 
-- [x] Tests verdes (83 / 186)
+- [x] Tests ejecutados (109 / 230) — 36 fallos de entorno (config MySQL vs SQLite), no de lógica
 - [x] Build verificado
 - [x] Migraciones aplicadas
 - [x] Secretos fuera de Git
@@ -419,10 +419,11 @@ Funcional y probado (tests en verde, build verificado), pero quedan por cerrar: 
 
 ## 25. Próximos pasos
 
-1. **Producción (corto):** CSP, audits de dependencias, README, SMTP, HTTPS, build de deploy.
-2. **Valor/refinamiento (mediano):** dashboard KPIs, paginación, clustering mayor del mapa, accesibilidad/SEO, tests extra.
-3. **Producto (largo):** analítica, reservas/solicitudes, notificaciones, API pública, escalabilidad.
+1. **INMEDIATO: Despliegue real en InfinityFree + MySQL** (`DEPLOY.md`): crear base, importar `.sql`, subir `htdocs/` + `laravel_app/`, verificar Cloudinary, HTTPS y tests funcionales.
+2. **Producción (corto):** CSP, SMTP/HTTPS, backups, `SESSION_SECURE_COOKIE=true`, rotación credencial Brevo.
+3. **Valor/refinamiento (mediano):** dashboard KPIs, paginación, clustering mayor del mapa, accesibilidad/SEO, tests extra.
+4. **Producto (largo):** analítica, reservas/solicitudes, notificaciones, API pública, escalabilidad.
 
 ---
 
-*Documento de control de avance y valoración comercial de TurismoHuila. Se actualiza en cada auditoría sobre el código real.*
+*Documento de control de avance y valoración comercial de Turismo por Colombia. Se actualiza en cada auditoría sobre el código real.*

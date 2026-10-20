@@ -18,17 +18,13 @@ class TourController extends Controller
         $tours = Tour::with('paquetes')
             ->withAvg('resenas', 'calificacion')
             ->withCount('resenas')
-            ->when($request->filled('municipio'), function ($query) use ($request) {
-                $query->where('municipio', $request->query('municipio'));
-            })
+            ->ubicacion($request->query('departamento'), $request->query('municipio'))
             ->orderBy('nombre')
             ->get();
 
-        $municipios = config('municipios.huila');
-
         $favoritosIds = $this->obtenerFavoritosIds(auth()->id(), 'tour');
 
-        return view('tours.index', compact('tours', 'municipios', 'favoritosIds'));
+        return view('tours.index', compact('tours', 'favoritosIds'));
     }
 
     public function create()
@@ -84,7 +80,7 @@ class TourController extends Controller
 
     public function show(Tour $tour)
     {
-        $tour->load('paquetes.agencia', 'imagenes', 'resenas');
+        $tour->load('paquetes.agencia', 'imagenes', 'resenas.user');
         $esFav = auth()->check()
             && !auth()->user()->esAdmin()
             && Favorito::where('user_id', auth()->id())->where('tipo', 'tour')->where('referencia_id', $tour->id)->exists();

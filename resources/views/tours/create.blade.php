@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Crear Tour - TurismoHuila')
+@section('title', 'Crear Tour - Turismo por Colombia')
 
 @section('content')
 <div class="row justify-content-center">
@@ -55,17 +55,7 @@
                         @enderror
                     </div>
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Municipio</label>
-                            <select name="municipio" class="form-select">
-                                <option value="">Seleccione municipio...</option>
-                                @error('municipio')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
-                                @enderror
-                                @foreach(config('municipios.huila') as $m)
-                                    <option value="{{ $m }}" {{ old('municipio') == $m ? 'selected' : '' }}>{{ $m }}</option>
-                                @endforeach
-                            </select>
+                        <x-form-ubicacion :departamento="old('departamento', 'Huila')" :municipio="old('municipio')" />
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold">Duración (días)</label>

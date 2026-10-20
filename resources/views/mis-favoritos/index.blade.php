@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Mis Favoritos - TurismoHuila')
+@section('title', 'Mis Favoritos - Turismo por Colombia')
 
 @section('content')
 <x-page-header titulo="Mis favoritos" descripcion="Los lugares, hoteles, restaurantes, tours, guías y agencias que guardaste." />
@@ -11,7 +11,7 @@
             Aún no tienes favoritos guardados.
         </div>
     @else
-        @foreach(['lugar' => 'Lugares', 'hotel' => 'Hoteles', 'restaurante' => 'Restaurantes', 'tour' => 'Tours', 'guia' => 'Guías', 'agencia' => 'Agencias'] as $tipo => $titulo)
+        @foreach(['lugar' => 'Lugares', 'hotel' => 'Hoteles', 'restaurante' => 'Restaurantes', 'tour' => 'Tours', 'guia' => 'Guías', 'agencia' => 'Agencias', 'transporte' => 'Transporte'] as $tipo => $titulo)
             @if($favoritos->has($tipo))
                 <h4 class="mb-3 mt-4" style="font-family: 'Fraunces', Georgia, serif; font-weight: 600;">{{ $titulo }}</h4>
                 <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">

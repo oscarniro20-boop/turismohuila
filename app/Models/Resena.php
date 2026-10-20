@@ -35,15 +35,7 @@ class Resena extends Model
                 : ucfirst($this->tipo) . ' #' . $this->referencia_id . ' (eliminado)';
         }
 
-        $modelo = match ($this->tipo) {
-            'lugar'       => \App\Models\Lugar::class,
-            'hotel'       => \App\Models\Hotel::class,
-            'restaurante' => \App\Models\Restaurante::class,
-            'tour'        => \App\Models\Tour::class,
-            'guia'        => \App\Models\Guia::class,
-            'agencia'     => \App\Models\Agencia::class,
-            default       => null,
-        };
+        $modelo = \Illuminate\Database\Eloquent\Relations\Relation::getMorphedModel($this->tipo);
 
         if (!$modelo) {
             return ucfirst($this->tipo) . ' #' . $this->referencia_id;

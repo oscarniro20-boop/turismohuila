@@ -21,6 +21,7 @@
 /public/storage
 /public/imagenes
 /public/galeria
+/public/portadas
 /storage/*.key
 /storage/pail
 /vendor

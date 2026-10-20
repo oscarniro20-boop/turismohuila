@@ -70,15 +70,7 @@ class ResenaController extends Controller
      */
     public static function modelosPorTipo(): array
     {
-        return [
-            'lugar'       => \App\Models\Lugar::class,
-            'hotel'       => \App\Models\Hotel::class,
-            'restaurante' => \App\Models\Restaurante::class,
-            'tour'        => \App\Models\Tour::class,
-            'guia'        => \App\Models\Guia::class,
-            'agencia'     => \App\Models\Agencia::class,
-            'transporte'  => \App\Models\Transporte::class,
-        ];
+        return \Illuminate\Database\Eloquent\Relations\Relation::morphMap();
     }
 
     public function store(Request $request)

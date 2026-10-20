@@ -16,17 +16,13 @@ class RestauranteController extends Controller
     {
         $restaurantes = Restaurante::withAvg('resenas', 'calificacion')
             ->withCount('resenas')
-            ->when($request->filled('municipio'), function ($query) use ($request) {
-                $query->where('municipio', $request->query('municipio'));
-            })
+            ->ubicacion($request->query('departamento'), $request->query('municipio'))
             ->orderBy('nombre')
             ->get();
 
-        $municipios = config('municipios.huila');
-
         $favoritosIds = $this->obtenerFavoritosIds(auth()->id(), 'restaurante');
 
-        return view('restaurantes.index', compact('restaurantes', 'municipios', 'favoritosIds'));
+        return view('restaurantes.index', compact('restaurantes', 'favoritosIds'));
     }
 
     public function create()
@@ -72,7 +68,7 @@ class RestauranteController extends Controller
 
     public function show(Restaurante $restaurante)
     {
-        $restaurante->load('imagenes', 'resenas');
+        $restaurante->load('imagenes', 'resenas.user');
         $esFav = auth()->check()
             && !auth()->user()->esAdmin()
             && Favorito::where('user_id', auth()->id())->where('tipo', 'restaurante')->where('referencia_id', $restaurante->id)->exists();

@@ -17,14 +17,14 @@
     @endif
 
     <h4 class="mb-1" style="font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 1.15rem;">
-        ⭐ Tu calificación
+        ⭐ {{ __('ui.review.your_rating') }}
     </h4>
     @if($nombre)
         <p class="small mb-3" style="color: var(--color-muted-fg);">
-            Cuéntanos cómo fue tu experiencia en {{ $nombre }}.
+            {{ __('ui.review.tell_experience_at', ['name' => $nombre]) }}
         </p>
     @else
-        <p class="small mb-3" style="color: var(--color-muted-fg);">Cuéntanos tu experiencia.</p>
+        <p class="small mb-3" style="color: var(--color-muted-fg);">{{ __('ui.review.tell_experience') }}</p>
     @endif
 
     @if($errors->any())
@@ -45,7 +45,7 @@
         <input type="hidden" name="retorno" value="{{ url()->current() }}">
 
         <fieldset class="mb-3 border-0 p-0 m-0">
-            <legend class="form-label mb-1 small fw-semibold">Calificación</legend>
+            <legend class="form-label mb-1 small fw-semibold">{{ __('ui.review.rating') }}</legend>
             <div class="resena-estrellas" role="radiogroup" aria-label="Calificación de 1 a 5 estrellas">
                 @for($i = 5; $i >= 1; $i--)
                     <input type="radio" id="estrella-{{ $tipo }}-{{ $referenciaId }}-{{ $i }}"
@@ -62,11 +62,11 @@
 
         <div class="mb-3">
             <label for="comentario-{{ $tipo }}-{{ $referenciaId }}" class="form-label small fw-semibold">
-                Comenta tu experiencia (opcional)
+                {{ __('ui.review.comment') }}
             </label>
             <textarea class="form-control" id="comentario-{{ $tipo }}-{{ $referenciaId }}"
                       name="comentario" rows="3" maxlength="1000"
-                      placeholder="Escribe tu experiencia...">{{ old('comentario') }}</textarea>
+                      placeholder="{{ __('ui.review.comment_placeholder') }}">{{ old('comentario') }}</textarea>
             @error('comentario')
                 <div class="small text-danger mt-1">{{ $message }}</div>
             @enderror
@@ -74,7 +74,7 @@
 
         <button type="submit" class="btn rounded-pill fw-semibold px-4 py-2"
                 style="background: var(--color-primary); color: #fff;">
-            Publicar reseña
+            {{ __('ui.review.publish') }}
         </button>
     </form>
 </div>
