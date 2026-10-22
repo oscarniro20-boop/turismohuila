@@ -16,7 +16,6 @@ class Lugar extends Model
     protected $table = 'lugares';
 
     protected $fillable = [
-        'user_id',
         'nombre',
         'departamento',
         'municipio',

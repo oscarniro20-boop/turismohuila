@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Lugar;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LugarFactory extends Factory
@@ -12,7 +13,6 @@ class LugarFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => \App\Models\User::factory(),
             'nombre' => $this->faker->unique()->city(),
             'departamento' => 'Huila',
             'municipio' => $this->faker->randomElement(['Neiva', 'Garzón', 'Pitalito', 'San Agustín', 'La Plata']),
@@ -20,6 +20,7 @@ class LugarFactory extends Factory
             'descripcion' => $this->faker->paragraph(),
             'latitud' => $this->faker->latitude(),
             'longitud' => $this->faker->longitude(),
+            'user_id' => User::factory(),
         ];
     }
 }
