@@ -454,6 +454,22 @@ class ImportacionCsvTest extends TestCase
         }
     }
 
+    public function test_csv_con_columna_user_id_se_rechaza(): void
+    {
+        $admin = $this->admin();
+
+        // user_id no es una columna permitida para el módulo lugares
+        $csv = "user_id,nombre,departamento,municipio,categoria,descripcion\n"
+            . "1,Lugar Maligno,Huila,Neiva,Naturaleza,Intento de suplantación de user_id\n";
+
+        $this->subir('lugares', $csv, $admin)
+            ->assertSessionHasErrors('archivo')
+            ->assertSessionMissing('importacion_resumen');
+
+        // user_id del CSV nunca se impone: el lugar no se creó
+        $this->assertDatabaseMissing('lugares', ['nombre' => 'Lugar Maligno']);
+    }
+
     public function test_operacion_se_registra_en_el_log_de_auditoria(): void
     {
         Log::spy();

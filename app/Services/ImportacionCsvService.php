@@ -457,10 +457,26 @@ class ImportacionCsvService
     {
         $modelo = $definicion['modelo'];
 
+        $crearRegistro = function (array $datos) use ($modelo): void {
+            $registro = new $modelo();
+            // Whitelist de campos fillable del modelo: protege contra mass-assignment
+            $fillable = $registro->getFillable();
+            $datosFiltrados = array_intersect_key($datos, array_flip($fillable));
+            $registro->fill($datosFiltrados);
+            // user_id no está en $fillable (protección anti mass-assignment desde
+            // requests de usuario). Cuando el módulo tiene autor=>true, importar()
+            // ya agregó user_id a $datos; fill() lo ignora pero se asigna directo
+            // aquí desde código interno, no es mass-assignment desde HTTP.
+            if (array_key_exists('user_id', $datos)) {
+                $registro->user_id = $datos['user_id'];
+            }
+            $registro->save();
+        };
+
         try {
-            DB::transaction(function () use ($modelo, $filas) {
+            DB::transaction(function () use ($modelo, $filas, $crearRegistro) {
                 foreach ($filas as $fila) {
-                    $modelo::create($fila['datos']);
+                    $crearRegistro($fila['datos']);
                 }
             });
 
@@ -478,7 +494,7 @@ class ImportacionCsvService
 
         foreach ($filas as $fila) {
             try {
-                DB::transaction(fn () => $modelo::create($fila['datos']));
+                DB::transaction(fn () => $crearRegistro($fila['datos']));
                 $resumen['importadas']++;
             } catch (\Throwable $e) {
                 Log::error('importacion_csv_fallo_fila', [
