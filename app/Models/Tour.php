@@ -8,6 +8,7 @@ use App\Concerns\HasUrlImagen;
 use App\Concerns\HasRating;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
@@ -21,6 +22,7 @@ class Tour extends Model
         'nombre',
         'descripcion',
         'departamento',
+        'departamento_id',
         'municipio',
         'precio',
         'duracion_dias',
@@ -31,6 +33,11 @@ class Tour extends Model
         'latitud',
         'longitud',
     ];
+
+    public function departamento(): BelongsTo
+    {
+        return $this->belongsTo(Departamento::class, 'departamento_id', 'cod_dpto');
+    }
 
     public function resenas()
     {

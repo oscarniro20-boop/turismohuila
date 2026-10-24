@@ -8,6 +8,7 @@ use App\Concerns\HasUrlImagen;
 use App\Concerns\HasRating;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Lugar extends Model
 {
@@ -18,6 +19,7 @@ class Lugar extends Model
     protected $fillable = [
         'nombre',
         'departamento',
+        'departamento_id',
         'municipio',
         'categoria',
         'descripcion',
@@ -25,6 +27,11 @@ class Lugar extends Model
         'latitud',
         'longitud',
     ];
+
+    public function departamento(): BelongsTo
+    {
+        return $this->belongsTo(Departamento::class, 'departamento_id', 'cod_dpto');
+    }
 
     public function user()
     {

@@ -7,6 +7,7 @@ use App\Concerns\HasUbicacion;
 use App\Concerns\HasUrlImagen;
 use App\Concerns\HasRating;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -21,6 +22,7 @@ class Guia extends Model
         'experiencia_anios',
         'zonas',
         'departamento',
+        'departamento_id',
         'whatsapp',
         'email',
         'telefono',
@@ -33,6 +35,11 @@ class Guia extends Model
         'experiencia_anios' => 'integer',
         'activo' => 'boolean',
     ];
+
+    public function departamento(): BelongsTo
+    {
+        return $this->belongsTo(Departamento::class, 'departamento_id', 'cod_dpto');
+    }
 
     /**
      * Relación muchos a muchos: Un guía puede estar en muchos lugares

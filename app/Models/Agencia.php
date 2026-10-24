@@ -7,6 +7,7 @@ use App\Concerns\HasUbicacion;
 use App\Concerns\HasUrlImagen;
 use App\Concerns\HasRating;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Agencia extends Model
@@ -15,6 +16,7 @@ class Agencia extends Model
     protected $fillable = [
         'nombre',
         'departamento',
+        'departamento_id',
         'municipio',
         'telefono_contacto',
         'whatsapp',
@@ -23,6 +25,11 @@ class Agencia extends Model
         'latitud',
         'longitud',
     ];
+
+    public function departamento(): BelongsTo
+    {
+        return $this->belongsTo(Departamento::class, 'departamento_id', 'cod_dpto');
+    }
 
     public function tours(): HasManyThrough
     {

@@ -8,6 +8,7 @@ use App\Concerns\HasRating;
 use App\Concerns\HasUrlImagen;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Transporte extends Model
 {
@@ -19,6 +20,7 @@ class Transporte extends Model
         'nombre',
         'descripcion',
         'departamento',
+        'departamento_id',
         'municipio',
         'tipo',
         'precio',
@@ -28,6 +30,11 @@ class Transporte extends Model
         'latitud',
         'longitud',
     ];
+
+    public function departamento(): BelongsTo
+    {
+        return $this->belongsTo(Departamento::class, 'departamento_id', 'cod_dpto');
+    }
 
     public function resenas()
     {

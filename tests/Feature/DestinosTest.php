@@ -41,13 +41,17 @@ class DestinosTest extends TestCase
 
     public function test_listado_muestra_conteo_real_de_servicios(): void
     {
-        Lugar::factory()->create(['nombre' => 'Tatacoa Norte', 'departamento' => 'Huila', 'municipio' => 'Villavieja']);
-        Lugar::factory()->create(['nombre' => 'Tatacoa Sur', 'departamento' => 'Huila', 'municipio' => 'Villavieja']);
+        $this->artisan('db:seed', ['--class' => \Database\Seeders\DepartamentoSeeder::class]);
+
+        $codHuila = \App\Models\Departamento::where('nombre', 'Huila')->value('cod_dpto');
+
+        Lugar::factory()->create(['nombre' => 'Tatacoa Norte', 'departamento' => 'Huila', 'departamento_id' => $codHuila, 'municipio' => 'Villavieja']);
+        Lugar::factory()->create(['nombre' => 'Tatacoa Sur', 'departamento' => 'Huila', 'departamento_id' => $codHuila, 'municipio' => 'Villavieja']);
 
         $response = $this->get(route('destinos.index'));
 
         $response->assertOk();
-        // La tarjeta de Huila debe reflejar los 2 servicios reales creados.
+        // La tarjeta de Huila debe reflejar los 2 servicios reales creados (contados por departamento_id vía withCount).
         $response->assertSee('2 servicios');
         // Los departamentos sin registros quedan marcados como vacíos.
         $response->assertSee(__('ui.destinos.no_services_short'));

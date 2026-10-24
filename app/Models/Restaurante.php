@@ -8,6 +8,7 @@ use App\Concerns\HasUrlImagen;
 use App\Concerns\HasRating;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Restaurante extends Model
 {
@@ -19,6 +20,7 @@ class Restaurante extends Model
         'nombre',
         'descripcion',
         'departamento',
+        'departamento_id',
         'municipio',
         'tipo_cocina',
         'precio_promedio',
@@ -28,6 +30,11 @@ class Restaurante extends Model
         'latitud',
         'longitud',
     ];
+
+    public function departamento(): BelongsTo
+    {
+        return $this->belongsTo(Departamento::class, 'departamento_id', 'cod_dpto');
+    }
 
     public function resenas()
     {

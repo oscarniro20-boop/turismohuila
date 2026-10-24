@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Concerns\ManagesImages;
 use App\Models\Agencia;
+use App\Models\Departamento;
 use App\Models\Guia;
 use App\Models\Hotel;
 use App\Models\Lugar;
@@ -132,7 +133,8 @@ class DestinoController extends Controller
 
     /**
      * Total de servicios reales por departamento (solo departamentos del
-     * catálogo). Una consulta agregada por módulo (7 en total), sin N+1.
+     * catálogo). Usa `withCount` sobre las 7 relaciones `hasMany` de
+     * `Departamento` para contar servicios vinculados por `departamento_id`.
      *
      * @return array<string, int>
      */
@@ -140,19 +142,29 @@ class DestinoController extends Controller
     {
         $conteos = array_fill_keys(Colombia::departamentos(), 0);
 
-        foreach ($this->modelos() as $modelo) {
-            $porDepartamento = $modelo::query()
-                ->selectRaw('departamento, count(*) as total')
-                ->whereNotNull('departamento')
-                ->where('departamento', '<>', '')
-                ->groupBy('departamento')
-                ->pluck('total', 'departamento');
+        $departamentos = Departamento::withCount([
+            'lugares',
+            'hoteles',
+            'restaurantes',
+            'tours',
+            'agencias',
+            'guias',
+            'transportes',
+        ])->get();
 
-            foreach ($porDepartamento as $departamento => $total) {
-                if (array_key_exists($departamento, $conteos)) {
-                    $conteos[$departamento] += (int) $total;
-                }
+        foreach ($departamentos as $depto) {
+            $nombre = $depto->nombre;
+            if (! array_key_exists($nombre, $conteos)) {
+                continue;
             }
+
+            $conteos[$nombre] = (int) $depto->lugares_count
+                + (int) $depto->hoteles_count
+                + (int) $depto->restaurantes_count
+                + (int) $depto->tours_count
+                + (int) $depto->agencias_count
+                + (int) $depto->guias_count
+                + (int) $depto->transportes_count;
         }
 
         return $conteos;
