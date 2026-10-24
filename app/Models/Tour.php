@@ -22,7 +22,6 @@ class Tour extends Model
         'nombre',
         'descripcion',
         'departamento',
-        'departamento_id',
         'municipio',
         'precio',
         'duracion_dias',

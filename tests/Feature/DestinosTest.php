@@ -45,8 +45,8 @@ class DestinosTest extends TestCase
 
         $codHuila = \App\Models\Departamento::where('nombre', 'Huila')->value('cod_dpto');
 
-        Lugar::factory()->create(['nombre' => 'Tatacoa Norte', 'departamento' => 'Huila', 'departamento_id' => $codHuila, 'municipio' => 'Villavieja']);
-        Lugar::factory()->create(['nombre' => 'Tatacoa Sur', 'departamento' => 'Huila', 'departamento_id' => $codHuila, 'municipio' => 'Villavieja']);
+        Lugar::factory()->create(['nombre' => 'Tatacoa Norte', 'departamento' => 'Huila', 'municipio' => 'Villavieja']);
+        Lugar::factory()->create(['nombre' => 'Tatacoa Sur', 'departamento' => 'Huila', 'municipio' => 'Villavieja']);
 
         $response = $this->get(route('destinos.index'));
 

@@ -16,7 +16,6 @@ class Agencia extends Model
     protected $fillable = [
         'nombre',
         'departamento',
-        'departamento_id',
         'municipio',
         'telefono_contacto',
         'whatsapp',

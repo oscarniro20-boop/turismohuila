@@ -20,7 +20,6 @@ class Transporte extends Model
         'nombre',
         'descripcion',
         'departamento',
-        'departamento_id',
         'municipio',
         'tipo',
         'precio',

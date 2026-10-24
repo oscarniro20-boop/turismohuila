@@ -20,7 +20,6 @@ class Hotel extends Model
         'nombre',
         'descripcion',
         'departamento',
-        'departamento_id',
         'municipio',
         'precio_noche',
         'estrellas',

@@ -22,7 +22,6 @@ class Guia extends Model
         'experiencia_anios',
         'zonas',
         'departamento',
-        'departamento_id',
         'whatsapp',
         'email',
         'telefono',

@@ -19,7 +19,6 @@ class Lugar extends Model
     protected $fillable = [
         'nombre',
         'departamento',
-        'departamento_id',
         'municipio',
         'categoria',
         'descripcion',

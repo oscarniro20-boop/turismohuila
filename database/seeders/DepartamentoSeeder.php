@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 class DepartamentoSeeder extends Seeder
 {
     private const DEPTS = [
-        ['02','Amazonas','amazonas','Amazonía','Leticia',0,30],
+        ['91','Amazonas','amazonas','Amazonía','Leticia',0,30],
         ['05','Antioquia','antioquia','Andina','Medellín',1,1],
         ['81','Arauca','arauca','Orinoquía','Arauca',0,28],
         ['08','Atlántico','atlantico','Caribe','Barranquilla',1,4],

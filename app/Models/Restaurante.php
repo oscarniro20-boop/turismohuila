@@ -20,7 +20,6 @@ class Restaurante extends Model
         'nombre',
         'descripcion',
         'departamento',
-        'departamento_id',
         'municipio',
         'tipo_cocina',
         'precio_promedio',
